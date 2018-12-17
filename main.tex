@@ -30,8 +30,10 @@
 \setlength{\topmargin}{-15mm}
 
 \newtheorem{Satz}{Satz}[section]
-\newtheorem{Definition}[Satz]{Definition}
 \newtheorem{Lemma}[Satz]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{Definition}{Definition}[section]
 
 \numberwithin{equation}{section}
 
@@ -234,9 +236,9 @@ S &= \frac{1}{2} (\nabla u + (\nabla u)^\top)
 Nach \cite[Kap.~4.1]{krueger17} kann die asymptotische Äquivalenz von LBM BGK Gleichung und schwach-kompressiblen Navier-Stokes Gleichungen mit der Entwicklung von Chapman-Enskog gezeigt werden.
 
 \newpage
-\subsection{Herangehensweisen an Gittervergfeinerung}
+\subsection{Herangehensweisen an Gitterverfeinerung}
 
-Grundsätzlich existieren mit der Multi-Grid bzw. Multi-Domain Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in Lattice Boltzmann Methoden. Im Westenlichen unterscheiden die Ansätze sich in der Struktur der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
+Grundsätzlich existieren mit der Multi-Grid bzw. Multi-Domain Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in Lattice Boltzmann Methoden \cite[Kap.~3.1]{lagrava12}. Im Westenlichen unterscheiden die Ansätze sich in der Struktur der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
 
 \subsubsection{Multi-Grid Ansatz}
 
@@ -245,19 +247,31 @@ Bei Verfahren des Multi-Grid Ansatzes existiert das gröbste Gitter über der ge
 \begin{figure}[h]
 \centering
 \input{img/multi_grid.tikz}
-\caption{Multi-Grid Herangehensweise}
+\caption{Teilgitter in der Multi-Grid Herangehensweise}
 \end{figure}
 
-Vorteil dieser Herangehensweise ist es, dass feinere Teilgitter im Verlauf der Simulation verschoben werden können, um beispielsweise komplexere Strömungsstrukturen zu \emph{verfolgen}. Nachteil ist, dass das Einsparpotentiale in Speicher- und Rechenbedarf durch Mehrfachabdeckung von Teilen der Simulationsdomäne mittels mehrerer Gitter nicht voll ausgenutzt werden können.
+Vorteil dieser Herangehensweise ist es, dass feinere Teilgitter im Verlauf der Simulation ohne aufwendige Restrukturierung verschoben werden können, um beispielsweise komplexere Strömungsstrukturen zu \emph{verfolgen}. Nachteil ist, dass das Einsparpotentiale in Speicher- und Rechenbedarf durch Mehrfachabdeckung von Teilen der Simulationsdomäne mittels mehrerer Gitter nicht voll ausgenutzt werden können.
 
 \subsubsection{Multi-Domain Ansatz}
+
+Kern des Multi-Domain Ansatzes ist es, außerhalb von etwaigen verfahrensbedingten Übergangsbereichen, jede Position in der Simulationsdomäne durch genau ein Teilgitter abzubilden. Konkret werden also bereits durch feinere Gitter abgedeckte Bereiche aus gröberen Teilgittern ausgespart.
+
+\begin{figure}[h]
+\centering
+\input{img/multi_domain_plain.tikz}
+\caption{Teiligitter in der Multi-Domain Herangehensweise}
+\end{figure}
+
+Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speicherbedarf sowie erwartete Einsparungen in der benötigten Rechenzeit. Erkauft werden diese Vorteile durch aufwendigere Kopplung der verschiedenen Teilgitter in den Übergangsbereichen.
 
 \newpage
 \section{Verfeinerungsmethode}
 
+Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{lagrava12}~\cite{lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Stuktur dieses Verfahrens, mit potentiell austauschbaren Restriktions- und Interpolationsverfahren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
+
 \subsection{Übersicht}
 
-Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[S.~4]{lagrava12} , bei welcher die feiner aufgelösten Teilbereiche der Simulationsdomäne aus dem gröber aufgelösten Gitter ausgeschlossen werden und sich nur in Übergangsbereichen überlappen.
+Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[Kap.~3.1]{lagrava12} , bei welcher die feiner aufgelösten Teilbereiche der Simulationsdomäne aus dem gröber aufgelösten Gitter ausgeschlossen werden und sich nur in Übergangsbereichen überlappen.
 
 \begin{figure}[h]
 \centering
@@ -267,21 +281,46 @@ Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[S.~4]{lagrava1
 
 In diesen Übergangsbereichen, welche eine Breite von mindestens einer Einheit des gröberen Zellabstands haben, liegt die Hauptarbeit des Verfeinerungsverfahrens.
 
+Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf eine skalierte und gefilterte Restriktion der Verteilungen beschränkt, gestaltet sich der Übergang vom groben zum feinen Gitter aufwendiger, da Verteilungen unbestimmt sind und aus den gegebenen Daten interpoliert werden müssen.
+
+Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen. Um diese Kopplung der verschiedenen Gitterauflösungen theoretisch erfassen zu können, müssen wir zunächst die Gitter selbst konkreter definieren:
+
+\begin{Definition}[Diskretisierung der Gitter]
+Wir betrachten zwei Gitter \(G\) und \(F\) als Diskretisierung der analytischen Domänen \(D_g\) bzw. \(D_f\). Dabei sei \(G\) das Gröbere und \(F\) das Feinere der beiden Gitter.
+\begin{align*}
+G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} \\
+F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \}
+\end{align*}
+\(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
+\end{Definition}
+
+\begin{Definition}[Gitterknoten der Übergangsbereiche]
+\begin{align*}
+U_g &:= G \cap F && \text{Grobe Gitterknoten im Übergangsbereich} \\
+U_f &:= F \cap (D_f \cap D_g) && \text{Feine Gitterknoten im Übergangsbereich} \\
+U_{g \to f} &:= \partial D_f \cap (U_f \cup U_g) && \text{Gitterknoten mit Übertragung von grob nach fein} \\
+U_{f \to g} &:= \partial D_g \cap (U_f \cup U_g) && \text{Gitterknoten mit Übertragung von fein nach grob} \\
+\end{align*}
+\end{Definition}
+
 \begin{figure}[h]
 \centering
 \input{img/overlap_zone.tikz}
 \caption{Skizze des Übergangsbereich \cite[vgl.~Abb.~4]{lagrava12}}
 \end{figure}
 
-Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf eine skalierte und gefilterte Restriktion der Verteilungen beschränkt, gestaltet sich der Übergang vom groben zum feinen Gitter aufwendiger, da Verteilungen unbestimmt sind und aus den gegebenen Daten interpoliert werden müssen.
-
-Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen.
-
 \subsection{Restriktion}
 
 \subsection{Interpolation}
 
-\subsection{Implementierung}
+\newpage
+\section{Implementierung in OpenLB}
+
+\subsection{Auswahl der Verfeinerungsmethode}\label{sec:olbRefinementChoice}
+
+\subsection{Struktur des Gitterverfeinerungsframework}
+
+\subsection{Umsetzung des Verfahrens von Lagrava et al.}
 
 \newpage
 \section{Evaluierung}
@@ -298,8 +337,8 @@ Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf
 \vspace*{8cm}
 \section*{Erkl\"arung}
 Ich  versichere  wahrheitsgem\"a\ss,  die  Arbeit selbstst\"andig verfasst,  alle  benutzten  Hilfsmittel  vollst\"andig  und  genau  angegeben  und  alles kenntlich  gemacht  zu  haben,  was  aus  Arbeiten  anderer  unver\"andert  oder  mit  Ab\"anderungen entnommen  wurde,  sowie die Satzung  des  KIT  zur  Sicherung guter wissenschaftlicher Praxis in der jeweils g\"ultigen Fassung beachtet zu haben.
-\\[2ex] 
+\\[2ex]
 \noindent
-Karlsruhe, den \date{}\\[5ex]
+Karlsruhe, den \today\\[5ex]
 
 \end{document}

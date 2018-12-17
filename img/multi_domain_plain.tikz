@@ -4,8 +4,14 @@
 	fine/.style={circle,draw=black,inner sep=1pt}
 ]
 
-\foreach \x in {0,...,7}
+\foreach \x in {0,...,3}
 	\foreach \y in {0,...,7}
+		\node[coarse] at (\x,\y){ };
+\foreach \x in {4,...,7}
+	\foreach \y in {0,...,2}
+		\node[coarse] at (\x,\y){ };
+\foreach \x in {4,...,7}
+	\foreach \y in {5,...,7}
 		\node[coarse] at (\x,\y){ };
 
 \draw (9,3.5) node[cross out,draw=black,line width=0.5mm,rotate=45]{};
@@ -16,8 +22,14 @@
 
 \draw[->,line width=0.5mm] (17.5,3.5) -- (19.5,3.5);
 
-\foreach \x in {22,...,29}
+\foreach \x in {22,...,25}
 	\foreach \y in {0,...,7}
+		\node[coarse] at (\x,\y){ };
+\foreach \x in {26,...,29}
+	\foreach \y in {0,...,2}
+		\node[coarse] at (\x,\y){ };
+\foreach \x in {26,...,29}
+	\foreach \y in {5,...,7}
 		\node[coarse] at (\x,\y){ };
 
 \foreach \x in {0,...,8}

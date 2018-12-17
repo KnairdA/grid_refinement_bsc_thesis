@@ -1,0 +1,305 @@
+\documentclass[12pt,a4paper]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{latexsym}
+\usepackage{amsmath,amssymb,amsthm}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdftitle={Gitterverfeinerte Lattice Boltzmann Methoden in OpenLB},
+	pdfauthor={Adrian Kummerländer},
+	bookmarksnumbered=true,
+	pdfpagemode=UseOutlines,
+}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.pathreplacing}
+
+\usepackage[backend=bibtex,style=numeric,maxbibnames=10,sorting=none]{biblatex}
+\DefineBibliographyStrings{ngerman}{andothers={et\ \addabbrvspace al\adddot}}
+\addbibresource{quellen.bib}
+
+\setlength{\topmargin}{-15mm}
+
+\newtheorem{Satz}{Satz}[section]
+\newtheorem{Definition}[Satz]{Definition}
+\newtheorem{Lemma}[Satz]{Lemma}
+
+\numberwithin{equation}{section}
+
+\newcommand{\C}{\mathbb{C}} % komplexe
+\newcommand{\K}{\mathbb{K}} % komplexe
+\newcommand{\R}{\mathbb{R}} % reelle
+\newcommand{\Q}{\mathbb{Q}} % rationale
+\newcommand{\Z}{\mathbb{Z}} % ganze
+\newcommand{\N}{\mathbb{N}} % natuerliche
+
+\newcommand{\V}[2]{\ensuremath{\begin{pmatrix}#1\\#2\end{pmatrix}}}
+
+\begin{document}
+
+\pagestyle{empty}
+\begin{titlepage}
+
+\includegraphics[scale=0.45]{img/kit-logo.jpg}
+\vspace*{2cm}
+
+\begin{center} \large
+Bachelorarbeit
+\vspace*{2cm}
+
+{\huge Gitterverfeinerte \\ Lattice Boltzmann Methoden \\ in OpenLB \\}
+\vspace*{2.5cm}
+
+Adrian Kummerländer
+\vspace*{1.5cm}
+
+31. März 2019
+\vspace*{3cm}
+
+Betreuung: Dipl.-Math. Markus Mohrhard \\[1cm]
+Fakultät für Mathematik \\[1cm]
+Karlsruher Institut für Technologie
+\end{center}
+
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\pagestyle{headings}
+
+\section{Einführung}
+
+\subsection{Warum Gitterverfeinerung?}
+
+Die einfachsten und zugleich am weitesten verbreiteten Umsetzungen von Simulationen mit Lattice Boltzmann Methoden basieren auf uniformen Gittern, in denen Zellen immer den gleichen Abstand zu ihren Nachbarzellen haben.
+
+Die Genauigkeit von Lattice Boltzmann basierenden Simulationen hängt maßgeblich von der Auflösung des verwendeten Gitters ab. Bei Außerachtlassung weiterer wichtiger Faktoren wie dem verwendeten Kollisionsterm und Randkonditionen kann im Allgemeinen davon ausgegangen werden, dass eine feinere Auflösung des Gitters zu besseren Ergebnissen führt.
+
+In praktischen Beispielen können innerhalb eines Modells große Unterschiede in der Strömungskomplexität existieren. So kann es große Gebiete eines Modells geben, die mit einem vergleichsweise groben Gitter gut simuliert werden können, während in anderen Gebieten \textendash{} beispielsweise in komplexen Geometrien und an Rändern \textendash{} ein vielfach feineres Gitter zur adäquaten Behandlung benötigt wird. In uniformen Gittern muss jedoch das gesamte Modell unabhängig der lokalen Situation mit der maximal benötigten Auflösung abgebildet werden.
+
+Da die Anzahl der benötigten Gitterpunkte sich maßgeblich auf den Speicherbedarf und Rechenaufwand auswirkt, ist es wünschenswert die Anzahl der Gitterpunkte zu minimieren. Ein Ansatz, dies zu erreichen, ist die lokale Variation der Gitterauflösung.
+
+\newpage
+\section{Grundlagen}
+
+In diesem Kapitel werden wir die, dem weiteren Verlauf dieser Arbeit zugrunde liegende, Lattice Boltzmann Methode in 2D nachvollziehen.
+
+\subsection{Lattice Boltzmann Methode}
+
+Grundlage und Namensgeber von Simulationen mit Lattice Boltzmann Methoden ist die Boltzmann Gleichung. Sie beschreibt das Verhalten von Gasen auf mesoskopischer Ebene als Verteilungsfunktion der Masse von Partikeln in einer Raumregion mit gegebener Geschwindigkeit.
+
+\begin{Definition}[Die Boltzmann-Gleichung]
+Sei \(f(x,\xi,t)\) die Verteilungsfunktion der Partikelmasse zu Zeit \(t\) in Ort \(x \in \R^2\) mit Geschwindigkeit \(\xi \in \R^2\), \(\rho\) die Dichte und \(F \in \R^2\) eine etwaige äußere Kraft. Die Boltzmann-Gleichung beschreibt die zeitliche Veränderung der Verteilungsfunktion anhand des totalen Differential \(\Omega(f)\):
+\[ \left( \partial_t + \xi \cdot \partial_x + \frac{F}{\rho} \cdot \partial_\xi \right) f = \Omega(f) \left( = \partial_x f \cdot \frac{dx}{dt} + \partial_\xi f \cdot \frac{d\xi}{dt} + \partial_t f \right) \]
+
+Hierbei handelt es sich um eine Advektionsgleichung wobei der Term \(\partial_t f + \xi \cdot \partial_x f\) die Strömung der Partikelverteilung mit Geschwindigkeit \(\xi\) und \(\frac{F}{\rho} \cdot \partial_\xi f\) einwirkende Kräfte darstellt. Der Term \(\Omega(f)\) beschreibt, entsprechend als Kollisionsoperator bezeichnet, die kollisionsbedingte lokale Neuverteilung von \(f\).
+\end{Definition}
+
+Zentrale Anforderung an den Kollisionsoperator ist die Impuls- und Masseerhaltung.
+
+Die im Folgenden betrachtete Lattice Boltzmann Methode verwendet die übliche BGK Approximation der Boltzmann-Gleichung ohne äußere Kraft von Bhatnagar, Gross und Krook (siehe \citetitle{krueger17}~\cite[Kap.~3.5.3]{krueger17}).
+
+Grundlegendes Element dieser Approximation ist der BGK Operator
+\[\Omega(f) := -\frac{f-f^\text{eq}}{\tau} \Delta t\]
+welcher die Partikelverteilung mit Rate \(\tau\) gegen eine Equilibriumsverteilung \(f^\text{eq}\) relaxiert. Ohne Beschränkung der Allgemeinheit setzen wir dabei  im Folgenden \(\Delta t = 1\).
+
+Wenden wir den BGK Operator auf die Boltzmann-Gleichung ohne äußere Kräfte an, erhalten wir die BGK Approximation:
+
+\begin{Definition}[BGK Approximation]
+Sei \(\tau \in \R_{\geq 0}\) eine Relaxionszeit und \(f^\text{eq}\) die von der Maxwell-Boltzmann Verteilung gegebene Equilibriumsverteilung.
+\[ (\partial_t + \xi \cdot \nabla_x) f = -\frac{1}{\tau} (f(x,\xi,t) - f^\text{eq}(x,\xi,t)) \]
+\end{Definition}
+
+An dieser Stelle bemerken wir, dass die BGK Approximation für beliebige \(\xi \in \R^2\) definiert ist. Da wir die LBM auf einem endlichen Rechner umsetzen wollen, müssen wir die Menge der betrachteten Geschwindigkeiten auf eine endliche Menge diskretisieren.
+
+Eine übliche Menge diskreter Geschwindigkeiten in 2D ist \emph{D2Q9} wobei \emph{D2} die Anzahl der Dimensionen und \emph{Q9} die Anzahl der Geschwindigkeiten verschlüsselt.
+
+\begin{Definition}[D2Q9 Modell]
+\[ \{\xi_i\}_{i=0}^8 = \left\{ \V{0}{0}, \V{-1}{\phantom{-}1}, \V{-1}{\phantom{-}0}, \V{-1}{-1}, \V{\phantom{-}0}{-1}, \V{\phantom{-}1}{-1}, \V{1}{0}, \V{1}{1}, \V{0}{1} \right\} \]
+\end{Definition}
+
+\begin{figure}[t]
+\centering
+\input{img/d2q9.tikz}
+\caption{Umgebung einer Zelle in D2Q9}
+\end{figure}
+
+Mithilfe einer solchen endlichen Menge diskreter Geschwindigkeiten lässt sich die BGK Approximation bezüglich der Geschwindigkeit diskretisieren:
+
+\begin{Definition}[BGK Geschwindigkeitsdiskretisierung]
+\label{def:disVelBGK}
+Seien \(\xi_i\) Vektoren einer Menge mikroskopischer Geschwindigkeiten wie z.B. D2Q9 und \(f_i(x,t) \equiv f(x,\xi_i,t)\). Dann ist
+\[ (\partial_t + \xi_i \cdot \nabla_x) f_i(x,t) = -\frac{1}{\tau} (f_i(x,t) - f_i^\text{eq}(x,t)) \]
+die Diskretisierung der BGK Approximation entlang der Geschwindigkeiten.
+\end{Definition}
+
+Hierbei ist die diskrete Equilibriumsverteilung \(f_i^\text{eq}\) wie folgt definiert:
+
+\begin{Definition}[Diskrete Equilibriumsverteilung]
+Seien \(\rho \in \R_{\geq 0}\) die Dichte, \(u \in \R^2\) die Gesamtgeschwindigkeit, \(\xi_i\) die \(i\)-te diskrete Geschwindigkeitskomponente, \(\omega_i\) das Gewicht jener Komponente bzgl. des Lattice und \(c_s\) die Lattice-Schallgeschwindigkeit.
+\[f_i^\text{eq} = \omega_i \rho \left( 1 + \frac{u \cdot \xi_i}{c_s^2} + \frac{(u \cdot \xi_i)^2}{2c_s^4} - \frac{u \cdot u}{2c_s^2} \right)\]
+\end{Definition}
+
+Die Werte von \(u = u(x,t)\) und \(\rho = \rho(x,t)\) in Ort \(x\) zu Zeit \(t\) ergeben sich dabei aus den \emph{Momenten} der Verteilungsfunktion \(f_i\):
+
+\begin{Definition}[Momente der Verteilungsfunktion]
+\label{def:Momente}
+\[\rho(x,t) = \sum_{i=0}^{q-1} f_i(x,t) \text{ und } \rho u(x,t) = \sum_{i=0}^{q-1} \xi_i f_i(x,t)\]
+\end{Definition}
+
+Für D2Q9 ergeben sich nach \cite[Gl.~3.60 bzw. Tab.~3.3]{krueger17} die Gewichte:
+\[\omega_0 = \frac{4}{9}, \ \omega_{2,4,6,8} = \frac{1}{9}, \ \omega_{1,3,5,7} = \frac{1}{36}\]
+
+Weiter folgt zusammen mit der Bedingung \(\sum_{i=1}^{q-1} \omega_i (\xi_i)_a (\xi_i)_b = c_s^2 \delta_{a,b}\) aus \cite[Gl.~3.60]{krueger17} die Schallgeschwindigkeit \(c_s = \sqrt{1/3}\) des Lattice. Konditionen zur Bestimmung dieser gitterspezifischen Konstanten sind hierbei die Erhaltung von Impuls und Masse sowie die Forderung von \emph{Rotationsisotropie}.
+
+Zur Entwicklung einer \emph{implementierbaren} expliziten BGK Gleichung können wir nun die Geschwindigkeitsdiskretisierung~\ref{def:disVelBGK} integrieren:
+\[ f_i(x+\xi_i, t+1) - f_i(x,t) = \int_0^1 \Omega_i(x+\xi_i s,t+s) ds \]
+
+Wobei \(\Omega_i(x,t)\) hier die diskrete Formulierung des BGK Kollisionsoperators darstellt:
+\[\Omega_i(x,t) := -\frac{1}{\tau} ( f_i(x,t) - f_i^\text{eq}(x, t) )\]
+
+Da sich die exakte Lösung des Integrals auf der rechten Seite schwierig gestaltet, wird es in der Praxis nur approximiert. Während es dazu vielfältige Ansätze gibt, beschränken wir uns an dieser Stelle auf Anwendung der Trapezregel:
+\begin{align*}
+f_i(x+\xi_i,t+1) - f_i(x,t) &= \frac{1}{2} \left( \Omega_i(x,t) + \Omega_i(x+\xi_i,t+1) \right) \\
+&= -\frac{1}{2\tau} \left( f_i(x+\xi_i,t+1) + f_i(x,t) - f_i^\text{eq}(x+\xi_i,t+1) - f_i^\text{eq}(x,t) \right)
+\end{align*}
+
+Zur expliziten Lösung dieser impliziten Gleichung benötigen wir nun nur noch eine geeignete Verschiebung von \(f_i\) und \(\tau\):
+
+\begin{Definition}[Diskrete LBM BGK Gleichung]
+\label{def:LBGKeq}
+Seien \(\overline{f_i}\) und \(\overline\tau\) definiert:
+\begin{align*}
+\overline{f_i} &= f_i + \frac{1}{2\tau}(f_i - f_i^\text{eq}) \\
+\overline\tau &= \tau + \frac{1}{2}
+\end{align*}
+
+Setzen wir diese verschobenen Variablen in das Ergebnis der Trapezregel ein, erhalten \cite[Kap.~A.5 mit \(\Delta t=1\)]{krueger17} wir die die vollständig diskretisierte LBM BGK Gleichung:
+
+\[\overline{f_i}(x+\xi_i,t+1) = \overline{f_i}(x,t) - \frac{1}{\overline\tau} (\overline{f_i}(x,t) - f_i^\text{eq}(x,t))\]
+\end{Definition}
+
+Bemerkenswert ist an dieser Stelle, dass die Momente der Verteilungen mit \(\overline{f_i}\) analog zu \ref{def:Momente} berechnet werden können:
+\begin{align*}
+\sum_{i=0}^{q-1} \overline{f_i} = \sum_{i=0}^{q-1} f_i + \frac{1}{2\tau} \sum_{i=0}^{q-1} (f_i - f_i^\text{eq}) &= \rho \\
+\sum_{i=0}^{q-1} \xi_i \overline{f_i} = \sum_{i=0}^{q-1} \xi_i f_i + \frac{1}{2\tau} \sum_{i=0}^{q-1} (f_i - f_i^\text{eq}) &= \rho u
+\end{align*}
+
+\newpage
+\subsubsection{Implementierung}
+
+Bei der Implementierung der {diskreten LBM BGK Gleichung}~\ref{def:LBGKeq} auf einem Computer ist die Aufteilung in Kollisions- und Strömungsschritt üblich.
+
+\begin{Definition}[Kollisionsschritt]
+Annäherung der Verteilungsfunktion an die lokal berechnete Equilibriumsverteilung entsprechend dem BGK Kollisionsoperator.
+\[f_i^\text{out}(x,t) = f_i(x,t) - \frac{1}{\tau}(f_i(x,t) - f_i^\text{eq}(x,t))\]
+\end{Definition}
+
+\begin{Definition}[Strömungsschritt]
+Strömen der neuen Verteilungen auf die benachbarten Zellen entsprechend der jeweiligen diskreten Geschwindigkeit.
+\[f_i(x+\xi_i,t+1) = f_i^\text{out}(x,t)\]
+\end{Definition}
+
+Bemerkenswert ist hierbei, dass der Kollisionsschritt nur lokale Informationen der jeweiligen Zelle benötigt und sich somit sehr gut zur parallelen Verarbeitung eignet.
+
+\subsubsection{Konvergenz gegen Navier-Stokes}
+
+Ziel der beschriebenen Lattice Boltzmann Methode ist die möglichst gute Approximation der schwach-kompressiblen Navier-Stokes Gleichungen auf der Simulationsdomäne.
+
+\begin{Definition}[Schwach-kompressible Navier-Stokes Gleichungen]
+Sei \(\rho\) die Dichte, \(u\) die Geschwindigkeit und \(p\) der Druck zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(S\) der Verzerrungstensor.
+\begin{align*}
+\partial_t  \rho + \nabla \cdot (\rho u) &= 0 \\
+\partial_t u + (u \cdot \nabla) u &= -\frac{1}{\rho} \nabla p + 2\nu\nabla \cdot (S)
+\end{align*}
+
+Dabei sind Druck \(p\), kinetische Viskosität \(\nu\) und Verzerrungstensor \(S\) definiert als:
+\begin{align*}
+p &= c_s^2 \rho \\
+\nu &= c_s^2 \tau \\
+S &= \frac{1}{2} (\nabla u + (\nabla u)^\top)
+\end{align*}
+\end{Definition}
+
+Nach \cite[Kap.~4.1]{krueger17} kann die asymptotische Äquivalenz von LBM BGK Gleichung und schwach-kompressiblen Navier-Stokes Gleichungen mit der Entwicklung von Chapman-Enskog gezeigt werden.
+
+\newpage
+\subsection{Herangehensweisen an Gittervergfeinerung}
+
+Grundsätzlich existieren mit der Multi-Grid bzw. Multi-Domain Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in Lattice Boltzmann Methoden. Im Westenlichen unterscheiden die Ansätze sich in der Struktur der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
+
+\subsubsection{Multi-Grid Ansatz}
+
+Bei Verfahren des Multi-Grid Ansatzes existiert das gröbste Gitter über der gesamten Domäne. Feinere Teilgitter werden über gröberen Gittern platziert und nicht aus deren Verarbeitung ausgeschlossen. Somit existieren über der gesamten \emph{Fläche} feinerer Gitter auch die Knoten gröberer Gitter.
+
+\begin{figure}[h]
+\centering
+\input{img/multi_grid.tikz}
+\caption{Multi-Grid Herangehensweise}
+\end{figure}
+
+Vorteil dieser Herangehensweise ist es, dass feinere Teilgitter im Verlauf der Simulation verschoben werden können, um beispielsweise komplexere Strömungsstrukturen zu \emph{verfolgen}. Nachteil ist, dass das Einsparpotentiale in Speicher- und Rechenbedarf durch Mehrfachabdeckung von Teilen der Simulationsdomäne mittels mehrerer Gitter nicht voll ausgenutzt werden können.
+
+\subsubsection{Multi-Domain Ansatz}
+
+\newpage
+\section{Verfeinerungsmethode}
+
+\subsection{Übersicht}
+
+Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[S.~4]{lagrava12} , bei welcher die feiner aufgelösten Teilbereiche der Simulationsdomäne aus dem gröber aufgelösten Gitter ausgeschlossen werden und sich nur in Übergangsbereichen überlappen.
+
+\begin{figure}[h]
+\centering
+\input{img/multi_domain.tikz}
+\caption{Multi-Domain Herangehensweise mit Übergangsbereich \cite[vgl.~Abb.~3]{lagrava12}}
+\end{figure}
+
+In diesen Übergangsbereichen, welche eine Breite von mindestens einer Einheit des gröberen Zellabstands haben, liegt die Hauptarbeit des Verfeinerungsverfahrens.
+
+\begin{figure}[h]
+\centering
+\input{img/overlap_zone.tikz}
+\caption{Skizze des Übergangsbereich \cite[vgl.~Abb.~4]{lagrava12}}
+\end{figure}
+
+Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf eine skalierte und gefilterte Restriktion der Verteilungen beschränkt, gestaltet sich der Übergang vom groben zum feinen Gitter aufwendiger, da Verteilungen unbestimmt sind und aus den gegebenen Daten interpoliert werden müssen.
+
+Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen.
+
+\subsection{Restriktion}
+
+\subsection{Interpolation}
+
+\subsection{Implementierung}
+
+\newpage
+\section{Evaluierung}
+
+\subsection{Wahl der Beispiele}
+
+\subsection{Rohrströmung}
+
+\newpage
+\printbibliography
+
+\newpage
+\thispagestyle{empty}
+\vspace*{8cm}
+\section*{Erkl\"arung}
+Ich  versichere  wahrheitsgem\"a\ss,  die  Arbeit selbstst\"andig verfasst,  alle  benutzten  Hilfsmittel  vollst\"andig  und  genau  angegeben  und  alles kenntlich  gemacht  zu  haben,  was  aus  Arbeiten  anderer  unver\"andert  oder  mit  Ab\"anderungen entnommen  wurde,  sowie die Satzung  des  KIT  zur  Sicherung guter wissenschaftlicher Praxis in der jeweils g\"ultigen Fassung beachtet zu haben.
+\\[2ex] 
+\noindent
+Karlsruhe, den \date{}\\[5ex]
+
+\end{document}

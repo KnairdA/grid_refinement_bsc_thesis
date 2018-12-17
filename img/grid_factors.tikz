@@ -1,0 +1,57 @@
+\begin{tikzpicture}[
+	cavity/.style = {
+		matrix of nodes,
+		nodes in empty cells,
+		column sep = -\pgflinewidth,
+		row sep    = -\pgflinewidth,
+		nodes={
+			inner sep=0mm,
+			outer sep=0pt,
+			minimum size=5mm,
+			text height=\ht\strutbox,
+			text depth=\dp\strutbox,
+			draw
+		}
+	}
+]
+
+\matrix[cavity,label=below:{\(N=15\)}] {
+	5 & 4 & 4 & 4 & 5 \\
+	3 & 3 & 2 & 3 & 4 \\
+	2 & 2 & 2 & 2 & 3 \\
+	1 & 1 & 1 & 1 & 1 \\
+	0 & 1 & 1 & 1 & 0 \\
+};
+
+\matrix[cavity,label=below:{\(N=30\)}] at (3, 0) {
+	4 & 3 & 3 & 3 & 4 \\
+	1 & 1 & 1 & 1 & 2 \\
+	1 & 0 & 0 & 1 & 2 \\
+	0 & 0 & 0 & 1 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+};
+
+\matrix[cavity,label=below:{\(N=60\)}] at (6, 0) {
+	3 & 2 & 2 & 2 & 3 \\
+	0 & 0 & 0 & 0 & 1 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+};
+
+\matrix[cavity,label=below:{\(N=120\)}] at (9, 0) {
+	2 & 1 & 1 & 1 & 2 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+};
+
+\matrix[cavity,label=below:{\(N=240\)}] at (12, 0) {
+	1 & 0 & 0 & 0 & 1 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+	0 & 0 & 0 & 0 & 0 \\
+};
+\end{tikzpicture}

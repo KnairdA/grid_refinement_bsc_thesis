@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+	scale=0.4,
+	coarse/.style={circle,draw=black,inner sep=2pt},
+	fine/.style={circle,draw=black,inner sep=1pt}
+]
+
+\foreach \x in {0,...,7}
+	\foreach \y in {0,...,7}
+		\node[coarse] at (\x,\y){ };
+
+\draw (9,3.5) node[cross out,draw=black,line width=0.5mm,rotate=45]{};
+
+\foreach \x in {0,...,8}
+	\foreach \y in {0,...,8}
+		\node[fine] at (11+0.5*\x,1+0.5*\y){ };
+
+\draw[->,line width=0.5mm] (18,3.5) -- (20,3.5);
+
+\foreach \x in {0,...,7}
+	\foreach \y in {0,...,7}
+		\node[coarse] at (22+\x,\y){ };
+\foreach \x in {0,...,8}
+	\foreach \y in {0,...,8}
+		\node[fine] at (24+0.5*\x,1+0.5*\y){ };
+\end{tikzpicture}

@@ -1,0 +1,29 @@
+\begin{tikzpicture}[
+	scale=1.5,
+	dot/.style={circle,fill=black,inner sep=2pt},
+	center/.style={circle,fill=red,inner sep=3pt},
+	arrow/.style={thick,->,>=stealth}
+]
+
+\node[dot,label=below left:\(\xi_3\)] at (0,0){ };
+\node[dot,label=below:\(\xi_4\)] at (1,0){ };
+\node[dot,label=below right:\(\xi_5\)] at (2,0){ };
+
+\node[dot,label=left:\(\xi_2\)] at (0,1){ };
+\node[center] at (1,1){ };
+\node[dot,label=right:\(\xi_6\)] at (2,1){ };
+
+\node[dot,label=above left:\(\xi_1\)] at (0,2){ };
+\node[dot,label=above:\(\xi_8\)] at (1,2){ };
+\node[dot,label=above right:\(\xi_7\)] at (2,2){ };
+
+\draw[arrow] (1.0,1.2) -- (1.0,1.8);
+\draw[arrow] (1.2,1.0) -- (1.8,1.0);
+\draw[arrow] (1.0,0.8) -- (1.0,0.2);
+\draw[arrow] (0.8,1.0) -- (0.2,1.0);
+
+\draw[arrow] (1.2,1.2) -- (1.8,1.8);
+\draw[arrow] (1.2,0.8) -- (1.8,0.2);
+\draw[arrow] (0.8,0.8) -- (0.2,0.2);
+\draw[arrow] (0.8,1.2) -- (0.2,1.8);
+\end{tikzpicture}

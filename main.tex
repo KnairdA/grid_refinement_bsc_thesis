@@ -277,6 +277,7 @@ Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[Kap.~3.1]{lagr
 \centering
 \input{img/multi_domain.tikz}
 \caption{Multi-Domain Herangehensweise mit Übergangsbereich \cite[vgl.~Abb.~3]{lagrava12}}
+\label{fig:MultiDomainOverlap}
 \end{figure}
 
 In diesen Übergangsbereichen, welche eine Breite von mindestens einer Einheit des gröberen Zellabstands haben, liegt die Hauptarbeit des Verfeinerungsverfahrens.
@@ -286,29 +287,39 @@ Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf ein
 Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen. Um diese Kopplung der verschiedenen Gitterauflösungen theoretisch erfassen zu können, müssen wir zunächst die Gitter selbst konkreter definieren:
 
 \begin{Definition}[Diskretisierung der Gitter]
-Wir betrachten zwei Gitter \(G\) und \(F\) als Diskretisierung der analytischen Domänen \(D_g\) bzw. \(D_f\). Dabei sei \(G\) das Gröbere und \(F\) das Feinere der beiden Gitter.
+Wir betrachten zwei Gitter \(G\) und \(F\) als Diskretisierung der analytischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
 \begin{align*}
-G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} \\
-F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \}
+G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
+F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
 \end{align*}
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
+Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(G\) und \(F\) um eine grobe Gitterweite \(\delta x_g\) überlappen, vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese in Form der Gitter diskretisierten Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
+
 \begin{Definition}[Gitterknoten der Übergangsbereiche]
 \begin{align*}
-U_g &:= G \cap F && \text{Grobe Gitterknoten im Übergangsbereich} \\
-U_f &:= F \cap (D_f \cap D_g) && \text{Feine Gitterknoten im Übergangsbereich} \\
-U_{g \to f} &:= \partial D_f \cap (U_f \cup U_g) && \text{Gitterknoten mit Übertragung von grob nach fein} \\
-U_{f \to g} &:= \partial D_g \cap (U_f \cup U_g) && \text{Gitterknoten mit Übertragung von fein nach grob} \\
+U_g &:= G \cap F && \text{Grobe Knoten im Übergangsbereich} \\
+U_f &:= F \cap (D_f \cap D_g) && \text{Feine Knoten im Übergangsbereich} \\
+U_{g \to f} &:= \partial D_f \cap (U_f \cup U_g) && \text{Knoten mit Übertragung von grob nach fein} \\
+U_{f \to g} &:= \partial D_g \cap (U_f \cup U_g) && \text{Knoten mit Übertragung von fein nach grob} \\
 \end{align*}
 \end{Definition}
+
+Die Übertragungsrichtungen in \(U_{g \to f}\) und \(U_{f \to g}\) ergeben sich aus den jeweils fehlenden Verteilungsfunktionen an den Rändern der Gitter. So fehlen beispielsweise zur Kollision der groben Gitterknoten in \(U_{f \to g}\) Verteilungsfunktionen in Richtung des feinen Gitters, während die feinen Zellen in dieser Menge noch vollständig definiert sind, da sie im Inneren des feinen Gitters liegen.
+
+Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches \(U_g \cup U_f\) der Mindestbreite \(\delta x_g\) erklären: Gäbe es diesen nicht, so fehlten an der Grenze zwischen grobem und feinem Gitter Verteilungsfunktionen in beide Richtungen zugleich.
 
 \begin{figure}[h]
 \centering
 \input{img/overlap_zone.tikz}
 \caption{Skizze des Übergangsbereich \cite[vgl.~Abb.~4]{lagrava12}}
+\label{fig:OverlapZone}
 \end{figure}
 
+Die Aufgabe der Restriktions- und Interpolationsschritte des Verfahrens besteht also \emph{nur} darin, diese jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
+
+\newpage
 \subsection{Restriktion}
 
 \subsection{Interpolation}

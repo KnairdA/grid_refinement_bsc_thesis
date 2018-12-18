@@ -44,7 +44,13 @@
 \newcommand{\Z}{\mathbb{Z}} % ganze
 \newcommand{\N}{\mathbb{N}} % natuerliche
 
+\newcommand{\G}{\mathcal{G}} % Grobes Gitter
+\newcommand{\F}{\mathcal{F}} % Feines Gitter
+\newcommand{\U}{\mathcal{U}} % Übergangsbereich
+
 \newcommand{\V}[2]{\ensuremath{\begin{pmatrix}#1\\#2\end{pmatrix}}}
+
+\newenvironment{rcases}{\left.\begin{aligned}}{\end{aligned}\right\rbrace}
 
 \begin{document}
 
@@ -148,8 +154,8 @@ die Diskretisierung der BGK Approximation entlang der Geschwindigkeiten.
 Hierbei ist die diskrete Equilibriumsverteilung \(f_i^\text{eq}\) wie folgt definiert:
 
 \begin{Definition}[Diskrete Equilibriumsverteilung]
-Seien \(\rho \in \R_{\geq 0}\) die Dichte, \(u \in \R^2\) die Gesamtgeschwindigkeit, \(\xi_i\) die \(i\)-te diskrete Geschwindigkeitskomponente, \(\omega_i\) das Gewicht jener Komponente bzgl. des Lattice und \(c_s\) die Lattice-Schallgeschwindigkeit.
-\[f_i^\text{eq} = \omega_i \rho \left( 1 + \frac{u \cdot \xi_i}{c_s^2} + \frac{(u \cdot \xi_i)^2}{2c_s^4} - \frac{u \cdot u}{2c_s^2} \right)\]
+Seien \(\rho \in \R_{\geq 0}\) die Dichte, \(u \in \R^2\) die Gesamtgeschwindigkeit, \(\xi_i\) die \(i\)-te diskrete Geschwindigkeitskomponente, \(w_i\) das Gewicht jener Komponente bzgl. des Lattice und \(c_s\) die Lattice-Schallgeschwindigkeit.
+\[f_i^\text{eq} = w_i \rho \left( 1 + \frac{u \cdot \xi_i}{c_s^2} + \frac{(u \cdot \xi_i)^2}{2c_s^4} - \frac{u \cdot u}{2c_s^2} \right)\]
 \end{Definition}
 
 Die Werte von \(u = u(x,t)\) und \(\rho = \rho(x,t)\) in Ort \(x\) zu Zeit \(t\) ergeben sich dabei aus den \emph{Momenten} der Verteilungsfunktion \(f_i\):
@@ -160,9 +166,9 @@ Die Werte von \(u = u(x,t)\) und \(\rho = \rho(x,t)\) in Ort \(x\) zu Zeit \(t\)
 \end{Definition}
 
 Für D2Q9 ergeben sich nach \cite[Gl.~3.60 bzw. Tab.~3.3]{krueger17} die Gewichte:
-\[\omega_0 = \frac{4}{9}, \ \omega_{2,4,6,8} = \frac{1}{9}, \ \omega_{1,3,5,7} = \frac{1}{36}\]
+\[w_0 = \frac{4}{9}, \ w_{2,4,6,8} = \frac{1}{9}, \ w_{1,3,5,7} = \frac{1}{36}\]
 
-Weiter folgt zusammen mit der Bedingung \(\sum_{i=1}^{q-1} \omega_i (\xi_i)_a (\xi_i)_b = c_s^2 \delta_{a,b}\) aus \cite[Gl.~3.60]{krueger17} die Schallgeschwindigkeit \(c_s = \sqrt{1/3}\) des Lattice. Konditionen zur Bestimmung dieser gitterspezifischen Konstanten sind hierbei die Erhaltung von Impuls und Masse sowie die Forderung von \emph{Rotationsisotropie}.
+Weiter folgt zusammen mit der Bedingung \(\sum_{i=1}^{q-1} w_i (\xi_i)_a (\xi_i)_b = c_s^2 \delta_{a,b}\) aus \cite[Gl.~3.60]{krueger17} die Schallgeschwindigkeit \(c_s = \sqrt{1/3}\) des Lattice. Konditionen zur Bestimmung dieser gitterspezifischen Konstanten sind hierbei die Erhaltung von Impuls und Masse sowie die Forderung von \emph{Rotationsisotropie}.
 
 Zur Entwicklung einer \emph{implementierbaren} expliziten BGK Gleichung können wir nun die Geschwindigkeitsdiskretisierung~\ref{def:disVelBGK} integrieren:
 \[ f_i(x+\xi_i, t+1) - f_i(x,t) = \int_0^1 \Omega_i(x+\xi_i s,t+s) ds \]
@@ -282,33 +288,33 @@ Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[Kap.~3.1]{lagr
 
 In diesen Übergangsbereichen, welche eine Breite von mindestens einer Einheit des gröberen Zellabstands haben, liegt die Hauptarbeit des Verfeinerungsverfahrens.
 
-Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf eine skalierte und gefilterte Restriktion der Verteilungen beschränkt, gestaltet sich der Übergang vom groben zum feinen Gitter aufwendiger, da Verteilungen unbestimmt sind und aus den gegebenen Daten interpoliert werden müssen.
+Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf eine skalierte und gefilterte Restriktion der Verteilungen beschränkt, gestaltet sich der Übergang vom groben zum feinen Gitter aufwendiger, da feine Knoten, für deren Position kein grober Knoten existiert, aus den übrigen Daten interpoliert werden müssen.
 
 Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen. Um diese Kopplung der verschiedenen Gitterauflösungen theoretisch erfassen zu können, müssen wir zunächst die Gitter selbst konkreter definieren:
 
 \begin{Definition}[Diskretisierung der Gitter]
-Wir betrachten zwei Gitter \(G\) und \(F\) als Diskretisierung der analytischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
+Wir betrachten zwei Gitter \(\G\) und \(\F\) als Diskretisierung der analytischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
 \begin{align*}
-G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
-F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
+\G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
+\F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
 \end{align*}
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
-Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(G\) und \(F\) um eine grobe Gitterweite \(\delta x_g\) überlappen, vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese in Form der Gitter diskretisierten Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
+Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen, vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese in Form der Gitter diskretisierten Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
 
 \begin{Definition}[Gitterknoten der Übergangsbereiche]
 \begin{align*}
-U_g &:= G \cap F && \text{Grobe Knoten im Übergangsbereich} \\
-U_f &:= F \cap (D_f \cap D_g) && \text{Feine Knoten im Übergangsbereich} \\
-U_{g \to f} &:= \partial D_f \cap (U_f \cup U_g) && \text{Knoten mit Übertragung von grob nach fein} \\
-U_{f \to g} &:= \partial D_g \cap (U_f \cup U_g) && \text{Knoten mit Übertragung von fein nach grob} \\
+\U_g &:= \G \cap \F && \text{Grobe Knoten im Übergangsbereich} \\
+\U_f &:= \F \cap (D_f \cap D_g) && \text{Feine Knoten im Übergangsbereich} \\
+\U_{g \to f} &:= \partial D_f \cap (\U_f \cup \U_g) && \text{Knoten mit Übertragung von grob nach fein} \\
+\U_{f \to g} &:= \partial D_g \cap (\U_f \cup \U_g) && \text{Knoten mit Übertragung von fein nach grob} \\
 \end{align*}
 \end{Definition}
 
-Die Übertragungsrichtungen in \(U_{g \to f}\) und \(U_{f \to g}\) ergeben sich aus den jeweils fehlenden Verteilungsfunktionen an den Rändern der Gitter. So fehlen beispielsweise zur Kollision der groben Gitterknoten in \(U_{f \to g}\) Verteilungsfunktionen in Richtung des feinen Gitters, während die feinen Zellen in dieser Menge noch vollständig definiert sind, da sie im Inneren des feinen Gitters liegen.
+Die Übertragungsrichtungen in \(\U_{g \to f}\) und \(\U_{f \to g}\) ergeben sich aus den jeweils fehlenden Verteilungsfunktionen an den Rändern der Gitter. So fehlen beispielsweise zur Kollision der groben Gitterknoten in \(\U_{f \to g}\) Verteilungsfunktionen in Richtung des feinen Gitters, während die feinen Zellen in dieser Menge noch vollständig definiert sind, da sie im Inneren des feinen Gitters liegen.
 
-Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches \(U_g \cup U_f\) der Mindestbreite \(\delta x_g\) erklären: Gäbe es diesen nicht, so fehlten an der Grenze zwischen grobem und feinem Gitter Verteilungsfunktionen in beide Richtungen zugleich.
+Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches \(\U_g \cup \U_f\) der Mindestbreite \(\delta x_g\) erklären: Gäbe es diesen nicht, so fehlten an der Grenze zwischen grobem und feinem Gitter Verteilungsfunktionen in beide Richtungen zugleich.
 
 \begin{figure}[h]
 \centering
@@ -317,9 +323,54 @@ Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches
 \label{fig:OverlapZone}
 \end{figure}
 
-Die Aufgabe der Restriktions- und Interpolationsschritte des Verfahrens besteht also \emph{nur} darin, diese jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
+Die Aufgabe der Skalierungs-, Restriktions- und Interpolationsschritte des Verfahrens besteht also \emph{nur} darin, diese jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
 
 \newpage
+\subsection{Skalierung}
+
+Während die Skalierung räumlicher Größen durch die Festlegung\footnote{Diese Festlegung ist keine besondere Eigenschaft des Verfahrens \cite{lagrava12} von Lagrava et al., sondern ist typisch für Gitterverfeinerung in LBM. Siehe beispielsweise !TBD!} des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
+
+\begin{Definition}[Konvektive Skalierung]
+Sei \(\delta t > 0\) die zeitliche und \(\delta x > 0\) die räumliche Diskretisierung. Dann gilt bei konvektiver Skalierung das Verhältnis:
+\[ \delta t \sim \delta x \]
+Es besteht also eine lineare Proportionalität.
+\end{Definition}
+
+\begin{Definition}[Diffusive Skalierung]
+Sei \(\delta t > 0\) die zeitliche und \(\delta x > 0\) die räumliche Diskretisierung. Dann gilt bei diffusiver Skalierung das Verhältnis:
+\[ \delta t \sim \delta x^2 \]
+Es besteht hier also eine quadratische Proportionalität. Im Vergleich zu einer konvektiven Skalierung ist die zeitliche Auflösung somit um eine Ordnung feiner.
+\end{Definition}
+
+Es ist klar zu erkennen, dass diffusive Skalierung einen deutlich größeren numerischen Aufwand gegenüber der konvektiven Skalierung nach sich zieht. Vorteil der bei diffusiver Skalierung erhöhten Schrittanzahl pro Zeiteinheit sind kleinere Fehler.
+
+Für die Autoren des hier erörterten Gitterverfeinerungsverfahrens überwog jedoch das Argument der numerischen Effizienz, weshalb auch wir hier nun die konvektive Skalierung betrachten wollen. Die Austauschbarkeit des Skalierungsverfahrens sollte jedoch bei der Implementierung in OpenLB beachtet werden, da dieser Aspekt eine weitere prinzipiell flexible Komponente des Verfahrens darstellt.
+
+\bigskip
+
+Aus der Wahl von konvektiver Skalierung ergibt sich zunächst:
+\[\frac{\delta t_g}{\delta x_g} = \frac{\delta t_f}{\delta x_f} \land \delta x_f = \frac{\delta x_g}{2} \implies \delta t_g = 2 \cdot \delta t_f \]
+Auf dem feinen Gitter müssen also doppelt so viele Zeitschritte wie auf dem groben Gitter durchgeführt werden. Geschwindigkeit, Druck und Dichte sind stetig im Gitterübergang. Dies gilt nicht für die kinetische Viskosität \(\nu = c_s^2 \tau\), was wir bei der Herleitung der feinen Relaxionszeit \(\tau_f\) aus \(\tau_g\) beachten müssen.
+
+\begin{Definition}[Physikalische Reynolds-Zahl]
+\label{def:PhysicalReynoldsNumber}
+Seien \(U\) die charakteristische Geschwindigkeit, \(L\) die charakteristische Länge und \(\nu\) die kinetische Viskosität in physikalischen Einheiten. Dann ist die Reynolds-Zahl definiert als: \[\text{Re} := \frac{U L}{\nu}\]
+\end{Definition}
+
+\begin{Definition}[Lattice Reynolds-Zahl]
+\label{def:LatticeReynoldsNumber}
+Sei \(s \in \{f, g\}\) Symbol des feinen oder groben Gitters. 
+Seien \(U_s := \delta t_s / \delta x_s \cdot u\) die charakteristische Geschwindigkeit, \(L_s := 1 / \delta x_s \cdot L\) die charakteristische Länge und \(\nu_s\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_s := \frac{U_s \ell_s}{\nu_s} = \frac{\delta t_s u \ell}{(\delta x_s)^2 \nu_s} \]
+\end{Definition}
+
+Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit der Reynolds-Zahl von dem verwendeten Gitter. Einsetzen von Definition~\ref{def:LatticeReynoldsNumber} ergibt dann:
+\begin{align*}
+\text{Re}_g = \text{Re}_f &\iff \frac{\delta t_g u \ell}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f u \ell}{(\delta x_f)^2 \nu_f} \\
+&\iff \frac{\delta t_g}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f}{(\delta x_f)^2 \nu_f} \\
+&\iff \frac{\delta t_g}{\delta x_g \delta x_f \nu_f} = \frac{\delta t_f}{\delta x_f \delta x_g \nu_g} \\
+&\iff \frac{\delta t_g}{\nu_f} = \frac{\delta t_f}{\nu_g} \\
+\end{align*}
+
 \subsection{Restriktion}
 
 \subsection{Interpolation}

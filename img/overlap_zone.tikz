@@ -16,8 +16,8 @@
 \draw[dashed,thick] (1.8,-0.2) rectangle (2.2,2.2);
 \draw[dashed,thick] (2.8,-0.2) rectangle (3.2,2.2);
 
-\draw[arrow] (2,3.3) node[right] {Übertragung von grob nach fein, \(U_{g \to f}\)} -- (2,2.3);
-\draw[arrow] (3,2.8) node[right] {Übertragung von fein nach grob, \(U_{f \to g}\)} -- (3,2.3);
+\draw[arrow] (2,3.3) node[right] {Übertragung von grob nach fein, \(\U_{g \to f}\)} -- (2,2.3);
+\draw[arrow] (3,2.8) node[right] {Übertragung von fein nach grob, \(\U_{f \to g}\)} -- (3,2.3);
 
 \draw[decorate,decoration={brace,amplitude=10pt,mirror},line width=1pt]
 (1.8,-0.4) -- (3.2,-0.4) node[midway,below,yshift=-6pt] {Übergangsbereich};

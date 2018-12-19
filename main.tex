@@ -328,7 +328,7 @@ Die Aufgabe der Skalierungs-, Restriktions- und Interpolationsschritte des Verfa
 \newpage
 \subsection{Skalierung}
 
-Während die Skalierung räumlicher Größen durch die Festlegung\footnote{Diese Festlegung ist keine besondere Eigenschaft des Verfahrens \cite{lagrava12} von Lagrava et al., sondern ist typisch für Gitterverfeinerung in LBM. Siehe beispielsweise !TBD!} des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
+Während die Skalierung räumlicher Größen durch die Festlegung des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
 
 \begin{Definition}[Konvektive Skalierung]
 Sei \(\delta t > 0\) die zeitliche und \(\delta x > 0\) die räumliche Diskretisierung. Dann gilt bei konvektiver Skalierung das Verhältnis:
@@ -349,7 +349,7 @@ Für die Autoren des hier erörterten Gitterverfeinerungsverfahrens überwog jed
 \bigskip
 
 Aus der Wahl von konvektiver Skalierung ergibt sich zunächst:
-\[\frac{\delta t_g}{\delta x_g} = \frac{\delta t_f}{\delta x_f} \land \delta x_f = \frac{\delta x_g}{2} \implies \delta t_g = 2 \cdot \delta t_f \]
+\[\frac{\delta t_g}{\delta x_g} = \frac{\delta t_f}{\delta x_f} \land \delta x_f = \frac{\delta x_g}{2} \implies \delta t_f = \frac{\delta t_g}{2} \]
 Auf dem feinen Gitter müssen also doppelt so viele Zeitschritte wie auf dem groben Gitter durchgeführt werden. Geschwindigkeit, Druck und Dichte sind stetig im Gitterübergang. Dies gilt nicht für die kinetische Viskosität \(\nu = c_s^2 \tau\), was wir bei der Herleitung der feinen Relaxionszeit \(\tau_f\) aus \(\tau_g\) beachten müssen.
 
 \begin{Definition}[Physikalische Reynolds-Zahl]
@@ -359,17 +359,21 @@ Seien \(U\) die charakteristische Geschwindigkeit, \(L\) die charakteristische L
 
 \begin{Definition}[Lattice Reynolds-Zahl]
 \label{def:LatticeReynoldsNumber}
-Sei \(s \in \{f, g\}\) Symbol des feinen oder groben Gitters. 
-Seien \(U_s := \delta t_s / \delta x_s \cdot u\) die charakteristische Geschwindigkeit, \(L_s := 1 / \delta x_s \cdot L\) die charakteristische Länge und \(\nu_s\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_s := \frac{U_s \ell_s}{\nu_s} = \frac{\delta t_s u \ell}{(\delta x_s)^2 \nu_s} \]
+Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters. 
+Seien \(U_\# := \delta t_\# / \delta x_\# \cdot u\) die charakteristische Geschwindigkeit, \(L_\# := 1 / \delta x_\# \cdot L\) die charakteristische Länge und \(\nu_\# := c_s^2 \tau_\#\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_\# := \frac{U_\# \ell_\#}{\nu_\#} = \frac{\delta t_\# u \ell}{(\delta x_\#)^2 \nu_\#} \]
 \end{Definition}
 
-Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit der Reynolds-Zahl von dem verwendeten Gitter. Einsetzen von Definition~\ref{def:LatticeReynoldsNumber} ergibt dann:
+Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit von Reynolds-Zahl und Gitterauflösung. Diese Gleichsetzung ist sinnvoll, da die Reynolds-Zahl gerade die Vergleichbarkeit von Strömungen verschiedener Modellgrößen ermöglicht. Durch Einsetzen von Definition~\ref{def:LatticeReynoldsNumber} erhalten wir eine Verknüpfung der Relaxionszeiten \(\tau_f\) und \(\tau_g\):
 \begin{align*}
 \text{Re}_g = \text{Re}_f &\iff \frac{\delta t_g u \ell}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f u \ell}{(\delta x_f)^2 \nu_f} \\
 &\iff \frac{\delta t_g}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f}{(\delta x_f)^2 \nu_f} \\
-&\iff \frac{\delta t_g}{\delta x_g \delta x_f \nu_f} = \frac{\delta t_f}{\delta x_f \delta x_g \nu_g} \\
-&\iff \frac{\delta t_g}{\nu_f} = \frac{\delta t_f}{\nu_g} \\
+&\iff \frac{\delta t_g}{(\delta x_g)^2 c_s^2 \tau_g} = \frac{\delta t_f}{(\delta x_f)^2 c_s^2 \tau_f} \\
+&\iff \tau_f = \frac{\delta t_f (\delta x_g)^2}{(\delta x_f)^2 \delta t_g} \tau_g \\
+&\iff \tau_f = 2 \tau_g \\
 \end{align*}
+
+Für die zur expliziten Lösung der diskreten LBM BGK Gleichung in Definition~\ref{def:LBGKeq} verschobenen Relaxionszeiten ergibt sich somit:
+\[\overline\tau_f = 2 \overline\tau_g - \frac{1}{2}\]
 
 \subsection{Restriktion}
 

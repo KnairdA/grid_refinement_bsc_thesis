@@ -7,6 +7,7 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{latexsym}
 \usepackage{amsmath,amssymb,amsthm}
+%\usepackage[euler-digits,euler-hat-accent]{eulervm}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -37,10 +38,7 @@
 
 \numberwithin{equation}{section}
 
-\newcommand{\C}{\mathbb{C}} % komplexe
-\newcommand{\K}{\mathbb{K}} % komplexe
 \newcommand{\R}{\mathbb{R}} % reelle
-\newcommand{\Q}{\mathbb{Q}} % rationale
 \newcommand{\Z}{\mathbb{Z}} % ganze
 \newcommand{\N}{\mathbb{N}} % natuerliche
 
@@ -48,8 +46,9 @@
 \newcommand{\F}{\mathcal{F}} % Feines Gitter
 \newcommand{\U}{\mathcal{U}} % Übergangsbereich
 
-\newcommand{\V}[2]{\ensuremath{\begin{pmatrix}#1\\#2\end{pmatrix}}}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
+\newcommand{\V}[2]{\ensuremath{\begin{pmatrix}#1\\#2\end{pmatrix}}}
 \newenvironment{rcases}{\left.\begin{aligned}}{\end{aligned}\right\rbrace}
 
 \begin{document}
@@ -154,6 +153,7 @@ die Diskretisierung der BGK Approximation entlang der Geschwindigkeiten.
 Hierbei ist die diskrete Equilibriumsverteilung \(f_i^\text{eq}\) wie folgt definiert:
 
 \begin{Definition}[Diskrete Equilibriumsverteilung]
+\label{def:fieq}
 Seien \(\rho \in \R_{\geq 0}\) die Dichte, \(u \in \R^2\) die Gesamtgeschwindigkeit, \(\xi_i\) die \(i\)-te diskrete Geschwindigkeitskomponente, \(w_i\) das Gewicht jener Komponente bzgl. des Lattice und \(c_s\) die Lattice-Schallgeschwindigkeit.
 \[f_i^\text{eq} = w_i \rho \left( 1 + \frac{u \cdot \xi_i}{c_s^2} + \frac{(u \cdot \xi_i)^2}{2c_s^4} - \frac{u \cdot u}{2c_s^2} \right)\]
 \end{Definition}
@@ -349,7 +349,7 @@ Für die Autoren des hier erörterten Gitterverfeinerungsverfahrens überwog jed
 \bigskip
 
 Aus der Wahl von konvektiver Skalierung ergibt sich zunächst:
-\[\frac{\delta t_g}{\delta x_g} = \frac{\delta t_f}{\delta x_f} \land \delta x_f = \frac{\delta x_g}{2} \implies \delta t_f = \frac{\delta t_g}{2} \]
+\[\frac{\delta t_g}{\delta x_g} = \frac{\delta t_f}{\delta x_f} \land \delta x_f = \frac{\delta x_g}{2} \implies \delta t_f = \frac{\delta t_g}{2} \numberthis\label{eq:gridTime}\]
 Auf dem feinen Gitter müssen also doppelt so viele Zeitschritte wie auf dem groben Gitter durchgeführt werden. Geschwindigkeit, Druck und Dichte sind stetig im Gitterübergang. Dies gilt nicht für die kinetische Viskosität \(\nu = c_s^2 \tau\), was wir bei der Herleitung der feinen Relaxionszeit \(\tau_f\) aus \(\tau_g\) beachten müssen.
 
 \begin{Definition}[Physikalische Reynolds-Zahl]
@@ -359,21 +359,23 @@ Seien \(U\) die charakteristische Geschwindigkeit, \(L\) die charakteristische L
 
 \begin{Definition}[Lattice Reynolds-Zahl]
 \label{def:LatticeReynoldsNumber}
-Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters. 
-Seien \(U_\# := \delta t_\# / \delta x_\# \cdot u\) die charakteristische Geschwindigkeit, \(L_\# := 1 / \delta x_\# \cdot L\) die charakteristische Länge und \(\nu_\# := c_s^2 \tau_\#\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_\# := \frac{U_\# \ell_\#}{\nu_\#} = \frac{\delta t_\# u \ell}{(\delta x_\#)^2 \nu_\#} \]
+Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters.
+Seien \(U_\# := \delta t_\# / \delta x_\# \cdot U\) die charakteristische Geschwindigkeit, \(L_\# := 1 / \delta x_\# \cdot L\) die charakteristische Länge und \(\nu_\# := c_s^2 \tau_\#\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_\# := \frac{U_\# L_\#}{\nu_\#} = \frac{\delta t_\# U L}{(\delta x_\#)^2 \nu_\#} \]
 \end{Definition}
 
 Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit von Reynolds-Zahl und Gitterauflösung. Diese Gleichsetzung ist sinnvoll, da die Reynolds-Zahl gerade die Vergleichbarkeit von Strömungen verschiedener Modellgrößen ermöglicht. Durch Einsetzen von Definition~\ref{def:LatticeReynoldsNumber} erhalten wir eine Verknüpfung der Relaxionszeiten \(\tau_f\) und \(\tau_g\):
 \begin{align*}
-\text{Re}_g = \text{Re}_f &\iff \frac{\delta t_g u \ell}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f u \ell}{(\delta x_f)^2 \nu_f} \\
+\text{Re}_g = \text{Re}_f &\iff \frac{\delta t_g U L}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f U L}{(\delta x_f)^2 \nu_f} \\
 &\iff \frac{\delta t_g}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f}{(\delta x_f)^2 \nu_f} \\
 &\iff \frac{\delta t_g}{(\delta x_g)^2 c_s^2 \tau_g} = \frac{\delta t_f}{(\delta x_f)^2 c_s^2 \tau_f} \\
 &\iff \tau_f = \frac{\delta t_f (\delta x_g)^2}{(\delta x_f)^2 \delta t_g} \tau_g \\
-&\iff \tau_f = 2 \tau_g \\
+&\iff \tau_f = 2 \tau_g \numberthis\label{eq:gridTau}\\
 \end{align*}
 
 Für die zur expliziten Lösung der diskreten LBM BGK Gleichung in Definition~\ref{def:LBGKeq} verschobenen Relaxionszeiten ergibt sich somit:
-\[\overline\tau_f = 2 \overline\tau_g - \frac{1}{2}\]
+\[\overline\tau_f = 2 \overline\tau_g - \frac{1}{2} \numberthis\label{eq:gridTauShift}\]
+
+Die Equilibriumsverteilung \(f_i^\text{eq}\) ergibt sich nach Definition~\ref{def:fieq} aus Geschwindigkeit \(u\) und Dichte \(\rho\). Sie sind also explizit unabhängig der Gitterauflösung und, wie erwähnt, stetig im Gitterübergang. Diese Aussage gilt nicht für die Nicht-Equilibriumsverteilung \(f_i^\text{neq}\), da diese vom Geschwindigkeitsgradienten \(\nabla u\) abhängt.
 
 \subsection{Restriktion}
 

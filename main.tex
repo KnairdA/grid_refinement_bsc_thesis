@@ -220,26 +220,53 @@ Strömen der neuen Verteilungen auf die benachbarten Zellen entsprechend der jew
 
 Bemerkenswert ist hierbei, dass der Kollisionsschritt nur lokale Informationen der jeweiligen Zelle benötigt und sich somit sehr gut zur parallelen Verarbeitung eignet.
 
-\subsubsection{Konvergenz gegen Navier-Stokes}
+\subsubsection{Chapman-Enskog Analyse}
 
 Ziel der beschriebenen Lattice Boltzmann Methode ist die möglichst gute Approximation der schwach-kompressiblen Navier-Stokes Gleichungen auf der Simulationsdomäne.
 
 \begin{Definition}[Schwach-kompressible Navier-Stokes Gleichungen]
-Sei \(\rho\) die Dichte, \(u\) die Geschwindigkeit und \(p\) der Druck zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(S\) der Verzerrungstensor.
+Sei \(\rho\) die Dichte, \(u\) die Geschwindigkeit und \(p\) der Druck zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(\mathrm{S}\) der Verzerrungstensor.
 \begin{align*}
 \partial_t  \rho + \nabla \cdot (\rho u) &= 0 \\
-\partial_t u + (u \cdot \nabla) u &= -\frac{1}{\rho} \nabla p + 2\nu\nabla \cdot (S)
+\partial_t u + (u \cdot \nabla) u &= -\frac{1}{\rho} \nabla p + 2\nu\nabla \cdot (\mathrm{S})
 \end{align*}
 
-Dabei sind Druck \(p\), kinetische Viskosität \(\nu\) und Verzerrungstensor \(S\) definiert als:
+Dabei sind Druck \(p\), kinetische Viskosität \(\nu\) und Verzerrungstensor \(\mathrm{S}\) definiert als:
 \begin{align*}
 p &= c_s^2 \rho \\
 \nu &= c_s^2 \tau \\
-S &= \frac{1}{2} (\nabla u + (\nabla u)^\top)
+\mathrm{S} &= \frac{1}{2} (\nabla u + (\nabla u)^\top) \numberthis\label{eq:Verzerrungstensor}
 \end{align*}
 \end{Definition}
 
 Nach \cite[Kap.~4.1]{krueger17} kann die asymptotische Äquivalenz von LBM BGK Gleichung und schwach-kompressiblen Navier-Stokes Gleichungen mit der Entwicklung von Chapman-Enskog gezeigt werden.
+
+\begin{Definition}[Chapman-Enskog Ansatz]
+Der Chapman-Enskog Ansatz besteht in der Annahme, dass die Verteilungsfunktion \(f_i\) als leicht gestörte Equilibriumsverteilung dargestellt werden kann: \[f_i = f_i^\text{eq} + \epsilon f_i^{(1)} + \mathcal{O}(\epsilon^2)\]
+Hierbei ist \(\epsilon f_i^{(1)}\) mit \(\epsilon \ll 1\) der Störterm 1. Ordnung. Dieser ist gegeben als:
+\[\epsilon f_i^{(1)} = \frac{w_i}{2 c_s^4} (\xi_i \xi_i - c_s^2 I) : \mathrm{\Pi}^{(1)} \numberthis\label{eq:firstOrderPertubation}\]
+Wobei das Störmoment \(\mathrm\Pi^{(1)}\) definiert ist als:
+\[\mathrm\Pi^{(1)} = \sum_{i=0}^{q-1} \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \tau \mathrm{S} \numberthis\label{eq:pertubationMoment}\]
+\end{Definition}
+
+%\[\epsilon f_i^{(1)} = \frac{w_i}{2 c_s^4} (\xi_i \xi_i - c_s^2 I) : \sum_{j=0}^{q-1} \xi_j \xi_j \epsilon f_j^{(1)}\]
+%\[\sum_i \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \tau S\]
+%\[\sum_i \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \tau \frac{1}{2}(\nabla u + (\nabla u)^\top)\]
+%\[\sum_i \xi_i \xi_i \epsilon f_i^{(1)} = - c_s^2 \rho \tau (\nabla u + (\nabla u)^\top)\]
+%\[\epsilon f_i^{(1)} = \frac{w_i}{2 c_s^4} (\xi_i \xi_i - c_s^2 I) : - c_s^2 \rho \tau (\nabla u + (\nabla u)^\top)\]
+%\[\epsilon f_i^{(1)} = - \frac{w_i \rho \tau}{2 c_s^2} (\xi_i \xi_i - c_s^2 I) : (\nabla u + (\nabla u)^\top)\]
+%\[\epsilon f_i^{(1)} = - \frac{w_i \rho \tau}{c_s^2} (\xi_i \xi_i - c_s^2 I) : \frac{1}{2} (\nabla u + (\nabla u)^\top)\]
+%\[\epsilon f_i^{(1)} = - \frac{w_i \rho \tau}{c_s^2} Q_i : S\]
+
+\begin{Definition}[Nicht-Equilibriumsverteilung]
+Die Relaxion der Verteilungsfunktion \(f_i\) gegen die Equilibriumsverteilung \(f_i^\text{eq}\) impliziert eine Dekomposition in Equilibriums- und Nicht-Equilibriumsverteilung: \[f_i := f_i^\text{eq} + f_i^\text{neq}\]
+\end{Definition}
+
+Unter Vernachlässigung von Störtermen der Ordnung \(\mathcal{O}(\epsilon^2)\) ergibt sich eine Näherung der Nicht-Equilibriumsverteilung:
+\[f_i^\text{neq} \cong \epsilon f_i^{(1)}\]
+
+Diese Darstellung können wir unter Kombination von (\ref{eq:firstOrderPertubation}) und (\ref{eq:pertubationMoment}) ausführen als:
+\[f_i^\text{neq} \cong -\frac{w_i \rho \tau}{c_s^2} (\xi_i \xi_i - c_s^2) : \mathrm{S} \numberthis\label{eq:approxFneq}\]
 
 \newpage
 \subsection{Herangehensweisen an Gitterverfeinerung}
@@ -375,7 +402,24 @@ Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit von Reyn
 Für die zur expliziten Lösung der diskreten LBM BGK Gleichung in Definition~\ref{def:LBGKeq} verschobenen Relaxionszeiten ergibt sich somit:
 \[\overline\tau_f = 2 \overline\tau_g - \frac{1}{2} \numberthis\label{eq:gridTauShift}\]
 
-Die Equilibriumsverteilung \(f_i^\text{eq}\) ergibt sich nach Definition~\ref{def:fieq} aus Geschwindigkeit \(u\) und Dichte \(\rho\). Sie sind also explizit unabhängig der Gitterauflösung und, wie erwähnt, stetig im Gitterübergang. Diese Aussage gilt nicht für die Nicht-Equilibriumsverteilung \(f_i^\text{neq}\), da diese vom Geschwindigkeitsgradienten \(\nabla u\) abhängt.
+Die Equilibriumsverteilung \(f_i^\text{eq}\) ergibt sich nach Definition~\ref{def:fieq} aus Geschwindigkeit \(u\) und Dichte \(\rho\). Sie sind also explizit unabhängig der Gitterauflösung und, wie erwähnt, stetig im Gitterübergang. Diese Aussage gilt nicht für die Nicht-Equilibriumsverteilung \(f_i^\text{neq}\), da diese nach (\ref{eq:approxFneq}) von dem Geschwindigkeitsgradienten \(\nabla u\) abhängt.
+
+Bezeichnen nun \(f_{f,i}^\text{neq}\) und \(f_{g,i}^\text{neq}\) die gitterspezifischen Nicht-Equilibriumsanteile und \(\mathrm{S}_f\) sowie \(\mathrm{S}_g\) die entsprechenden Verzerrungstensoren. Zur Skalierung von \(f_{f,i}^\text{neq}\) suchen wir ein \(\alpha \in \R\) s.d. gilt: \[f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneqReq}\]
+
+Mit Hilfe von \ref{eq:approxFneq} lässt sich diese Relation nun nach \(\alpha\) auflösen:
+\begin{align*}
+f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} &\iff -\frac{w_i \rho \tau_f}{c_s^2} (\xi_i \xi_i - c_s^2) : \mathrm{S}_f = -\alpha \frac{w_i \rho \tau_g}{c_s^2} (\xi_i \xi_i - c_s^2) : \mathrm{S}_g \\
+&\iff \tau_f (\xi_i \xi_i - c_s^2) : \mathrm{S}_f = \alpha \tau_g (\xi_i \xi_i - c_s^2) : \mathrm{S}_g \\
+&\iff \frac{\tau_f}{\delta t_f} (\xi_i \xi_i - c_s^2) : \mathrm{S} = \alpha \frac{\tau_g}{\delta t_g} (\xi_i \xi_i - c_s^2) : \mathrm{S} \\
+&\iff \alpha = \frac{\delta t_g \tau_f}{\delta t_f \tau_g}
+\end{align*}
+
+Auflösen dieses \(\alpha\) in (\ref{eq:scaleFneqReq}) und Einsetzen der Relationen (\ref{eq:gridTime}) sowie (\ref{eq:gridTau}) ergibt dann:
+\begin{align*}
+f_{f,i}^\text{neq} &= \frac{\delta t_g}{\delta t_f} \frac{\tau_f}{\tau_g} f_{g,i}^\text{neq} \\
+&= \frac{2 \delta t_f}{\delta t_f} \frac{2 \tau_g}{\tau_g} f_{g,i}^\text{neq} \\
+&= 4 f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneq}
+\end{align*}
 
 \subsection{Restriktion}
 

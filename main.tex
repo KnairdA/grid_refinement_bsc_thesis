@@ -413,7 +413,7 @@ Bezeichnen nun \(f_{f,i}^\text{neq}\) und \(f_{g,i}^\text{neq}\) die gitterspezi
 
 Mit Hilfe von \ref{eq:approxFneq} lässt sich diese Relation nun nach \(\alpha\) auflösen:
 \begin{align*}
-f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} &\iff -\frac{w_i \rho \overline{\tau_f}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_f = -\alpha \frac{w_i \rho \overline{\tau_g}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_g \\
+f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} &\iff -\frac{w_i \rho \overline{\tau_f}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_f = -\alpha \left( \frac{w_i \rho \overline{\tau_g}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_g \right) \\
 &\iff \overline{\tau_f} \mathrm{Q}_i : \mathrm{S}_f = \alpha \overline{\tau_g} \mathrm{Q}_i : \mathrm{S}_g \\
 &\iff \frac{\overline{\tau_f}}{\delta t_f} \mathrm{Q}_i : \mathrm{S} = \alpha \frac{\overline{\tau_g}}{\delta t_g} \mathrm{Q}_i : \mathrm{S} \\
 &\iff \alpha = \frac{\delta t_g}{\delta t_f} \frac{\overline{\tau_f}}{\overline{\tau_g}}\\
@@ -426,6 +426,19 @@ f_{f,i}^\text{neq} &= \frac{\delta t_g}{\delta t_f} \frac{\overline{\tau_f}}{\ov
 &= \left( 4 - \frac{1}{\overline{\tau_g}} \right) f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneq}
 \end{align*}
 
+Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zeit, der Relaxionszeit sowie der Nicht-Equilibriumsverteilung zwischen den Gittern \(\F\) und \(\G\) hergeleitet.
+
+\bigskip
+
+Seien \(x_{f \to g} \in \U_{f \to g}\) und \(x_{g \to f} \in \U_{g \to f}\) die Knoten aus dem Übergangsbereich mit Übertragung von fein nach grob bzw. von grob nach fein. Dann gilt:
+\begin{align}
+f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(4-\frac{1}{\overline{\tau_g}}\right) f_{g,i}^\text{neq} \\
+f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(4-\frac{1}{\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}
+\end{align}
+
+Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumsanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten komplizierter als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.
+
+\newpage
 \subsection{Restriktion}
 
 \subsection{Interpolation}

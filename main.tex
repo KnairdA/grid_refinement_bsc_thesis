@@ -46,6 +46,8 @@
 \newcommand{\F}{\mathcal{F}} % Feines Gitter
 \newcommand{\U}{\mathcal{U}} % Übergangsbereich
 
+\newcommand{\rfneq}[2]{\boldsymbol{r(}f_{f,\star}^\text{neq}, #1, #2\boldsymbol{)}}
+
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
 \newcommand{\V}[2]{\ensuremath{\begin{pmatrix}#1\\#2\end{pmatrix}}}
@@ -251,17 +253,7 @@ Wobei der Geschwindigkeitstensor \(\mathrm{Q}_i\) und das Störmoment \(\mathrm\
 \mathrm{Q}_i &= \xi_i \xi_i - c_s^2 I \numberthis\label{eq:velocityTensor} \\
 \mathrm\Pi^{(1)} &= \sum_{i=0}^{q-1} \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \overline\tau \mathrm{S} \numberthis\label{eq:pertubationMoment}
 \end{align*}
-
 \end{Definition}
-
-%\[\epsilon f_i^{(1)} = \frac{w_i}{2 c_s^4} (\xi_i \xi_i - c_s^2 I) : \sum_{j=0}^{q-1} \xi_j \xi_j \epsilon f_j^{(1)}\]
-%\[\sum_i \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \tau S\]
-%\[\sum_i \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \tau \frac{1}{2}(\nabla u + (\nabla u)^\top)\]
-%\[\sum_i \xi_i \xi_i \epsilon f_i^{(1)} = - c_s^2 \rho \tau (\nabla u + (\nabla u)^\top)\]
-%\[\epsilon f_i^{(1)} = \frac{w_i}{2 c_s^4} (\xi_i \xi_i - c_s^2 I) : - c_s^2 \rho \tau (\nabla u + (\nabla u)^\top)\]
-%\[\epsilon f_i^{(1)} = - \frac{w_i \rho \tau}{2 c_s^2} (\xi_i \xi_i - c_s^2 I) : (\nabla u + (\nabla u)^\top)\]
-%\[\epsilon f_i^{(1)} = - \frac{w_i \rho \tau}{c_s^2} (\xi_i \xi_i - c_s^2 I) : \frac{1}{2} (\nabla u + (\nabla u)^\top)\]
-%\[\epsilon f_i^{(1)} = - \frac{w_i \rho \tau}{c_s^2} Q_i : S\]
 
 \begin{Definition}[Nicht-Equilibriumsverteilung]
 Die Relaxion der Verteilungsfunktion \(f_i\) gegen die Equilibriumsverteilung \(f_i^\text{eq}\) impliziert eine Dekomposition in Equilibriums- und Nicht-Equilibriumsverteilung: \[f_i := f_i^\text{eq} + f_i^\text{neq}\]
@@ -305,7 +297,7 @@ Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speich
 \newpage
 \section{Verfeinerungsmethode}
 
-Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{lagrava12}~\cite{lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Stuktur dieses Verfahrens, mit potentiell austauschbaren Restriktions- und Interpolationsverfahren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
+Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{lagrava12}~\cite{lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Stuktur dieses Verfahrens, mit potenziell austauschbaren Restriktions- und Interpolationsverfahren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
 
 \subsection{Übersicht}
 
@@ -336,11 +328,12 @@ Wir betrachten zwei Gitter \(\G\) und \(\F\) als Diskretisierung der analytische
 Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen, vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese in Form der Gitter diskretisierten Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
 
 \begin{Definition}[Gitterknoten der Übergangsbereiche]
+\label{def:OverlapGridNodes}
 \begin{align*}
 \U_g &:= \G \cap \F && \text{Grobe Knoten im Übergangsbereich} \\
 \U_f &:= \F \cap (D_f \cap D_g) && \text{Feine Knoten im Übergangsbereich} \\
-\U_{g \to f} &:= \partial D_f \cap (\U_f \cup \U_g) && \text{Knoten mit Übertragung von grob nach fein} \\
-\U_{f \to g} &:= \partial D_g \cap (\U_f \cup \U_g) && \text{Knoten mit Übertragung von fein nach grob} \\
+\U_{g \to f} &:= \partial D_f \cap \U_f && \text{Knoten mit Übertragung von grob nach fein} \\
+\U_{f \to g} &:= \partial D_g \cap \U_g && \text{Knoten mit Übertragung von fein nach grob}
 \end{align*}
 \end{Definition}
 
@@ -432,16 +425,36 @@ Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zei
 
 Seien \(x_{f \to g} \in \U_{f \to g}\) und \(x_{g \to f} \in \U_{g \to f}\) die Knoten aus dem Übergangsbereich mit Übertragung von fein nach grob bzw. von grob nach fein. Dann gilt:
 \begin{align}
-f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(4-\frac{1}{\overline{\tau_g}}\right) f_{g,i}^\text{neq} \\
-f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(4-\frac{1}{\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}
+f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(4-\frac{1}{\overline{\tau_g}}\right) f_{g,i}^\text{neq}(x_{g \to f}) \label{eq:basicG2F}\\
+f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(4-\frac{1}{\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}(x_{f \to g}) \label{eq:basicF2G}
 \end{align}
 
-Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumsanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten komplizierter als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.
+Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumsanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten potenziell komplizierter, als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.
 
 \newpage
 \subsection{Restriktion}
 
+Kraft seiner höheren Auflösung enthält das feine Gitter mehr Informationen als das umgebende grobe Gitter. Der Übergang von fein nach grob stellt also eine Restriktion der Verteilungsfunktionen dar.
+
+Konkret suchen wir nach einer sinnvollen Definition der in \(x_{f \to g} \in \U_{f \to g}\) fehlenden Verteilungsfunktionen \(f_{g,i}\). Eine Solche ergibt sich aus der skalierten Dekomposition \ref{eq:basicF2G} durch Ersetzen der einfachen Nicht-Equilibriumsverteilung \(f_{f,i}^\text{neq}(x_{f \to g})\) mit einer restringierten Variante ebendieser.
+\[f_{g,i}(x_{f \to g}) = f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \alpha^{-1} \rfneq{i}{x_{f \to g}} \numberthis\label{eq:restrictedF2G}\]
+
+Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch die Restriktionsoperation \(\boldsymbol{r}\) eingeschränkt wird, während der Equilibriumsanteil unangetastet bleibt. Dies ist damit zu begründen, dass Dichte und Geschwindigkeit bei der verwendeten konvektiven Skalierung im Gitterübergang stetig bleiben.
+
+Die skalierte Dekomposition \ref{eq:basicF2G} lässt sich in der Schreibweise von \ref{eq:restrictedF2G} formulieren, wenn die Identität als Restriktionsoperation eingesetzt wird: \[\rfneq{i}{x_{f \to g}} := f_{f,i}^\text{neq}(x_{f \to g})\]
+
+Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumsanteilen: \[\rfneq{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
+
 \subsection{Interpolation}
+
+Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGridNodes} um eine Unterscheidung zwischen Knoten, für die ein, der Übertragung von grob nach fein dienlicher, passender grober Knoten existiert und alleinstehenden feinen Knoten.
+
+\begin{Definition}[Gitterknoten mit Übertragung von grob nach fein]
+\begin{align*}
+\U_{g \to f}^g &:= \U_{g \to f} \cap \U_g && \text{Grobe Knoten mit Übertragung von grob nach fein} \\
+\U_{g \to f}^f &:= \U_{g \to f} \setminus \U_g && \text{Alleinstehende feine Knoten mit Übertragung von grob nach fein}
+\end{align*}
+\end{Definition}
 
 \newpage
 \section{Implementierung in OpenLB}

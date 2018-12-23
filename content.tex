@@ -16,6 +16,7 @@ Da die Anzahl der benötigten Gitterpunkte sich maßgeblich auf den Speicherbeda
 In diesem Kapitel werden wir die, dem weiteren Verlauf dieser Arbeit zugrunde liegende, Lattice Boltzmann Methode in 2D nachvollziehen.
 
 \subsection{Lattice Boltzmann Methode}
+\label{kap:LBM}
 
 Grundlage und Namensgeber von Simulationen mit Lattice Boltzmann Methoden ist die Boltzmann Gleichung. Sie beschreibt das Verhalten von Gasen auf mesoskopischer Ebene als Verteilungsfunktion der Masse von Partikeln in einer Raumregion mit gegebener Geschwindigkeit.
 
@@ -42,6 +43,7 @@ Sei \(\tau \in \R_{\geq 0}\) eine Relaxionszeit und \(f^\text{eq}\) die von der 
 Analog zur Boltzmann-Gleichung ist auch bei deren BGK Approximation der beschriebene Ort \(x \in \R^2\) im Allgemeinen frei gewählt. Da unser Ziel jedoch gerade die Diskretisierung der Simulationsdomäne in einem Gitter ist, wollen wir \(x\) einschränken:
 
 \begin{Definition}[Ortsdiskretisierung]
+\label{def:SpatialDiscretizationLBM}
 Sei die örtliche Simulationsdomäne \(D := \R^2\) diskretisiert als kartesisches Gitter mit Zellabstand \(\Delta x \in \R_+\). Dann ist die Einbettung der kartesischen Gitterdomäne \(L := \Z^2\) in \(D\) gegeben als:
 \[d : L \to D, \ l \mapsto \Delta x \cdot l\]
 Analog zur o.B.d.A. erfolgten Wahl von \(\Delta t = 1\) setzen wir auch hier \(\Delta x = 1\), sodass wir die Simulations- und Gitterdomäne -- bei Inklusion stetiger Übergänge zwischen Elementen aus \(L\) -- identisch identifizieren können. Der stetige Übergang zwischen zwei orthodonal benachbarten Gitterknoten erfolgt somit auf dem Einheitsintervall. Praktisch können wir also im Folgenden bei Annahme von \(x \in L \subset D\) die explizite Ausführung der Gittereinbettung vernachlässigen.
@@ -241,7 +243,8 @@ Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf ein
 Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen. Um diese Kopplung der verschiedenen Gitterauflösungen theoretisch erfassen zu können, müssen wir zunächst die Gitter selbst konkreter definieren:
 
 \begin{Definition}[Diskretisierung der Gitter]
-Wir betrachten zwei Gitter \(\G\) und \(\F\) als Diskretisierung der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
+\label{def:DiskretRefinedGitter}
+Wir betrachten zwei identisch orientierte kartesische Gitter \(\G\) und \(\F\) als Diskretisierung der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
 \begin{align*}
 \G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
 \F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
@@ -249,7 +252,28 @@ Wir betrachten zwei Gitter \(\G\) und \(\F\) als Diskretisierung der physikalisc
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
-Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen, vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese, in Form der Gitter diskretisierten, Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
+Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während für die LBM an sich weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
+
+Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\).
+
+\begin{Definition}[Abbildung auf implementierende Gitter]
+\label{def:BijImplGitter}
+Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters.
+Dann können wir o.B.d.A. einen beliebigen physikalischen Knoten \(x_{0,\#}^\text{phys}\) mit dem Knoten \(x_0^\text{impl} = 0 \in L\) identifizieren. Eine Bijektion zwischen physikalischen und implementierenden Gittern ist damit schon eindeutig definiert:
+\begin{align*}
+x_\#^\text{impl}(x^\text{phys}) &:= \frac{1}{\delta x_\#} (x^\text{phys} - x_{0,\#}^\text{phys}) \\
+x_\#^\text{phys}(x^\text{impl}) &:= x_{0,\#}^\text{phys} + \delta x_\# \cdot x^\text{impl}
+\end{align*}
+\end{Definition}
+
+Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese, in Form der Gitter diskretisierten, Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
+
+\begin{figure}[h]
+\centering
+\input{img/overlap_zone.tikz}
+\caption{Skizze des Übergangsbereich \cite[vgl.~Abb.~4]{lagrava12}}
+\label{fig:OverlapZone}
+\end{figure}
 
 \begin{Definition}[Gitterknoten der Übergangsbereiche]
 \label{def:OverlapGridNodes}
@@ -265,17 +289,11 @@ Die Übertragungsrichtungen in \(\U_{g \to f}\) und \(\U_{f \to g}\) ergeben sic
 
 Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches \(\U_g \cup \U_f\) der Mindestbreite \(\delta x_g\) erklären: Gäbe es diesen nicht, so fehlten an der Grenze zwischen grobem und feinem Gitter Verteilungsfunktionen in beide Richtungen zugleich.
 
-\begin{figure}[h]
-\centering
-\input{img/overlap_zone.tikz}
-\caption{Skizze des Übergangsbereich \cite[vgl.~Abb.~4]{lagrava12}}
-\label{fig:OverlapZone}
-\end{figure}
-
 Die Aufgabe der Skalierungs-, Restriktions- und Interpolationsschritte des Verfahrens besteht also \emph{nur} darin, diese jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
 
 \newpage
 \subsection{Skalierung}
+\label{kap:Skalierung}
 
 Während die Skalierung räumlicher Größen durch die Festlegung des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
 

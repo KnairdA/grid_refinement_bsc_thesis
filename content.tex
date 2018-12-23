@@ -26,9 +26,7 @@ Sei \(f(x,\xi,t)\) die Verteilungsfunktion der Partikelmasse zu Zeit \(t\) in Or
 Hierbei handelt es sich um eine Advektionsgleichung wobei der Term \(\partial_t f + \xi \cdot \partial_x f\) die Strömung der Partikelverteilung mit Geschwindigkeit \(\xi\) und \(\frac{F}{\rho} \cdot \partial_\xi f\) einwirkende Kräfte darstellt. Der Term \(\Omega(f)\) beschreibt, entsprechend als Kollisionsoperator bezeichnet, die kollisionsbedingte lokale Neuverteilung von \(f\).
 \end{Definition}
 
-Zentrale Anforderung an den Kollisionsoperator ist die Impuls- und Masseerhaltung.
-
-Die im Folgenden betrachtete Lattice Boltzmann Methode verwendet die übliche BGK Approximation der Boltzmann-Gleichung ohne äußere Kraft von Bhatnagar, Gross und Krook (siehe \citetitle{krueger17}~\cite[Kap.~3.5.3]{krueger17}).
+Zentrale Anforderung an den Kollisionsoperator ist die Impuls- und Masseerhaltung. Die im Folgenden betrachtete Lattice Boltzmann Methode verwendet die übliche BGK Approximation der Boltzmann-Gleichung ohne äußere Kraft von Bhatnagar, Gross und Krook (siehe \citetitle{krueger17}~\cite[Kap.~3.5.3]{krueger17}).
 
 Grundlegendes Element dieser Approximation ist der BGK Operator
 \[\Omega(f) := -\frac{f-f^\text{eq}}{\tau} \Delta t\]
@@ -37,11 +35,25 @@ welcher die Partikelverteilung mit Rate \(\tau\) gegen eine Equilibriumsverteilu
 Wenden wir den BGK Operator auf die Boltzmann-Gleichung ohne äußere Kräfte an, erhalten wir die BGK Approximation:
 
 \begin{Definition}[BGK Approximation]
-Sei \(\tau \in \R_{\geq 0}\) eine Relaxionszeit und \(f^\text{eq}\) die von der Maxwell-Boltzmann Verteilung gegebene Equilibriumsverteilung.
+Sei \(\tau \in \R_{\geq 0}\) eine Relaxionszeit und \(f^\text{eq}\) die von der Maxwell-Boltzmann-Verteilung gegebene Equilibriumsverteilung.
 \[ (\partial_t + \xi \cdot \nabla_x) f = -\frac{1}{\tau} (f(x,\xi,t) - f^\text{eq}(x,\xi,t)) \]
 \end{Definition}
 
-An dieser Stelle bemerken wir, dass die BGK Approximation für beliebige \(\xi \in \R^2\) definiert ist. Da wir die LBM auf einem endlichen Rechner umsetzen wollen, müssen wir die Menge der betrachteten Geschwindigkeiten auf eine endliche Menge diskretisieren.
+Analog zur Boltzmann-Gleichung ist auch bei deren BGK Approximation der beschriebene Ort \(x \in \R^2\) im Allgemeinen frei gewählt. Da unser Ziel jedoch gerade die Diskretisierung der Simulationsdomäne in einem Gitter ist, wollen wir \(x\) einschränken:
+
+\begin{Definition}[Ortsdiskretisierung]
+Sei die örtliche Simulationsdomäne \(D := \R^2\) diskretisiert als kartesisches Gitter mit Zellabstand \(\Delta x \in \R_+\). Dann ist die Einbettung der kartesischen Gitterdomäne \(L := \Z^2\) in \(D\) gegeben als:
+\[d : L \to D, \ l \mapsto \Delta x \cdot l\]
+Analog zur o.B.d.A. erfolgten Wahl von \(\Delta t = 1\) setzen wir auch hier \(\Delta x = 1\), sodass wir die Simulations- und Gitterdomäne -- bei Inklusion stetiger Übergänge zwischen Elementen aus \(L\) -- identisch identifizieren können. Der stetige Übergang zwischen zwei orthodonal benachbarten Gitterknoten erfolgt somit auf dem Einheitsintervall. Praktisch können wir also im Folgenden bei Annahme von \(x \in L \subset D\) die explizite Ausführung der Gittereinbettung vernachlässigen.
+\end{Definition}
+
+Zu erwähnen ist an dieser Stelle die Wichtigkeit einer klaren Unterscheidung zwischen Simulationsdomäne und dem durch diese zu modellierenden physikalischen System für die konkrete Interpretation des Simulationsergebnisses \cite[Kap.~7]{krueger17}.
+
+Für die verbleibende Herleitung der LBM können wir diese Interpretation, d.h. die Unterscheidung zwischen physikalischen- und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxionszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird an hier nicht weiter eingeschränkt.
+
+\bigskip
+
+Wir bemerken nun, dass die BGK Approximation nicht nur für beliebige Orte, sondern auch für beliebige Geschwindigkeiten \(\xi \in \R^2\) definiert ist. Da wir die LBM auf einem endlichen Rechner umsetzen wollen, müssen wir auch die Menge der betrachteten Geschwindigkeiten auf eine endliche Menge diskretisieren.
 
 Eine übliche Menge diskreter Geschwindigkeiten in 2D ist \emph{D2Q9} wobei \emph{D2} die Anzahl der Dimensionen und \emph{Q9} die Anzahl der Geschwindigkeiten verschlüsselt.
 
@@ -49,7 +61,7 @@ Eine übliche Menge diskreter Geschwindigkeiten in 2D ist \emph{D2Q9} wobei \emp
 \[ \{\xi_i\}_{i=0}^8 = \left\{ \V{0}{0}, \V{-1}{\phantom{-}1}, \V{-1}{\phantom{-}0}, \V{-1}{-1}, \V{\phantom{-}0}{-1}, \V{\phantom{-}1}{-1}, \V{1}{0}, \V{1}{1}, \V{0}{1} \right\} \]
 \end{Definition}
 
-\begin{figure}[t]
+\begin{figure}
 \centering
 \input{img/d2q9.tikz}
 \caption{Umgebung einer Zelle in D2Q9}
@@ -61,7 +73,7 @@ Mithilfe einer solchen endlichen Menge diskreter Geschwindigkeiten lässt sich d
 \label{def:disVelBGK}
 Seien \(\xi_i\) Vektoren einer Menge mikroskopischer Geschwindigkeiten wie z.B. D2Q9 und \(f_i(x,t) \equiv f(x,\xi_i,t)\). Dann ist
 \[ (\partial_t + \xi_i \cdot \nabla_x) f_i(x,t) = -\frac{1}{\tau} (f_i(x,t) - f_i^\text{eq}(x,t)) \]
-die Diskretisierung der BGK Approximation entlang der Geschwindigkeiten.
+die Diskretisierung der BGK Approximation entlang der Geschwindigkeiten in diskreten Gitterknoten \(x \in L\). Die Geschwindigkeiten müssen hier dank der Wahl von \(\Delta x = 1\) nicht weiter skaliert werden.
 \end{Definition}
 
 Hierbei ist die diskrete Equilibriumsverteilung \(f_i^\text{eq}\) wie folgt definiert:
@@ -229,7 +241,7 @@ Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf ein
 Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen. Um diese Kopplung der verschiedenen Gitterauflösungen theoretisch erfassen zu können, müssen wir zunächst die Gitter selbst konkreter definieren:
 
 \begin{Definition}[Diskretisierung der Gitter]
-Wir betrachten zwei Gitter \(\G\) und \(\F\) als Diskretisierung der analytischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
+Wir betrachten zwei Gitter \(\G\) und \(\F\) als Diskretisierung der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
 \begin{align*}
 \G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
 \F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
@@ -237,7 +249,7 @@ Wir betrachten zwei Gitter \(\G\) und \(\F\) als Diskretisierung der analytische
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
-Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen, vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese in Form der Gitter diskretisierten Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
+Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen, vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese, in Form der Gitter diskretisierten, Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
 
 \begin{Definition}[Gitterknoten der Übergangsbereiche]
 \label{def:OverlapGridNodes}
@@ -349,7 +361,7 @@ Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitte
 Kraft seiner höheren Auflösung enthält das feine Gitter mehr Informationen als das umgebende grobe Gitter. Der Übergang von fein nach grob stellt also eine Restriktion der Verteilungsfunktionen dar.
 
 Konkret suchen wir nach einer sinnvollen Definition der in \(x_{f \to g} \in \U_{f \to g}\) fehlenden Verteilungsfunktionen \(f_{g,i}\). Eine Solche ergibt sich aus der skalierten Dekomposition \ref{eq:basicF2G} durch Ersetzen der einfachen Nicht-Equilibriumsverteilung \(f_{f,i}^\text{neq}(x_{f \to g})\) mit einer restringierten Variante ebendieser.
-\[f_{g,i}(x_{f \to g}) = f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \alpha^{-1} \rfneq{i}{x_{f \to g}} \numberthis\label{eq:restrictedF2G}\]
+\[f_{g,i}(x_{f \to g}) = f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \alpha^{-1} \ \rfneq{i}{x_{f \to g}} \numberthis\label{eq:restrictedF2G}\]
 
 Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch die Restriktionsoperation \(\boldsymbol{r}\) eingeschränkt wird, während der Equilibriumsanteil unangetastet bleibt. Dies ist damit zu begründen, dass Dichte und Geschwindigkeit bei der verwendeten konvektiven Skalierung im Gitterübergang stetig bleiben.
 
@@ -359,7 +371,7 @@ Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist
 
 \subsection{Interpolation}
 
-Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGridNodes} um eine Unterscheidung zwischen Knoten, für die ein, der Übertragung von grob nach fein dienlicher, passender grober Knoten existiert und alleinstehenden feinen Knoten.
+Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGridNodes} um eine Unterscheidung zwischen Knoten, für die ein, der Übertragung von grob nach fein dienlicher, grober Knoten existiert und alleinstehenden feinen Knoten.
 
 \begin{Definition}[Gitterknoten mit Übertragung von grob nach fein]
 \begin{align*}

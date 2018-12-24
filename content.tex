@@ -244,7 +244,7 @@ Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf
 
 \begin{Definition}[Diskretisierung der Gitter]
 \label{def:DiskretRefinedGitter}
-Wir betrachten zwei identisch orientierte kartesische Gitter \(\G\) und \(\F\) als Diskretisierung der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Die Domänen seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
+Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierung der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
 \begin{align*}
 \G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
 \F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
@@ -252,9 +252,9 @@ Wir betrachten zwei identisch orientierte kartesische Gitter \(\G\) und \(\F\) a
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
-Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während für die LBM an sich weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
+Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während im Kontext der LBM an sich weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
 
-Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\).
+Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\). Diese stellen gerade die Definitionsmengen der groben bzw. feinen Verteilungsfunktionen dar.
 
 \begin{Definition}[Abbildung auf implementierende Gitter]
 \label{def:BijImplGitter}
@@ -264,9 +264,10 @@ Dann können wir o.B.d.A. einen beliebigen physikalischen Knoten \(x_{0,\#}^\tex
 x_\#^\text{impl}(x^\text{phys}) &:= \frac{1}{\delta x_\#} (x^\text{phys} - x_{0,\#}^\text{phys}) \\
 x_\#^\text{phys}(x^\text{impl}) &:= x_{0,\#}^\text{phys} + \delta x_\# \cdot x^\text{impl}
 \end{align*}
+Diese Abbildung der physikalisch eingebetteten Gitterknoten in die Definitionsmenge der Verteilungsfunktionen nehmen wir dabei zur Vereinfachung der Notation implizit an, wann immer die Verteilung in Elementen aus \(\G\) oder \(\F\) betrachtet wird.
 \end{Definition}
 
-Zur Betrachtung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese, in Form der Gitter diskretisierten, Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
+Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese, in Form der Gitter diskretisierten, Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
 
 \begin{figure}[h]
 \centering
@@ -365,7 +366,7 @@ Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zei
 
 \bigskip
 
-Seien \(x_{f \to g} \in \U_{f \to g}\) und \(x_{g \to f} \in \U_{g \to f}\) die Knoten aus dem Übergangsbereich mit Übertragung von fein nach grob bzw. von grob nach fein. Dann gilt:
+Seien \(x_{f \to g} \in \U_{f \to g}\) und \(x_{g \to f} \in \U_{g \to f}\) die Knoten aus dem Übergangsbereich mit Übertragung von fein nach grob bzw. von grob nach fein. Dann gelten bei Erinnerung an die implizite Knotenabbildung~\ref{def:BijImplGitter}:
 \begin{align}
 f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(4-\frac{1}{\overline{\tau_g}}\right) f_{g,i}^\text{neq}(x_{g \to f}) \label{eq:basicG2F}\\
 f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(4-\frac{1}{\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}(x_{f \to g}) \label{eq:basicF2G}

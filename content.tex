@@ -51,7 +51,7 @@ Analog zur o.B.d.A. erfolgten Wahl von \(\Delta t = 1\) setzen wir auch hier \(\
 
 Zu erwähnen ist an dieser Stelle die Wichtigkeit einer klaren Unterscheidung zwischen Simulationsdomäne und dem durch diese zu modellierenden physikalischen System für die konkrete Interpretation des Simulationsergebnisses \cite[Kap.~7]{krueger17}.
 
-Für die verbleibende Herleitung der LBM können wir diese Interpretation, d.h. die Unterscheidung zwischen physikalischen- und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxionszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird an hier nicht weiter eingeschränkt.
+Für die verbleibende Herleitung der LBM können wir diese Interpretation, d.h. die Unterscheidung zwischen physikalischen- und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxionszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird hier nicht weiter eingeschränkt.
 
 \bigskip
 
@@ -90,7 +90,10 @@ Die Werte von \(u = u(x,t)\) und \(\rho = \rho(x,t)\) in Ort \(x\) zu Zeit \(t\)
 
 \begin{Definition}[Momente der Verteilungsfunktion]
 \label{def:Momente}
-\[\rho(x,t) = \sum_{i=0}^{q-1} f_i(x,t) \text{ und } \rho u(x,t) = \sum_{i=0}^{q-1} \xi_i f_i(x,t)\]
+\begin{align*}
+\rho(x,t) &= \sum_{i=0}^{q-1} f_i(x,t) \\
+\rho u(x,t) &= \sum_{i=0}^{q-1} \xi_i f_i(x,t)
+\end{align*}
 \end{Definition}
 
 Für D2Q9 ergeben sich nach \cite[Gl.~3.60 bzw. Tab.~3.3]{krueger17} die Gewichte:
@@ -218,7 +221,7 @@ Kern des Multi-Domain Ansatzes ist es, außerhalb von etwaigen verfahrensbedingt
 \caption{Teiligitter in der Multi-Domain Herangehensweise}
 \end{figure}
 
-Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speicherbedarf sowie erwartete Einsparungen in der benötigten Rechenzeit. Erkauft werden diese Vorteile durch aufwendigere Kopplung der verschiedenen Teilgitter in den Übergangsbereichen.
+Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speicherbedarf sowie erwartete Einsparungen in der benötigten Rechenzeit. Erkauft werden diese Vorteile durch aufwendigere Kopplung \cite[Kap.~3.1]{lagrava12} der verschiedenen Teilgitter in den Übergangsbereichen.
 
 \newpage
 \section{Verfeinerungsmethode}
@@ -345,7 +348,7 @@ Für die zur expliziten Lösung der diskreten LBM BGK Gleichung in Definition~\r
 
 Die Equilibriumsverteilung \(f_i^\text{eq}\) ergibt sich nach Definition~\ref{def:fieq} aus Geschwindigkeit \(u\) und Dichte \(\rho\). Sie sind also explizit unabhängig der Gitterauflösung und, wie erwähnt, stetig im Gitterübergang. Diese Aussage gilt nicht für die Nicht-Equilibriumsverteilung \(f_i^\text{neq}\), da diese nach (\ref{eq:approxFneq}) von dem Geschwindigkeitsgradienten \(\nabla u\) abhängt.
 
-Bezeichnen nun \(f_{f,i}^\text{neq}\) und \(f_{g,i}^\text{neq}\) die gitterspezifischen Nicht-Equilibriumsanteile und \(\mathrm{S}_f\) sowie \(\mathrm{S}_g\) die entsprechenden Verzerrungstensoren. Zur Skalierung von \(f_{f,i}^\text{neq}\) suchen wir ein \(\alpha \in \R\) s.d. gilt: \[f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneqReq}\]
+Bezeichnen nun \(f_{f,i}^\text{neq}\) und \(f_{g,i}^\text{neq}\) die gitterspezifischen Nicht-Equilibriumanteile und \(\mathrm{S}_f\) sowie \(\mathrm{S}_g\) die entsprechenden Verzerrungstensoren. Zur Skalierung von \(f_{f,i}^\text{neq}\) suchen wir ein \(\alpha \in \R\) s.d. gilt: \[f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneqReq}\]
 
 Mit Hilfe von \ref{eq:approxFneq} lässt sich diese Relation nun nach \(\alpha\) auflösen:
 \begin{align*}
@@ -368,11 +371,11 @@ Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zei
 
 Seien \(x_{f \to g} \in \U_{f \to g}\) und \(x_{g \to f} \in \U_{g \to f}\) die Knoten aus dem Übergangsbereich mit Übertragung von fein nach grob bzw. von grob nach fein. Dann gelten bei Erinnerung an die implizite Knotenabbildung~\ref{def:BijImplGitter}:
 \begin{align}
-f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(4-\frac{1}{\overline{\tau_g}}\right) f_{g,i}^\text{neq}(x_{g \to f}) \label{eq:basicG2F}\\
-f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(4-\frac{1}{\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}(x_{f \to g}) \label{eq:basicF2G}
+f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(4-\frac{1}{\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}(x_{f \to g}) \label{eq:basicF2G} \\
+f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(4-\frac{1}{\overline{\tau_g}}\right) f_{g,i}^\text{neq}(x_{g \to f}) \label{eq:basicG2F}
 \end{align}
 
-Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumsanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten potenziell komplizierter, als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.
+Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten potenziell komplizierter, als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.
 
 \newpage
 \subsection{Restriktion}
@@ -381,23 +384,34 @@ Kraft seiner höheren Auflösung enthält das feine Gitter mehr Informationen al
 
 Konkret suchen wir nach einer sinnvollen Definition der in \(x_{f \to g} \in \U_{f \to g}\) fehlenden Verteilungsfunktionen \(f_{g,i}\). Eine Solche ergibt sich aus der skalierten Dekomposition \ref{eq:basicF2G} durch Ersetzen der einfachen Nicht-Equilibriumsverteilung \(f_{f,i}^\text{neq}(x_{f \to g})\) mit einer restringierten Variante ebendieser.
 \[f_{g,i}(x_{f \to g}) = f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \alpha^{-1} \ \rfneq{i}{x_{f \to g}} \numberthis\label{eq:restrictedF2G}\]
-
-Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch die Restriktionsoperation \(\boldsymbol{r}\) eingeschränkt wird, während der Equilibriumsanteil unangetastet bleibt. Dies ist damit zu begründen, dass Dichte und Geschwindigkeit bei der verwendeten konvektiven Skalierung im Gitterübergang stetig bleiben.
+Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch die Restriktionsoperation \(\boldsymbol{r}\) eingeschränkt wird, während der Equilibriumanteil unangetastet bleibt. Dies ist damit zu begründen, dass Dichte und Geschwindigkeit bei der verwendeten konvektiven Skalierung im Gitterübergang stetig bleiben.
 
 Die skalierte Dekomposition \ref{eq:basicF2G} lässt sich in der Schreibweise von \ref{eq:restrictedF2G} formulieren, wenn die Identität als Restriktionsoperation eingesetzt wird: \[\rfneq{i}{x_{f \to g}} := f_{f,i}^\text{neq}(x_{f \to g})\]
 
-Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumsanteilen: \[\rfneq{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
+Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumanteilen: \[\rfneq{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
 
+\newpage
 \subsection{Interpolation}
 
-Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGridNodes} um eine Unterscheidung zwischen Knoten, für die ein, der Übertragung von grob nach fein dienlicher, grober Knoten existiert und alleinstehenden feinen Knoten.
-
+Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGridNodes} um eine Unterscheidung zwischen alleinstehenden feinen Knoten und solchen für die ein, der Übertragung von grob nach fein dienlicher, grober Knoten existiert.
 \begin{Definition}[Gitterknoten mit Übertragung von grob nach fein]
 \begin{align*}
-\U_{g \to f}^g &:= \U_{g \to f} \cap \U_g && \text{Grobe Knoten mit Übertragung von grob nach fein} \\
+\U_{g \to f}^g &:= \U_{g \to f} \cap \U_g && \text{Doppelte Knoten mit Übertragung von grob nach fein} \\
 \U_{g \to f}^f &:= \U_{g \to f} \setminus \U_g && \text{Alleinstehende feine Knoten mit Übertragung von grob nach fein}
 \end{align*}
 \end{Definition}
+
+Für \(x_{g \to f}^g \in \U_{g \to f}^g\) gilt insbesondere \(x_{g \to f}^g \in \U_g \cap \, \U_f\). Es existieren in diesen Gitterpunkten also vollständig definierte grobe Verteilungsfunktionen, die wir zur Bestimmung der Momente \(\rho\) und \(u\) in (\ref{eq:basicG2F}) heranziehen können. Dazu formulieren wir die Momente der groben Verteilungsfunktionen in \(x^g \in \G\) anhand Definition~\ref{def:Momente} wie folgt:
+\begin{align*}
+\rho_g(x^g) &:= \sum_{j=0}^{q-1} f_{g,j}(x^g) \\
+u_g(x^g) &:= \frac{1}{\rho_g(x^g)} \sum_{j=0}^{q-1} \xi_j f_{g,j}(x^g)
+\end{align*}
+Insgesamt erhalten wir eine vollständige Definition der gesuchten Verteilungen in den feinen Knotenpunkten \(x_{g \to f}^g \in \U_{g \to f}^g \subset \U_f\):
+\[f_{f,i}(x_{g \to f}^g) = f_i^\text{eq}(\rho_g(x_{g \to f}^g), u_g(x_{g \to f}^g)) + \alpha f_{g,i}^\text{neq}(x_{g \to f}^g) \numberthis\label{eq:expandedDirectG2F}\]
+
+Für \(x_{g \to f}^f \in \U_{g \to f}^f\) gilt insbesondere \(x_{g \to f}^f \notin \U_g\). Es existieren in diesen Gitterpunkten also im Gegensatz zur Situation \ref{eq:expandedDirectG2F} keine groben Verteilungsfunktionen. Die fehlenden Werte zur Bestimmung der Momente sowie des Nicht-Equilibriumanteils in (\ref{eq:basicG2F}) müssen hier also aus den umliegenden groben Verteilungsfunktionen interpoliert werden:
+\[f_{f,i}(x_{g \to f}^f) = f_i^\text{eq}(\interpol{\rho_g}{x_{g \to f}^f}, \interpol{u_g}{x_{g \to f}^f}) + \alpha \interpol{f_{g,i}^\text{neq}}{x_{g \to g}^f} \numberthis\label{eq:expandedInterpolG2F}\]
+Die unbekannten Werte der Moment- und Nicht-Equilibriumfunktionen werden in diesem Ausdruck durch eine Interpolationsoperation \(\boldsymbol{n}\) genähert. Neben der Restriktionsoperation stellt die Wahl des Interpolationsverfahrens einen weiteren zentralen und flexiblen Bestandteil des, auf diesen Seiten nachvollzogenen, Gitterverfeinerungsverfahren dar.
 
 \newpage
 \section{Implementierung in OpenLB}

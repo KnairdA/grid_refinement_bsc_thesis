@@ -1,0 +1,28 @@
+\begin{tikzpicture}[
+	scale=1.5,
+	coarse/.style={circle,draw=gray,inner sep=4pt},
+	ibase/.style={coarse,draw=black,very thick},
+	fine/.style={cross out,draw=gray,minimum size=8pt},
+	wantedfine/.style={fine,draw=black,ultra thick},
+	arrow/.style={-{Latex[length=2mm]},thick}
+]
+
+\foreach \x in {-3.5,...,3.5}
+	\node[coarse] at (\x,0){ };
+
+\foreach \x in {-7,...,7}
+	\node[fine] at (\x*0.5,0){ };
+
+\node[wantedfine] at (0,0){ };
+\node[ibase] at (-1.5,0){ };
+\node[ibase] at (-0.5,0){ };
+\node[ibase] at (0.5,0){ };
+\node[ibase] at (1.5,0){ };
+
+\draw[arrow] (0,0.8) node[right] {Gesuchter Wert \(\interpol{\star}{x_{g \to f}^f}\)} -- (0,0.3);
+\draw[arrow] (-1.5,-0.8) node[below right] {Bekannte Werte \(\interpol{\star}{\U_{g \to f}^g}\)} -- (-1.5,-0.3);
+\draw[arrow] (-0.5,-0.8) -- (-0.5,-0.3);
+\draw[arrow] (0.5,-0.8) -- (0.5,-0.3);
+\draw[arrow] (1.5,-0.8) -- (1.5,-0.3);
+
+\end{tikzpicture}

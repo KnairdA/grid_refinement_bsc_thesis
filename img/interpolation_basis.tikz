@@ -1,0 +1,32 @@
+\begin{tikzpicture}[
+	scale=1.5,
+	coarse/.style={circle,draw=gray,inner sep=4pt},
+	ibase/.style={coarse,draw=black,very thick},
+	fine/.style={cross out,draw=gray,minimum size=8pt},
+	wantedfine/.style={fine,draw=black,ultra thick},
+	arrow/.style={-{Latex[length=2mm]},thick}
+]
+
+\foreach \x in {-1,...,3}
+	\foreach \y in {-1,...,2}
+		\node[coarse] at (\x,\y){ };
+
+\foreach \x in {0,...,8}
+	\foreach \y in {-2,...,4}
+		\node[fine] at (2+\x*0.5,\y*0.5){ };
+
+\node[wantedfine] at (2,0.5){ };
+\node[ibase] at (2,2){ };
+\node[ibase] at (2,1){ };
+\node[ibase] at (2,0){ };
+\node[ibase] at (2,-1){ };
+
+\draw[dashed,thick] (1.8,-1.2) rectangle (2.2,2.2);
+\draw[dashed,draw=gray] (2.8,-1.2) rectangle (3.2,2.2);
+
+\draw[arrow] (2,3.3) node[right] {Interpolation von grob nach fein, \(\U_{g \to f}\)} -- (2,2.3);
+\draw[arrow] (3,2.8) node[right] {Restriktion von fein nach grob, \(\U_{f \to g}\)} -- (3,2.3);
+
+\draw[decorate,decoration={brace,amplitude=10pt,mirror},line width=1pt]
+(1.8,-1.4) -- (3.2,-1.4) node[midway,below,yshift=-6pt] {Übergangsbereich};
+\end{tikzpicture}

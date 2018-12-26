@@ -411,7 +411,23 @@ Insgesamt erhalten wir eine vollständige Definition der gesuchten Verteilungen 
 
 Für \(x_{g \to f}^f \in \U_{g \to f}^f\) gilt insbesondere \(x_{g \to f}^f \notin \U_g\). Es existieren in diesen Gitterpunkten also im Gegensatz zur Situation \ref{eq:expandedDirectG2F} keine groben Verteilungsfunktionen. Die fehlenden Werte zur Bestimmung der Momente sowie des Nicht-Equilibriumanteils in (\ref{eq:basicG2F}) müssen hier also aus den umliegenden groben Verteilungsfunktionen interpoliert werden:
 \[f_{f,i}(x_{g \to f}^f) = f_i^\text{eq}(\interpol{\rho_g}{x_{g \to f}^f}, \interpol{u_g}{x_{g \to f}^f}) + \alpha \interpol{f_{g,i}^\text{neq}}{x_{g \to g}^f} \numberthis\label{eq:expandedInterpolG2F}\]
-Die unbekannten Werte der Moment- und Nicht-Equilibriumfunktionen werden in diesem Ausdruck durch eine Interpolationsoperation \(\boldsymbol{n}\) genähert. Neben der Restriktionsoperation stellt die Wahl des Interpolationsverfahrens einen weiteren zentralen und flexiblen Bestandteil des, auf diesen Seiten nachvollzogenen, Gitterverfeinerungsverfahren dar.
+Die unbekannten Werte der Moment- und Nicht-Equilibriumfunktionen werden in diesem Ausdruck durch eine Interpolationsoperation \(\boldsymbol{n}\) genähert. Neben der Restriktionsoperation \(\boldsymbol{r}\) stellt die Wahl des Interpolationsverfahrens einen weiteren zentralen und flexiblen Bestandteil des, auf diesen Seiten nachvollzogenen, Gitterverfeinerungsverfahren dar.
+
+Stützstellen für die Interpolation seien hier die parallel zum Gitterübergang liegenden groben Nachbarknoten des gesuchten Punktes \(x_{g \to f}^f\).
+
+\begin{figure}
+\centering
+\input{img/interpolation_basis.tikz}
+\caption{Stützstellen der Interpolation im Übergangsbereich}
+\label{fig:InterpolationBasis}
+\end{figure}
+
+\begin{figure}
+\centering
+\input{img/interpolation_detail.tikz}
+\caption{Stützstellen der Interpolation}
+\label{fig:InterpolationDetail}
+\end{figure}
 
 \newpage
 \section{Implementierung in OpenLB}

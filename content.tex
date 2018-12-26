@@ -102,7 +102,7 @@ Für D2Q9 ergeben sich nach \cite[Gl.~3.60 bzw. Tab.~3.3]{krueger17} die Gewicht
 Weiter folgt zusammen mit der Bedingung \(\sum_{i=1}^{q-1} w_i (\xi_i)_a (\xi_i)_b = c_s^2 \delta_{a,b}\) aus \cite[Gl.~3.60]{krueger17} die Schallgeschwindigkeit \(c_s = \sqrt{1/3}\) des Lattice. Konditionen zur Bestimmung dieser gitterspezifischen Konstanten sind hierbei die Erhaltung von Impuls und Masse sowie die Forderung von \emph{Rotationsisotropie}.
 
 Zur Entwicklung einer \emph{implementierbaren} expliziten BGK Gleichung können wir nun die Geschwindigkeitsdiskretisierung~\ref{def:disVelBGK} integrieren:
-\[ f_i(x+\xi_i, t+1) - f_i(x,t) = \int_0^1 \Omega_i(x+\xi_i s,t+s) ds \]
+\[ f_i(x+\xi_i, t+1) - f_i(x,t) = \ipol_0^1 \Omega_i(x+\xi_i s,t+s) ds \]
 
 Wobei \(\Omega_i(x,t)\) hier die diskrete Formulierung des BGK Kollisionsoperators darstellt:
 \[\Omega_i(x,t) := -\frac{1}{\tau} ( f_i(x,t) - f_i^\text{eq}(x, t) )\]
@@ -383,12 +383,12 @@ Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitte
 Kraft seiner höheren Auflösung enthält das feine Gitter mehr Informationen als das umgebende grobe Gitter. Der Übergang von fein nach grob stellt also eine Restriktion der Verteilungsfunktionen dar.
 
 Konkret suchen wir nach einer sinnvollen Definition der in \(x_{f \to g} \in \U_{f \to g}\) fehlenden Verteilungsfunktionen \(f_{g,i}\). Eine Solche ergibt sich aus der skalierten Dekomposition \ref{eq:basicF2G} durch Ersetzen der einfachen Nicht-Equilibriumsverteilung \(f_{f,i}^\text{neq}(x_{f \to g})\) mit einer restringierten Variante ebendieser.
-\[f_{g,i}(x_{f \to g}) = f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \alpha^{-1} \ \rfneq{i}{x_{f \to g}} \numberthis\label{eq:restrictedF2G}\]
-Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch die Restriktionsoperation \(\boldsymbol{r}\) eingeschränkt wird, während der Equilibriumanteil unangetastet bleibt. Dies ist damit zu begründen, dass Dichte und Geschwindigkeit bei der verwendeten konvektiven Skalierung im Gitterübergang stetig bleiben.
+\[f_{g,i}(x_{f \to g}) = f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \alpha^{-1} \ \resarg{i}{x_{f \to g}} \numberthis\label{eq:restrictedF2G}\]
+Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch eine Restriktionsoperation eingeschränkt wird, während der Equilibriumanteil unangetastet bleibt. Dies ist damit zu begründen, dass Dichte und Geschwindigkeit bei der von uns verwendeten konvektiven Skalierung im Gitterübergang stetig bleiben.
 
-Die skalierte Dekomposition \ref{eq:basicF2G} lässt sich in der Schreibweise von \ref{eq:restrictedF2G} formulieren, wenn die Identität als Restriktionsoperation eingesetzt wird: \[\rfneq{i}{x_{f \to g}} := f_{f,i}^\text{neq}(x_{f \to g})\]
+Die skalierte Dekomposition \ref{eq:basicF2G} lässt sich in der Schreibweise von \ref{eq:restrictedF2G} formulieren, wenn die Identität als Restriktionsoperation eingesetzt wird: \[\resarg{i}{x_{f \to g}} := f_{f,i}^\text{neq}(x_{f \to g})\]
 
-Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumanteilen: \[\rfneq{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
+Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumanteilen: \[\resarg{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
 
 \newpage
 \subsection{Interpolation}
@@ -410,17 +410,30 @@ Insgesamt erhalten wir eine vollständige Definition der gesuchten Verteilungen 
 \[f_{f,i}(x_{g \to f}^g) = f_i^\text{eq}(\rho_g(x_{g \to f}^g), u_g(x_{g \to f}^g)) + \alpha f_{g,i}^\text{neq}(x_{g \to f}^g) \numberthis\label{eq:expandedDirectG2F}\]
 
 Für \(x_{g \to f}^f \in \U_{g \to f}^f\) gilt insbesondere \(x_{g \to f}^f \notin \U_g\). Es existieren in diesen Gitterpunkten also im Gegensatz zur Situation \ref{eq:expandedDirectG2F} keine groben Verteilungsfunktionen. Die fehlenden Werte zur Bestimmung der Momente sowie des Nicht-Equilibriumanteils in (\ref{eq:basicG2F}) müssen hier also aus den umliegenden groben Verteilungsfunktionen interpoliert werden:
-\[f_{f,i}(x_{g \to f}^f) = f_i^\text{eq}(\interpol{\rho_g}{x_{g \to f}^f}, \interpol{u_g}{x_{g \to f}^f}) + \alpha \interpol{f_{g,i}^\text{neq}}{x_{g \to g}^f} \numberthis\label{eq:expandedInterpolG2F}\]
-Die unbekannten Werte der Moment- und Nicht-Equilibriumfunktionen werden in diesem Ausdruck durch eine Interpolationsoperation \(\boldsymbol{n}\) genähert. Neben der Restriktionsoperation \(\boldsymbol{r}\) stellt die Wahl des Interpolationsverfahrens einen weiteren zentralen und flexiblen Bestandteil des, auf diesen Seiten nachvollzogenen, Gitterverfeinerungsverfahren dar.
+\[f_{f,i}(x_{g \to f}^f) = f_i^\text{eq}(\ipolarg{\rho_g}{x_{g \to f}^f}, \ipolarg{u_g}{x_{g \to f}^f}) + \alpha \ipolarg{f_{g,i}^\text{neq}}{x_{g \to g}^f} \numberthis\label{eq:expandedInterpolG2F}\]
+Die unbekannten Werte der Moment- und Nicht-Equilibriumfunktionen werden in diesem Ausdruck durch eine Interpolationsoperation \(\ipol\) genähert. Neben der Restriktionsoperation \(\res\) stellt die Wahl des Interpolationsverfahrens einen weiteren zentralen und flexiblen Bestandteil des, auf diesen Seiten nachvollzogenen, Gitterverfeinerungsverfahren dar.
 
-Stützstellen für die Interpolation seien hier die parallel zum Gitterübergang liegenden groben Nachbarknoten des gesuchten Punktes \(x_{g \to f}^f\).
+\bigskip
 
-\begin{figure}
+Stützstellen für die Interpolation seien hier die parallel zum Gitterübergang liegenden groben Nachbarknoten des gesuchten Punktes \(x_{g \to f}^f\). Wir adressieren diese, parallel zu einem Einheitsvektor \(v\) positionierten, Stützknoten mit:
+\[\mathcal{N}_{x_{g \to f}^f} := \left\{x \in \G \middle| x = x_{g \to f}^f + j \, \delta x_f \, v,\ j \in \Z \right\} \subseteq \U_{g \to f}^g\]
+Bekannte Stützwerte von \(\ipolarg{\star}{x}\) befinden sich also relativ zum gesuchten Knoten \(x_{g \to f}^f\) in, um ungerade Vielfache der feinen Schrittweite \(\delta x_f\) skalierten, Verschiebungen entlang der normierten Übergangsparallele \(v\) (vgl. Abbildungen \ref{fig:InterpolationBasis} und \ref{fig:InterpolationDetail}). Die Einschränkung der hinzugezogenen Stützen auf Knoten, welche parallel zum Übergang liegen, wurde von Lagrava et al. so gewählt~\cite[Kap.~3.6]{lagrava12}, um in 2D ein eindimensionales Interpolationsproblem zu erhalten. Prinzipiell spricht nichts gegen eine Einbeziehung umfangreicherer Teilmengen der groben Knotennachbarschaft.
+
+\begin{figure}[h]
 \centering
 \input{img/interpolation_basis.tikz}
 \caption{Stützstellen der Interpolation im Übergangsbereich}
 \label{fig:InterpolationBasis}
 \end{figure}
+
+Um die kommenden Ausführungen auf das Wesentliche -- namentlich das Verfahren unabhängig der konkret zu interpolierenden Funktion -- zu konzentrieren, sei definiert:
+\[\sipolarg{h} := \ipolarg{\star}{x_{g \to f}^f + h \, \delta x_f \, v} \text{ für Zielfunktion } \star \in \{\rho_g, u_g, f_{g,i}^\text{neq}\}\]
+In dieser Formulierung suchen wir also eine möglichst gute Interpolation des Wertes in \(\sipolarg{0}\) anhand der Stützstellen \(\sipolarg{h}\) für kleine \(h \in \Z \setminus 2\Z\). Ein naheliegender Ansatz hierfür ist das arithmetische Mittel der beiden engsten Nachbarn:
+\[\ipolarg{\star}{x_{g \to f}^f} = \sipolarg{0} = \frac{\sipolarg{-1} + \sipolarg{1}}{2}\]
+Vorteil eine solch einfachen Interpolation wäre, dass die benötigten groben Nachbarknoten auch an den Ecken des Übergangsbereiches existieren auf diese Weise keine Sonderbehandlung erforderlich wird.
+
+Bessere Näherungen können beispielsweise mit einem Verfahren vierter Ordnung erzielt werden:
+\[\sipolarg{0} = \frac{9}{16}\left(\sipolarg{-1} + \sipolarg{1}\right) - \frac{1}{16}\left(\sipolarg{-3} + \sipolarg{3}\right)\]
 
 \begin{figure}
 \centering

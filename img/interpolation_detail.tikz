@@ -19,10 +19,12 @@
 \node[ibase] at (0.5,0){ };
 \node[ibase] at (1.5,0){ };
 
-\draw[arrow] (0,0.8) node[right] {Gesuchter Wert \(\interpol{\star}{x_{g \to f}^f}\)} -- (0,0.3);
-\draw[arrow] (-1.5,-0.8) node[below right] {Bekannte Werte \(\interpol{\star}{\U_{g \to f}^g}\)} -- (-1.5,-0.3);
-\draw[arrow] (-0.5,-0.8) -- (-0.5,-0.3);
-\draw[arrow] (0.5,-0.8) -- (0.5,-0.3);
-\draw[arrow] (1.5,-0.8) -- (1.5,-0.3);
+\draw[arrow] (0,0.8) node[right] {Gesuchter Wert \(\sipolarg{0}\)} -- (0,0.3);
+\draw[arrow] (-1.5,-0.8) node[below] {\(\sipolarg{-3}\)} -- (-1.5,-0.3);
+\draw[arrow] (-0.5,-0.8) node[below] {\(\sipolarg{-1}\)} -- (-0.5,-0.3);
+\draw[arrow] (0.5,-0.8) node[below] {\(\sipolarg{1}\)} -- (0.5,-0.3);
+\draw[arrow] (1.5,-0.8) node[below] {\(\sipolarg{3}\)} -- (1.5,-0.3);
+
+\node[below right,yshift=-1pt] at (2,-0.8) {Umfeld bekannter Werte in \(\mathcal{N}_{x_{g \to f}^f}\)};
 
 \end{tikzpicture}

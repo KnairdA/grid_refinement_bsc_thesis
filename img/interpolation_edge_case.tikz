@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+	scale=1.5,
+	coarse/.style={circle,draw=gray,inner sep=4pt},
+	ibase/.style={coarse,draw=black!40!blue,very thick},
+	fine/.style={cross out,draw=gray,minimum size=8pt},
+	wantedfine/.style={fine,draw=black!40!blue,ultra thick},
+	arrow/.style={-{Latex[length=2mm]},thick},
+]
+
+\foreach \x in {0,...,3}
+	\foreach \y in {-2,...,2}
+		\node[coarse] at (\x,\y){ };
+
+\foreach \x in {4,...,6}
+	\foreach \y in {0,...,2}
+		\node[coarse] at (\x,\y){ };
+
+\foreach \x in {0,...,8}
+	\foreach \y in {-4,...,2}
+		\node[fine] at (2+\x*0.5,\y*0.5){ };
+
+\node[wantedfine] at (2,0.5){ };
+\node[ibase] at (2,1){ };
+\node[ibase] at (2,0){ };
+\node[ibase] at (2,-1){ };
+
+\node[wantedfine,draw=black!40!green] at (5.5,1){ };
+\node[ibase,draw=black!40!green] at (6,1){ };
+\node[ibase,draw=black!40!green] at (5,1){ };
+\node[ibase,draw=black!40!green] at (4,1){ };
+
+\draw[dashed,thick] (1.8,-2.2) -- (1.8,1.2) -- (6.2,1.2) -- (6.2,0.8) -- (2.2,0.8) -- (2.2,-2.2) -- (1.8,-2.2);
+\draw[dashed,draw=gray] (2.8,-2.2) -- (2.8,0.2) -- (6.2,0.2) -- (6.2,-0.2) -- (3.2,-0.2) -- (3.2,-2.2) -- (2.8,-2.2);
+
+\end{tikzpicture}

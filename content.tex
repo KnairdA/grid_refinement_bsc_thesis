@@ -28,7 +28,6 @@ Hierbei handelt es sich um eine Advektionsgleichung wobei der Term \(\partial_t 
 \end{Definition}
 
 Zentrale Anforderung an den Kollisionsoperator ist die Impuls- und Masseerhaltung. Die im Folgenden betrachtete Lattice Boltzmann Methode verwendet die übliche BGK Approximation der Boltzmann-Gleichung ohne äußere Kraft von Bhatnagar, Gross und Krook (siehe \citetitle{krueger17}~\cite[Kap.~3.5.3]{krueger17}).
-
 Grundlegendes Element dieser Approximation ist der BGK Operator
 \[\Omega(f) := -\frac{f-f^\text{eq}}{\tau} \Delta t\]
 welcher die Partikelverteilung mit Rate \(\tau\) gegen eine Equilibriumsverteilung \(f^\text{eq}\) relaxiert. Ohne Beschränkung der Allgemeinheit setzen wir dabei  im Folgenden \(\Delta t = 1\).
@@ -270,6 +269,16 @@ x_\#^\text{phys}(x^\text{impl}) &:= x_{0,\#}^\text{phys} + \delta x_\# \cdot x^\
 Diese Abbildung der physikalisch eingebetteten Gitterknoten in die Definitionsmenge der Verteilungsfunktionen nehmen wir dabei zur Vereinfachung der Notation implizit an, wann immer die Verteilung in Elementen aus \(\G\) oder \(\F\) betrachtet wird.
 \end{Definition}
 
+Da die Einbettungen von Knoten verschiedener Auflösungen in deren Übergangsbereichen nicht disjunkt sind, benötigen wir im Weiteren gitterspezifische Bezeichnungen für die Verteilungen und deren Momente:
+
+\begin{Definition}[Gitterspezifische Verteilungsfunktionen und Momente]
+Sei \(\# \in \{f, g\}\) wieder Symbol des feinen oder groben Gitters. Wir bezeichnen dann mit \(f_{\#,i}\) die \(i\)-te Verteilungsfunktion des entspechenden Gitters. Analog formulieren sich mit Definition~\ref{def:Momente} die Momente für \(x \in \G\) respektive \(x \in \F\):
+\begin{align*}
+\rho_\#(x) &:= \sum_{j=0}^{q-1} f_{\#,j}(x) \\
+u_\#(x) &:= \frac{1}{\rho_\#(x)} \sum_{j=0}^{q-1} \xi_j f_{\#,j}(x)
+\end{align*}
+\end{Definition}
+
 Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese, in Form der Gitter diskretisierten, Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
 
 \begin{figure}[h]
@@ -296,7 +305,8 @@ Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches
 Die Aufgabe der Skalierungs-, Restriktions- und Interpolationsschritte des Verfahrens besteht also \emph{nur} darin, diese jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
 
 \newpage
-\subsection{Skalierung}
+\subsection{Komponenten der Gitterkopplung}
+\subsubsection{Skalierung}
 \label{kap:Skalierung}
 
 Während die Skalierung räumlicher Größen durch die Festlegung des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
@@ -378,7 +388,7 @@ f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left
 Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten potenziell komplizierter, als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.
 
 \newpage
-\subsection{Restriktion}
+\subsubsection{Restriktion}
 
 Kraft seiner höheren Auflösung enthält das feine Gitter mehr Informationen als das umgebende grobe Gitter. Der Übergang von fein nach grob stellt also eine Restriktion der Verteilungsfunktionen dar.
 
@@ -391,7 +401,7 @@ Die skalierte Dekomposition \ref{eq:basicF2G} lässt sich in der Schreibweise vo
 Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumanteilen: \[\resarg{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
 
 \newpage
-\subsection{Interpolation}
+\subsubsection{Interpolation}
 
 Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGridNodes} um eine Unterscheidung zwischen alleinstehenden feinen Knoten und solchen für die ein, der Übertragung von grob nach fein dienlicher, grober Knoten existiert.
 \begin{Definition}[Gitterknoten mit Übertragung von grob nach fein]
@@ -401,12 +411,7 @@ Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGrid
 \end{align*}
 \end{Definition}
 
-Für \(x_{g \to f}^g \in \U_{g \to f}^g\) gilt insbesondere \(x_{g \to f}^g \in \U_g \cap \, \U_f\). Es existieren in diesen Gitterpunkten also vollständig definierte grobe Verteilungsfunktionen, die wir zur Bestimmung der Momente \(\rho\) und \(u\) in (\ref{eq:basicG2F}) heranziehen können. Dazu formulieren wir die Momente der groben Verteilungsfunktionen in \(x^g \in \G\) anhand Definition~\ref{def:Momente} wie folgt:
-\begin{align*}
-\rho_g(x^g) &:= \sum_{j=0}^{q-1} f_{g,j}(x^g) \\
-u_g(x^g) &:= \frac{1}{\rho_g(x^g)} \sum_{j=0}^{q-1} \xi_j f_{g,j}(x^g)
-\end{align*}
-Insgesamt erhalten wir eine vollständige Definition der gesuchten Verteilungen in den feinen Knotenpunkten \(x_{g \to f}^g \in \U_{g \to f}^g \subset \U_f\):
+Für \(x_{g \to f}^g \in \U_{g \to f}^g\) gilt insbesondere \(x_{g \to f}^g \in \U_g \cap \, \U_f\). Es existieren in diesen Gitterpunkten also vollständig definierte grobe Verteilungsfunktionen, die wir zur Bestimmung der Momente \(\rho\) und \(u\) in (\ref{eq:basicG2F}) heranziehen können. Entsprechend besitzen wir zur Interpolation des gesuchten Wertes geschickterweise eine Stützstelle an eben dessen Position. Die \emph{Interpolation} von \(x_{g \to g}^g\) beschränkt sich folglich auf eine Skalierung:
 \[f_{f,i}(x_{g \to f}^g) = f_i^\text{eq}(\rho_g(x_{g \to f}^g), u_g(x_{g \to f}^g)) + \alpha f_{g,i}^\text{neq}(x_{g \to f}^g) \numberthis\label{eq:expandedDirectG2F}\]
 
 Für \(x_{g \to f}^f \in \U_{g \to f}^f\) gilt insbesondere \(x_{g \to f}^f \notin \U_g\). Es existieren in diesen Gitterpunkten also im Gegensatz zur Situation \ref{eq:expandedDirectG2F} keine groben Verteilungsfunktionen. Die fehlenden Werte zur Bestimmung der Momente sowie des Nicht-Equilibriumanteils in (\ref{eq:basicG2F}) müssen hier also aus den umliegenden groben Verteilungsfunktionen interpoliert werden:
@@ -432,13 +437,6 @@ In dieser Formulierung suchen wir also eine möglichst gute Interpolation des We
 \[\ipolarg{\star}{x_{g \to f}^f} = \sipolarg{0} = \frac{\sipolarg{-1} + \sipolarg{1}}{2} \numberthis\label{eq:ipol2ord}\]
 Diese Formel stellt gerade das, mit dem Schema von Neville herleitbare, Interpolationspolynom auf zwei Stützstellen dar. Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nachbarn auch an den Ecken des Übergangsbereiches existieren und daher keine Sonderbehandlung erforderlich wird.
 
-Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden:
-\[\sipolarg{0} = \frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \numberthis\label{eq:ipol4ord}\]
-Dieses Interpolationspolynom auf vier Stützpunkten resultiert in ein Verfahren vierter Ordnung, wie sich mithilfe der Taylor-Entwicklung von \(\sipol\) um \(0\) zeigen lässt:
-\[\sipolarg{h} = \sipolarg{0} + \sipolderivarg{1}{0}h + \frac{1}{2}\sipolderivarg{2}{0}h^2 + \frac{1}{6}\sipolderivarg{3}{0}h^3 + \mathcal{O}(h^4) \numberthis\label{eq:sipolTaylorOrder4}\]
-Dazu kann die Entwicklung einfach in die Auswertung des eindeutigen Interpolationspolynoms dritten Grades auf vier Stützstellen (\ref{eq:ipol4ord}) an Stelle \(0\) eingesetzt werden:
-\[\frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^4)\]
-
 \begin{figure}
 \centering
 \input{img/interpolation_detail.tikz}
@@ -446,7 +444,34 @@ Dazu kann die Entwicklung einfach in die Auswertung des eindeutigen Interpolatio
 \label{fig:InterpolationDetail}
 \end{figure}
 
+Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden:
+\[\sipolarg{0} = \frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \numberthis\label{eq:ipol4ord}\]
+Dieses Interpolationspolynom auf vier Stützpunkten resultiert in ein Verfahren vierter Ordnung, wie sich mithilfe der Taylor-Entwicklung von \(\sipol\) um \(0\) zeigen lässt:
+\[\sipolarg{h} = \sipolarg{0} + \sipolderivarg{1}{0}h + \frac{1}{2}\sipolderivarg{2}{0}h^2 + \frac{1}{6}\sipolderivarg{3}{0}h^3 + \mathcal{O}(h^4) \numberthis\label{eq:sipolTaylorOrder4}\]
+Dazu kann die Entwicklung einfach in die Auswertung des eindeutigen Interpolationspolynoms dritten Grades auf vier Stützstellen (\ref{eq:ipol4ord}) an Stelle \(0\) eingesetzt werden:
+\[\frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^4)\]
+
+In Abbildung~\ref{fig:InterpolationEdgeCase} erkennen wir zwei mögliche Randfälle des Übergangs von \(\G\) nach \(\F\), welche zu Problemen bei Nutzung des Interpolationsverfahren vierter Ordnung führen können. So kann es an den Außengrenzen der Simulationsdomäne dazu kommen, dass nur drei der vier benötigten groben Nachbarknoten zur Verfügung stehen, wie in der grün markierten Situation dargestellt.
+\begin{figure}[h]
+\centering
+\input{img/interpolation_edge_case.tikz}
+\caption{Interpolation in Ecken und Enden des feinen Gitters}
+\label{fig:InterpolationEdgeCase}
+\end{figure}
+
+Je nach Implementierung der Kommunikation zwischen den Gittern, kann die gleiche Einschränkung auch in Ecken des feinen Gitters -- hier blau markiert -- dazu kommen, dass eine Interpolation auf Grundlage von nur drei Nachbarn benötigt wird. Entsprechend erhalten wir nach Anwendung des Schema von Neville ein Interpolationspolynom auf drei Stützstellen:
+\[\sipolarg{0} = \frac{3}{8}\sipolarg{-1} + \frac{3}{4}\sipolarg{1} - \frac{1}{8}\sipolarg{3} \numberthis\label{eq:ipol3ord}\]
+Passend zur Anzahl der Stützstellen präsentiert sich dieses Verfahren nach erneutem Einsetzen der Taylor-Entwicklung (\ref{eq:sipolTaylorOrder4}) als eine Interpolationsformel dritter Ordnung:
+\[\frac{3}{8}\sipolarg{-1} + \frac{3}{4}\sipolarg{1} - \frac{1}{8}\sipolarg{3} \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^3)\]
+
+Trotz Behandlung dieses Sondernfalls werden die höheren Approximationsordnungen gegenüber (\ref{eq:ipol2ord}) weiterhin und unumgänglich durch zusätzliche Stützstellen erkauft, welche bei parallelisierten LBM-Umsetzungen kommuniziert werden müssen. Es gilt also, zwischen Güte der Interpolation und Anzahl sowie Position der Stützstellen abzuwiegen.
+
+\newpage
+\subsection{Algorithmus}
+
 % ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten
+% ToDo: Randfälle der Restriktion ausarbeiten, analog zu Interpolation (fehlt im Paper)
+% ToDo: Gitterspezifische Verteilungsfunktionen in der Übersicht definieren, ebenso Momente etc.
 
 \newpage
 \section{Implementierung in OpenLB}

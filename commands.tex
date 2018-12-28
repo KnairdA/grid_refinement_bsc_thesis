@@ -20,10 +20,14 @@
 \newcommand{\resarg}[2]{\boldsymbol{r(}{#1}, {#2}\boldsymbol{)}}
 
 \DeclareMathOperator{\ipol}{\boldsymbol{n}}
+\DeclareMathOperator{\sipol}{\overline{\boldsymbol{n}}}
 \newcommand{\ipolarg}[2]{\boldsymbol{n}_{#1}\boldsymbol{(}{#2}\boldsymbol{)}}
 \newcommand{\sipolarg}[1]{\overline{\boldsymbol{n}}\boldsymbol{(}{#1}\boldsymbol{)}}
+\newcommand{\sipolderivarg}[2]{\overline{\boldsymbol{n}}^{\,(#1)}\boldsymbol{(}{#2}\boldsymbol{)}}
 
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 
 \newcommand{\V}[2]{\ensuremath{\begin{pmatrix}#1\\#2\end{pmatrix}}}
 \newenvironment{rcases}{\left.\begin{aligned}}{\end{aligned}\right\rbrace}
+
+%\AtBeginEnvironment{matrix}{\everymath{\displaystyle}}

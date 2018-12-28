@@ -411,7 +411,7 @@ Insgesamt erhalten wir eine vollständige Definition der gesuchten Verteilungen 
 
 Für \(x_{g \to f}^f \in \U_{g \to f}^f\) gilt insbesondere \(x_{g \to f}^f \notin \U_g\). Es existieren in diesen Gitterpunkten also im Gegensatz zur Situation \ref{eq:expandedDirectG2F} keine groben Verteilungsfunktionen. Die fehlenden Werte zur Bestimmung der Momente sowie des Nicht-Equilibriumanteils in (\ref{eq:basicG2F}) müssen hier also aus den umliegenden groben Verteilungsfunktionen interpoliert werden:
 \[f_{f,i}(x_{g \to f}^f) = f_i^\text{eq}(\ipolarg{\rho_g}{x_{g \to f}^f}, \ipolarg{u_g}{x_{g \to f}^f}) + \alpha \ipolarg{f_{g,i}^\text{neq}}{x_{g \to g}^f} \numberthis\label{eq:expandedInterpolG2F}\]
-Die unbekannten Werte der Moment- und Nicht-Equilibriumfunktionen werden in diesem Ausdruck durch eine Interpolationsoperation \(\ipol\) genähert. Neben der Restriktionsoperation \(\res\) stellt die Wahl des Interpolationsverfahrens einen weiteren zentralen und flexiblen Bestandteil des, auf diesen Seiten nachvollzogenen, Gitterverfeinerungsverfahren dar.
+Die unbekannten Werte der Moment- und Nicht-Equilibriumfunktionen werden in diesem Ausdruck durch eine Interpolationsoperation \(\ipol\) genähert. Neben der Art der Restriktion \(\res\) stellt die Wahl des Interpolationsverfahrens einen weiteren zentralen und flexiblen Bestandteil des, auf diesen Seiten nachvollzogenen, Gitterverfeinerungsverfahren dar.
 
 \bigskip
 
@@ -429,11 +429,15 @@ Bekannte Stützwerte von \(\ipolarg{\star}{x}\) befinden sich also relativ zum g
 Um die kommenden Ausführungen auf das Wesentliche -- namentlich das Verfahren unabhängig der konkret zu interpolierenden Funktion -- zu konzentrieren, sei definiert:
 \[\sipolarg{h} := \ipolarg{\star}{x_{g \to f}^f + h \, \delta x_f \, v} \text{ für Zielfunktion } \star \in \{\rho_g, u_g, f_{g,i}^\text{neq}\}\]
 In dieser Formulierung suchen wir also eine möglichst gute Interpolation des Wertes in \(\sipolarg{0}\) anhand der Stützstellen \(\sipolarg{h}\) für kleine \(h \in \Z \setminus 2\Z\). Ein naheliegender Ansatz hierfür ist das arithmetische Mittel der beiden engsten Nachbarn:
-\[\ipolarg{\star}{x_{g \to f}^f} = \sipolarg{0} = \frac{\sipolarg{-1} + \sipolarg{1}}{2}\]
-Vorteil eine solch einfachen Interpolation wäre, dass die benötigten groben Nachbarknoten auch an den Ecken des Übergangsbereiches existieren auf diese Weise keine Sonderbehandlung erforderlich wird.
+\[\ipolarg{\star}{x_{g \to f}^f} = \sipolarg{0} = \frac{\sipolarg{-1} + \sipolarg{1}}{2} \numberthis\label{eq:ipol2ord}\]
+Diese Formel stellt gerade das, mit dem Schema von Neville herleitbare, Interpolationspolynom auf zwei Stützstellen dar. Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nachbarn auch an den Ecken des Übergangsbereiches existieren und daher keine Sonderbehandlung erforderlich wird.
 
-Bessere Näherungen können beispielsweise mit einem Verfahren vierter Ordnung erzielt werden:
-\[\sipolarg{0} = \frac{9}{16}\left(\sipolarg{-1} + \sipolarg{1}\right) - \frac{1}{16}\left(\sipolarg{-3} + \sipolarg{3}\right)\]
+Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden:
+\[\sipolarg{0} = \frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \numberthis\label{eq:ipol4ord}\]
+Dieses Interpolationspolynom auf vier Stützpunkten resultiert in ein Verfahren vierter Ordnung, wie sich mithilfe der Taylor-Entwicklung von \(\sipol\) um \(0\) zeigen lässt:
+\[\sipolarg{h} = \sipolarg{0} + \sipolderivarg{1}{0}h + \frac{1}{2}\sipolderivarg{2}{0}h^2 + \frac{1}{6}\sipolderivarg{3}{0}h^3 + \mathcal{O}(h^4) \numberthis\label{eq:sipolTaylorOrder4}\]
+Dazu kann die Entwicklung einfach in die Auswertung des eindeutigen Interpolationspolynoms dritten Grades auf vier Stützstellen (\ref{eq:ipol4ord}) an Stelle \(0\) eingesetzt werden:
+\[\frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^4)\]
 
 \begin{figure}
 \centering
@@ -441,6 +445,8 @@ Bessere Näherungen können beispielsweise mit einem Verfahren vierter Ordnung e
 \caption{Stützstellen der Interpolation}
 \label{fig:InterpolationDetail}
 \end{figure}
+
+% ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten
 
 \newpage
 \section{Implementierung in OpenLB}

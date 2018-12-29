@@ -443,7 +443,7 @@ Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nach
 \label{fig:InterpolationDetail}
 \end{figure}
 
-Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden. Wir berechnen dazu mit dem Schema von Neville ein Interpolationspolynom auf den vier Stützpunkten \((-3,\sipolarg{-3})\), \((-1,\sipolarg{-1})\), \((1,\sipolarg{1})\) und \((3,\sipolarg{3})\):
+Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden. Wir berechnen dazu mit dem Schema der dividierten Differenzen die Faktoren der Newtonschen Interpolationsformel \cite[IV.3~(3.10)]{amann_escher} auf den in Abbildung~\ref{fig:InterpolationDetail} dargestellten Stützpunkten \((-3,\sipolarg{-3})\), \((-1,\sipolarg{-1})\), \((1,\sipolarg{1})\) und \((3,\sipolarg{3})\):
 \begin{align*}
 \sipolarg{x} :&= \sipolarg{-3} \\
 &+ \frac{1}{2}(\sipolarg{-1}-\sipolarg{-3})(x+3)\\
@@ -468,7 +468,7 @@ In Abbildung~\ref{fig:InterpolationEdgeCase} erkennen wir zwei mögliche Randfä
 
 \noindent
 So kann es an den Außengrenzen der Simulationsdomäne dazu kommen, dass nur drei der vier benötigten groben Nachbarknoten zur Verfügung stehen, wie in der grün markierten Situation dargestellt.
-Je nach Implementierung der Kommunikation zwischen den Gittern, kann die gleiche Einschränkung auch in Ecken des feinen Gitters -- hier blau markiert -- dazu kommen, dass eine Interpolation auf Grundlage von nur drei Nachbarn benötigt wird. Entsprechend erhalten wir nach Anwendung des Schema von Neville ein Interpolationspolynom auf drei Stützstellen:
+Je nach Implementierung der Kommunikation zwischen den Gittern, kann die gleiche Einschränkung auch in Ecken des feinen Gitters -- hier blau markiert -- dazu kommen, dass eine Interpolation auf Grundlage von nur drei Nachbarn benötigt wird. Entsprechend erhalten wir nach Berechnung der dividierten Differenzen ein Interpolationspolynom auf drei Stützstellen:
 \begin{align*}
 \sipolarg{x} :&= \sipolarg{-1} \\
 &+ \frac{1}{2}(\sipolarg{1}-\sipolarg{-1})(x+1)\\
@@ -484,9 +484,25 @@ Trotz Behandlung dieses Sondernfalls werden die höheren Approximationsordnungen
 \newpage
 \subsection{Algorithmus}
 
+In der zurückliegenden Sektion haben wir, aufbauend auf der Skalierung von Verteilungsfunktionen zwischen Gitterauflösungen, die Restriktion von fein nach grob sowie die Interpolation von grob zu fein nachvollzogen. Die somit erfassten wesentlichen Grundlagen des Verfeinerungsverfahrens gilt es nun in einem \emph{Kopplungsalgorithmus}~\cite[Kap.~3.5]{lagrava12} zusammenzuführen.
+
+\bigskip
+
+Entsprechend (\ref{eq:gridTime}) müssen für jeden groben Zeitschritt \(\delta t_g\) zwei feine Zeitschritte \(\delta t_f\) durchgeführt werden. Die alternierenden Kollisions- und Strömungsschritte der beiden Gitter sind also strikt gekoppelt und werden als eine Schleifeneinheit betrachtet. Als Schleifeninvariante definieren wir dabei die vollständige Bekanntheit aller Verteilungsfunktionen aller Knoten in beiden Gittern.
+\begin{enumerate}
+\item Kollisions- und Strömungsschritt auf Gitter \(\G\)
+\item Kollisions- und Strömungsschritt auf Gitter \(\F\)
+\item Zeitliche Interpolation von \(\rho_g, u_g\) und \(f_{g,i}^\text{neq}\) in \(x_{g \to f}^g \in \G\) zu Zeitpunkt \(t + \delta t_g / 2\)
+\item Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedDirectG2F}).
+\item Räumliche Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedInterpolG2F}).
+\item Kollisions- und Strömungsschritt auf Gitter \(\F\)
+\item Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedDirectG2F}).
+\item Räumliche Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedInterpolG2F}).
+\item Setzen von \(f_{g,i}\) in \(x_{f \to g} \in \G\) mittels (\ref{eq:basicF2G})
+\end{enumerate}
+
 % ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten
 % ToDo: Randfälle der Restriktion ausarbeiten, analog zu Interpolation (fehlt im Paper)
-% ToDo: Gitterspezifische Verteilungsfunktionen in der Übersicht definieren, ebenso Momente etc.
 
 \newpage
 \section{Implementierung in OpenLB}

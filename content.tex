@@ -411,7 +411,7 @@ Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGrid
 \end{align*}
 \end{Definition}
 
-Für \(x_{g \to f}^g \in \U_{g \to f}^g\) gilt insbesondere \(x_{g \to f}^g \in \U_g \cap \, \U_f\). Es existieren in diesen Gitterpunkten also vollständig definierte grobe Verteilungsfunktionen, die wir zur Bestimmung der Momente \(\rho\) und \(u\) in (\ref{eq:basicG2F}) heranziehen können. Entsprechend besitzen wir zur Interpolation des gesuchten Wertes geschickterweise eine Stützstelle an eben dessen Position. Die \emph{Interpolation} von \(x_{g \to g}^g\) beschränkt sich folglich auf eine Skalierung:
+Für \(x_{g \to f}^g \in \U_{g \to f}^g\) gilt insbesondere \(x_{g \to f}^g \in \U_g \cap \, \U_f\). Es existieren in diesen Gitterpunkten also vollständig definierte grobe Verteilungsfunktionen, die wir zur Bestimmung der Momente \(\rho\) und \(u\) in (\ref{eq:basicG2F}) heranziehen können. Entsprechend besitzen wir zur Interpolation des gesuchten Wertes geschickterweise eine Stützstelle an eben dessen Position. Die \emph{Interpolation} von \(x_{g \to f}^g\) beschränkt sich folglich auf die Skalierung~(\ref{eq:basicG2F}):
 \[f_{f,i}(x_{g \to f}^g) = f_i^\text{eq}(\rho_g(x_{g \to f}^g), u_g(x_{g \to f}^g)) + \alpha f_{g,i}^\text{neq}(x_{g \to f}^g) \numberthis\label{eq:expandedDirectG2F}\]
 
 Für \(x_{g \to f}^f \in \U_{g \to f}^f\) gilt insbesondere \(x_{g \to f}^f \notin \U_g\). Es existieren in diesen Gitterpunkten also im Gegensatz zur Situation \ref{eq:expandedDirectG2F} keine groben Verteilungsfunktionen. Die fehlenden Werte zur Bestimmung der Momente sowie des Nicht-Equilibriumanteils in (\ref{eq:basicG2F}) müssen hier also aus den umliegenden groben Verteilungsfunktionen interpoliert werden:
@@ -435,23 +435,30 @@ Um die kommenden Ausführungen auf das Wesentliche -- namentlich das Verfahren u
 \[\sipolarg{h} := \ipolarg{\star}{x_{g \to f}^f + h \, \delta x_f \, v} \text{ für Zielfunktion } \star \in \{\rho_g, u_g, f_{g,i}^\text{neq}\}\]
 In dieser Formulierung suchen wir also eine möglichst gute Interpolation des Wertes in \(\sipolarg{0}\) anhand der Stützstellen \(\sipolarg{h}\) für kleine \(h \in \Z \setminus 2\Z\). Ein naheliegender Ansatz hierfür ist das arithmetische Mittel der beiden engsten Nachbarn:
 \[\ipolarg{\star}{x_{g \to f}^f} = \sipolarg{0} = \frac{\sipolarg{-1} + \sipolarg{1}}{2} \numberthis\label{eq:ipol2ord}\]
-Diese Formel stellt gerade das, mit dem Schema von Neville herleitbare, Interpolationspolynom auf zwei Stützstellen dar. Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nachbarn auch an den Ecken des Übergangsbereiches existieren und daher keine Sonderbehandlung erforderlich wird.
-
-\begin{figure}
+Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nachbarn auch an den Ecken des Übergangsbereiches existieren (vgl. Abbildung~\ref{fig:InterpolationEdgeCase}) und daher keine Sonderbehandlung erforderlich wird.
+\begin{figure}[h]
 \centering
 \input{img/interpolation_detail.tikz}
-\caption{Stützstellen der Interpolation}
+\caption{Stützstellen der Interpolation im Detail}
 \label{fig:InterpolationDetail}
 \end{figure}
 
-Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden:
+Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden. Wir berechnen dazu mit dem Schema von Neville ein Interpolationspolynom auf den vier Stützpunkten \((-3,\sipolarg{-3})\), \((-1,\sipolarg{-1})\), \((1,\sipolarg{1})\) und \((3,\sipolarg{3})\):
+\begin{align*}
+\sipolarg{x} :&= \sipolarg{-3} \\
+&+ \frac{1}{2}(\sipolarg{-1}-\sipolarg{-3})(x+3)\\
+&+ \frac{1}{8}(\sipolarg{1}-\sipolarg{-1}+\sipolarg{3})(x+3)(x+1) \\
+&+ \frac{1}{48}(\sipolarg{3}-3\sipolarg{1}+3\sipolarg{-1}-\sipolarg{-3})(x+3)(x+1)(x-1)
+\end{align*}
+Ausgewertet in \(0\) erhalten wir folgenden Ausdruck als Näherung von \(\ipolarg{\star}{x_{g \to f}^f}\):
 \[\sipolarg{0} = \frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \numberthis\label{eq:ipol4ord}\]
-Dieses Interpolationspolynom auf vier Stützpunkten resultiert in ein Verfahren vierter Ordnung, wie sich mithilfe der Taylor-Entwicklung von \(\sipol\) um \(0\) zeigen lässt:
-\[\sipolarg{h} = \sipolarg{0} + \sipolderivarg{1}{0}h + \frac{1}{2}\sipolderivarg{2}{0}h^2 + \frac{1}{6}\sipolderivarg{3}{0}h^3 + \mathcal{O}(h^4) \numberthis\label{eq:sipolTaylorOrder4}\]
-Dazu kann die Entwicklung einfach in die Auswertung des eindeutigen Interpolationspolynoms dritten Grades auf vier Stützstellen (\ref{eq:ipol4ord}) an Stelle \(0\) eingesetzt werden:
-\[\frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^4)\]
+Hierbei handelt es sich um ein Verfahren vierter Ordnung, wie sich durch Einsetzen der Taylor-Entwicklung von \(\sipol\) um \(0\) in die Auswertung~(\ref{eq:ipol4ord}) zeigen lässt:
+\begin{align*}
+&\sipolarg{h} = \sipolarg{0} + \sipolderivarg{1}{0}h + \frac{1}{2}\sipolderivarg{2}{0}h^2 + \frac{1}{6}\sipolderivarg{3}{0}h^3 + \mathcal{O}(h^4) \numberthis\label{eq:sipolTaylorOrder4} \\
+\implies &\frac{9}{16}(\sipolarg{-1} + \sipolarg{1}) - \frac{1}{16}(\sipolarg{-3} + \sipolarg{3}) \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^4)
+\end{align*}
 
-In Abbildung~\ref{fig:InterpolationEdgeCase} erkennen wir zwei mögliche Randfälle des Übergangs von \(\G\) nach \(\F\), welche zu Problemen bei Nutzung des Interpolationsverfahren vierter Ordnung führen können. So kann es an den Außengrenzen der Simulationsdomäne dazu kommen, dass nur drei der vier benötigten groben Nachbarknoten zur Verfügung stehen, wie in der grün markierten Situation dargestellt.
+In Abbildung~\ref{fig:InterpolationEdgeCase} erkennen wir zwei mögliche Randfälle des Gitterübergangs, welche zu Problemen bei Nutzung des Interpolationsverfahren vierter Ordnung führen können.
 \begin{figure}[h]
 \centering
 \input{img/interpolation_edge_case.tikz}
@@ -459,7 +466,15 @@ In Abbildung~\ref{fig:InterpolationEdgeCase} erkennen wir zwei mögliche Randfä
 \label{fig:InterpolationEdgeCase}
 \end{figure}
 
+\noindent
+So kann es an den Außengrenzen der Simulationsdomäne dazu kommen, dass nur drei der vier benötigten groben Nachbarknoten zur Verfügung stehen, wie in der grün markierten Situation dargestellt.
 Je nach Implementierung der Kommunikation zwischen den Gittern, kann die gleiche Einschränkung auch in Ecken des feinen Gitters -- hier blau markiert -- dazu kommen, dass eine Interpolation auf Grundlage von nur drei Nachbarn benötigt wird. Entsprechend erhalten wir nach Anwendung des Schema von Neville ein Interpolationspolynom auf drei Stützstellen:
+\begin{align*}
+\sipolarg{x} :&= \sipolarg{-1} \\
+&+ \frac{1}{2}(\sipolarg{1}-\sipolarg{-1})(x+1)\\
+&+ \frac{1}{8}(\sipolarg{3}-2\sipolarg{1}+\sipolarg{-1})(x+1)(x-1)
+\end{align*}
+Auch in dieser Situation ist nur der Wert in \(0\) zur Näherung von \(\ipolarg{\star}{x_{g \to f}^f}\) von Interesse:
 \[\sipolarg{0} = \frac{3}{8}\sipolarg{-1} + \frac{3}{4}\sipolarg{1} - \frac{1}{8}\sipolarg{3} \numberthis\label{eq:ipol3ord}\]
 Passend zur Anzahl der Stützstellen präsentiert sich dieses Verfahren nach erneutem Einsetzen der Taylor-Entwicklung (\ref{eq:sipolTaylorOrder4}) als eine Interpolationsformel dritter Ordnung:
 \[\frac{3}{8}\sipolarg{-1} + \frac{3}{4}\sipolarg{1} - \frac{1}{8}\sipolarg{3} \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^3)\]

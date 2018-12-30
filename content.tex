@@ -489,17 +489,12 @@ In der zurückliegenden Sektion haben wir, aufbauend auf der Skalierung von Vert
 \bigskip
 
 Entsprechend (\ref{eq:gridTime}) müssen für jeden groben Zeitschritt \(\delta t_g\) zwei feine Zeitschritte \(\delta t_f\) durchgeführt werden. Die alternierenden Kollisions- und Strömungsschritte der beiden Gitter sind also strikt gekoppelt und werden als eine Schleifeneinheit betrachtet. Als Schleifeninvariante definieren wir dabei die vollständige Bekanntheit aller Verteilungsfunktionen aller Knoten in beiden Gittern.
-\begin{enumerate}
-\item Kollisions- und Strömungsschritt auf Gitter \(\G\)
-\item Kollisions- und Strömungsschritt auf Gitter \(\F\)
-\item Zeitliche Interpolation von \(\rho_g, u_g\) und \(f_{g,i}^\text{neq}\) in \(x_{g \to f}^g \in \G\) zu Zeitpunkt \(t + \delta t_g / 2\)
-\item Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedDirectG2F}).
-\item Räumliche Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedInterpolG2F}).
-\item Kollisions- und Strömungsschritt auf Gitter \(\F\)
-\item Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedDirectG2F}).
-\item Räumliche Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) für alle \(i \in \{0,\dots,8\}\) mittels (\ref{eq:expandedInterpolG2F}).
-\item Setzen von \(f_{g,i}\) in \(x_{f \to g} \in \G\) mittels (\ref{eq:basicF2G})
-\end{enumerate}
+
+\begin{figure}[h]
+\input{img/algorithm_birds_eye.tikz}
+\caption{Verfeinerungsalgorithmus mit Invariante aus der Vogelperspektive}
+\label{fig:AlgorithmBirdsEye}
+\end{figure}
 
 % ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten
 % ToDo: Randfälle der Restriktion ausarbeiten, analog zu Interpolation (fehlt im Paper)

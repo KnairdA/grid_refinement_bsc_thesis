@@ -1,0 +1,59 @@
+\hspace{-12.5mm}
+\begin{tikzpicture}[
+	scale=1.0,
+	coarse/.style={left,xshift=-5mm,align=left},
+	fine/.style={right,xshift=5mm,align=left}
+]
+
+\draw[yellow,very thick] (0,0) -- (0,-11) {};
+\draw[yellow,very thick] (1,0) -- (1,-11) {};
+
+\draw[green!60!black,fill] (0,0) circle [radius=1.5mm]{};
+\node[coarse] at (0,0) {\(f_{g,i}(\G)\) vollständig zu Zeit \(t\)};
+
+\draw[green!60!black,fill] (1,0) circle [radius=1mm]{};
+\node[fine] at (1,0) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t\)};
+
+\draw[yellow,fill] (0,-1) circle [radius=1.5mm]{};
+\node[coarse] at (0,-1) {Zeitschritt \(t \to t+\delta t_g\) auf \(\G\)};
+
+\draw[yellow,fill] (1,-2) circle [radius=1mm]{};
+\node[fine] at (1,-2) {Zeitschritt \(t \to t+\delta t_f\) auf \(\F\)};
+
+\draw[yellow,fill] (0,-3) circle [radius=1.5mm]{};
+\node[coarse] at (0,-3)
+{Interpolation von \(\rho_g, u_g, f_{g,i}^\text{neq}\) in \(x_{g \to f}^g \in \G\)\\zu Zeitpunkt \(t + \delta t_g / 2\)};
+
+\draw[yellow,fill] (1,-4) circle [radius=1mm]{};
+\node[fine] at (1,-4)
+{Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) mit (\ref{eq:expandedDirectG2F}).};
+
+\draw[yellow,fill] (1,-5) circle [radius=1mm]{};
+\node[fine] at (1,-5)
+{Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) mit (\ref{eq:expandedInterpolG2F}).};
+
+\draw[green!60!black,fill] (1,-6) circle [radius=1mm]{};
+\node[fine] at (1,-6) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t + \delta t_f\)};
+
+\draw[yellow,fill] (1,-7) circle [radius=1mm]{};
+\node[fine] at (1,-7) {Zeitschritt \(t+\delta t_f \to t+2\delta t_f\) auf \(\F\)};
+
+\draw[yellow,fill] (1,-8) circle [radius=1mm]{};
+\node[fine] at (1,-8)
+{Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) mit (\ref{eq:expandedDirectG2F}).};
+
+\draw[yellow,fill] (1,-9) circle [radius=1mm]{};
+\node[fine] at (1,-9)
+{Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) mit (\ref{eq:expandedInterpolG2F}).};
+
+\draw[yellow,fill] (0,-10) circle [radius=1.5mm]{};
+\node[coarse] at (0,-10)
+{Setzen von \(f_{g,i}\) in \(x_{f \to g} \in \G\) mit (\ref{eq:basicF2G})};
+
+\draw[green!60!black,fill] (0,-11) circle [radius=1.5mm]{};
+\node[coarse] at (0,-11) {\(f_{g,i}(\G)\) vollständig zu Zeit \(t+\delta t_g\)};
+
+\draw[green!60!black,fill] (1,-11) circle [radius=1mm]{};
+\node[fine] at (1,-11) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t+\delta t_g\)};
+
+\end{tikzpicture}

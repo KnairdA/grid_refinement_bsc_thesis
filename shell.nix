@@ -10,6 +10,7 @@ stdenv.mkDerivation rec {
       amsmath
       eulervm
       cm-super
+      enumitem
       bibtex biblatex logreq xstring
       ;
     };

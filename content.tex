@@ -399,7 +399,8 @@ Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch e
 
 Die skalierte Dekomposition \ref{eq:basicF2G} lässt sich in der Schreibweise von \ref{eq:restrictedF2G} formulieren, wenn die Identität als Restriktionsoperation eingesetzt wird: \[\resarg{i}{x_{f \to g}} := f_{f,i}^\text{neq}(x_{f \to g})\]
 
-Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumanteilen: \[\resarg{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
+Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumanteilen:
+\[\resarg{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
 
 \newpage
 \subsubsection{Interpolation}
@@ -500,15 +501,37 @@ Entsprechend (\ref{eq:gridTime}) müssen für jeden groben Zeitschritt \(\delta 
 Aufbauend auf dieser Invariante ergibt sich die, in Abbildung~\ref{fig:AlgorithmBirdsEye} dargelegte, Reihenfolge der erforderlichen Schritte direkt aus den, für die einzelnen Komponenten der Gitterkopplung benötigen, Informationen. So sind zu Beginn alle Verteilungsfunktionen vollständig bekannt, was die Ausführung eines üblichen Kollisions- und Strömungsschritts (vgl. Kapitel~\ref{kap:LBMimpl}) in beiden Gittern ohne weitere Zuarbeit erlaubt. Nach diesen beiden Schritten fehlen Verteilungsfunktionen \(f_{g,i}(x_{f \to g})\) zur Wiederherstellung der Invariante des groben Gitters. Auch der benötigte zweite Simulationsschritt, um \(\F\) auf Zeitpunkt \(t+\delta t_g=t+2\delta t_f\) zu bringen, scheitert zunächst an der Unbestimmtheit von Verteilungsfunktionen \(f_{f,i}(x_{g \to f})\).
 
 \begin{description}[style=unboxed,leftmargin=0cm]
-\item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+\delta t_f\):] Zur Vervollständigung des feinen Gitters nach dem ersten Zeitschritt müssen die fehlenden Verteilungen aus dem groben Gitter rekonstruiert werden. Um die dazu erarbeiteten Näherungen (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) mit der Interpolationsformel vierter Ordnung (\ref{eq:ipol4ord}) anzuwenden, fehlen jedoch Werte der groben Stützstellen \(f_{g,i}(x_{g \to f}^g)\) zu Zeitpunkt \(t+\delta t_f\). Diese sind zwar in den gesuchten Punkten, dank Trennung der Kopplungsrichtungen durch den Übergangsbereich, nach jedem Simulationsschritt direkt vollständig vorhanden -- jedoch nur zu Zeit \(t\) und \(t+\delta t_g\). Hier findet sich eine Anwendung des Interpolationsverfahrens zweiter Ordnung (\ref{eq:ipol2ord}), d.h. des arithmetischen Mittels zweier Stützpunkte, zur linearen Zeitinterpolation der benötigten Werte von \(\rho_g, u_g\) und \(f_{g,i}^\text{neq}\). Aufbauend darauf steht der Anwendung der Kopplungsformeln (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) zur Vervollständigung von \(\F\) nichts mehr im Wege.
+\item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+\delta t_f\):] Zur Vervollständigung des feinen Gitters nach dem ersten Zeitschritt müssen die fehlenden Verteilungen aus dem groben Gitter rekonstruiert werden. Um die dazu erarbeiteten Kopplungen (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) anzuwenden, fehlen jedoch Werte der groben Stützstellen \(\smash{f_{g,i}(x_{g \to f}^g})\) zu Zeitpunkt \(t+\delta t_f\). Diese sind zwar in den gesuchten Punkten, dank Trennung der Kopplungsrichtungen durch den Übergangsbereich, nach jedem Simulationsschritt direkt vollständig vorhanden -- jedoch nur zu Zeit \(t\) und \(t+\delta t_g\). Hier findet sich eine Anwendung des Interpolationsverfahrens zweiter Ordnung (\ref{eq:ipol2ord}) zur linearen Zeitinterpolation der benötigten Werte von \(\rho_g, u_g\) und \(f_{g,i}^\text{neq}\):
+\[\star(x,t+\delta t_f) \approx \frac{\star(x,t+\delta t_g) + \star(x,t)}{2} \text{ für } \star \in \{\rho_g,u_g,f_{g,i}^\text{neq}\}, x \in \G\]
+Aufbauend darauf steht der Anwendung der Kopplungsformeln (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) zur Vervollständigung von \(\F\) nichts mehr im Wege:
+\begin{align*}
+f_{f,i}(x_{g \to f}^g,t+\delta t_f) &= f_i^\text{eq}(\rho_g(x_{g \to f}^g,t+\delta t_f), u_g(x_{g \to f}^g,t+\delta t_f)) + \alpha f_{g,i}^\text{neq}(x_{g \to f}^g,t+\delta t_f) \\
+f_{f,i}(x_{g \to f}^f,t+\delta t_f) &= f_i^\text{eq}(\ipolarg{\rho_g}{x_{g \to f}^f}, \ipolarg{u_g}{x_{g \to f}^f}) + \alpha \ipolarg{f_{g,i}^\text{neq}}{x_{g \to g}^f}
+\end{align*}
+Der Interpolationsoperator vierter Ordnung (\ref{eq:ipol4ord}) löst sich dabei für die Zielfunktionen \(\star \in \{\rho_g,u_g,f_{g,i}^\text{neq}\}\) und die Übergangsparallele \(v\) wie folgt auf:
+\begin{align*}
+\ipolarg{\star}{x_{g \to f}^f} = &\frac{9}{16}(\star(x_{g \to f}^f-\delta x_f v, t+\delta t_f) + \star(x_{g \to f}^f+\delta x_f v, t+\delta t_f))\\
++ &\frac{1}{16}(\star(x_{g \to f}^f-3\delta x_f v, t+\delta t_f) + \star(x_{g \to f}^f+3\delta x_f v, t+\delta t_f))
+\end{align*}
+\begin{figure}[h]
+\centering
+\input{img/algo_completion_overview.tikz}
+\caption{Übersicht der zu vervollständigenden Knoten}
+\end{figure}
 
-\item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+2\delta t_f\):] Dieser zweite Rekonstruktionsschritt auf dem feinen Gitter gestaltet sich einfacher, da die benötigten groben Verteilungen in \(\U_{g \to f}\) zur Zeitpunkt \(t+\delta t_g\) bereits durch den initialen Simulationschritt auf dem groben Gitter bekannt sind. Entsprechend können die Kopplungsformeln (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) direkt zur Vervollständigung von \(\F\) angewandt werden.
+\item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+\delta t_g\):] Dieser zweite Rekonstruktionsschritt auf dem feinen Gitter gestaltet sich einfacher, da die benötigten groben Verteilungen in \(\U_{g \to f}\) zur Zeitpunkt \(t+\delta t_g\) bereits durch den initialen Simulationschritt auf dem groben Gitter bekannt sind. Entsprechend können die Kopplungsformeln (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) direkt zur Vervollständigung von \(\F\) angewandt werden.
 
-\item[Vervollständigung von \(\G\) zu Zeitpunkt \(t+\delta t_g\):] Nach zweimaliger Vervollständigung des feinen Gitters verbleibt, zur Wiederherstellung der Schleifeninvariante, der Abschluss des eingehenden Kollisions- und Strömungsschritts auf dem groben Gitter durch Restriktion der aus Richtung des feinen Gitters eingehenden Verteilungsfunktionen. Die Vollständigkeit des feinen Gitters zu Zeitpunkt \(t+\delta t_g\) erlaubt hier die direkte Anwendung von Kopplungsformel (\ref{eq:restrictedF2G}) mit Restriktionsoperator (\ref{eq:neqAvgRestrictionF2G}).
+\item[Vervollständigung von \(\G\) zu Zeitpunkt \(t+\delta t_g\):] Nach zweimaliger Vervollständigung des feinen Gitters verbleibt zur Wiederherstellung der Schleifeninvariante der Abschluss des eingehenden Kollisions- und Strömungsschritts auf dem groben Gitter durch Restriktion der aus Richtung des feinen Gitters eingehenden Verteilungsfunktionen. Hierzu erlaubt die, durch die zuvorkommenden Schritte garantierte, Vollständigkeit des feinen Gitters zu Zeitpunkt \(t+\delta t_g\), die direkte Anwendung der Kopplungsformel (\ref{eq:restrictedF2G}) mit Restriktionsoperator (\ref{eq:neqAvgRestrictionF2G}) auf die Knoten in \(\U_{f \to g}\).
+\begin{align*}
+f_{g,i}(x_{f \to g},t+\delta t_g) &= f_i^\text{eq}(\rho_f(x_{f \to g},t+\delta t_g), u_f(x_{f \to g},t+\delta t_g))\\
+&+ \frac{1}{\alpha} \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j,t+\delta t_g)
+\end{align*}
 \end{description}
+Zu erwähnen bleibt, dass wir aus Konsistenzgründen alle Kopplungsformeln immer auf alle -- und nicht nur die fehlenden -- Richtungen \(i \in [q-1]\) einer betrachteten Zelle \(x\) anwenden.
 
 % ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten
 % ToDo: Randfälle der Restriktion ausarbeiten, analog zu Interpolation (fehlt im Paper)
+% ToDo: Experimentelle Begründung, warum Kopplungsformel immer auf alle Richtungen angewandt wird
 
 \newpage
 \section{Implementierung in OpenLB}

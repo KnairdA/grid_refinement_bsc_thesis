@@ -2,7 +2,7 @@
 	scale=1.5,
 	coarse/.style={circle,draw=gray,inner sep=4pt},
 	ibase/.style={coarse,draw=black,very thick},
-	fine/.style={cross out,draw=gray,minimum size=8pt},
+	fine/.style={cross out,draw=gray,inner sep=4pt},
 	wantedfine/.style={fine,draw=black,ultra thick},
 	arrow/.style={-{Latex[length=2mm]},thick}
 ]

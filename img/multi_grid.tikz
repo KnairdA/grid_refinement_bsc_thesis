@@ -1,7 +1,7 @@
 \begin{tikzpicture}[
 	scale=0.4,
-	coarse/.style={circle,draw=black,inner sep=2pt},
-	fine/.style={circle,draw=black,inner sep=1pt}
+	coarse/.style={circle,draw=black,inner sep=2},
+	fine/.style={cross out,draw=black,inner sep=1},
 ]
 
 \foreach \x in {0,...,7}

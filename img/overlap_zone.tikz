@@ -1,7 +1,7 @@
 \begin{tikzpicture}[
 	scale=1.5,
-	coarse/.style={circle,draw=black,thick,inner sep=4pt},
-	fine/.style={cross out,draw=black,thick,minimum size=8pt},
+	coarse/.style={circle,draw=black,thick,inner sep=4},
+	fine/.style={cross out,draw=black,thick,inner sep=2},
 	arrow/.style={-{Latex[length=2mm]},thick}
 ]
 

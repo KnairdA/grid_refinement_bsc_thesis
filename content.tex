@@ -221,6 +221,7 @@ Kern des Multi-Domain Ansatzes ist es, außerhalb von etwaigen verfahrensbedingt
 \caption{Teiligitter in der Multi-Domain Herangehensweise}
 \end{figure}
 
+\noindent
 Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speicherbedarf sowie erwartete Einsparungen in der benötigten Rechenzeit. Erkauft werden diese Vorteile durch aufwendigere Kopplung \cite[Kap.~3.1]{lagrava12} der verschiedenen Teilgitter in den Übergangsbereichen.
 
 \newpage
@@ -500,6 +501,12 @@ Entsprechend (\ref{eq:gridTime}) müssen für jeden groben Zeitschritt \(\delta 
 \noindent
 Aufbauend auf dieser Invariante ergibt sich die, in Abbildung~\ref{fig:AlgorithmBirdsEye} dargelegte, Reihenfolge der erforderlichen Schritte direkt aus den, für die einzelnen Komponenten der Gitterkopplung benötigen, Informationen. So sind zu Beginn alle Verteilungsfunktionen vollständig bekannt, was die Ausführung eines üblichen Kollisions- und Strömungsschritts (vgl. Kapitel~\ref{kap:LBMimpl}) in beiden Gittern ohne weitere Zuarbeit erlaubt. Nach diesen beiden Schritten fehlen Verteilungsfunktionen \(f_{g,i}(x_{f \to g})\) zur Wiederherstellung der Invariante des groben Gitters. Auch der benötigte zweite Simulationsschritt, um \(\F\) auf Zeitpunkt \(t+\delta t_g=t+2\delta t_f\) zu bringen, scheitert zunächst an der Unbestimmtheit von Verteilungsfunktionen \(f_{f,i}(x_{g \to f})\).
 
+\begin{figure}[h]
+\centering
+\input{img/algo_completion_overview.tikz}
+\caption{Übersicht der zu vervollständigenden Knoten}
+\end{figure}
+
 \begin{description}[style=unboxed,leftmargin=0cm]
 \item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+\delta t_f\):] Zur Vervollständigung des feinen Gitters nach dem ersten Zeitschritt müssen die fehlenden Verteilungen aus dem groben Gitter rekonstruiert werden. Um die dazu erarbeiteten Kopplungen (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) anzuwenden, fehlen jedoch Werte der groben Stützstellen \(\smash{f_{g,i}(x_{g \to f}^g})\) zu Zeitpunkt \(t+\delta t_f\). Diese sind zwar in den gesuchten Punkten, dank Trennung der Kopplungsrichtungen durch den Übergangsbereich, nach jedem Simulationsschritt direkt vollständig vorhanden -- jedoch nur zu Zeit \(t\) und \(t+\delta t_g\). Hier findet sich eine Anwendung des Interpolationsverfahrens zweiter Ordnung (\ref{eq:ipol2ord}) zur linearen Zeitinterpolation der benötigten Werte von \(\rho_g, u_g\) und \(f_{g,i}^\text{neq}\):
 \[\star(x,t+\delta t_f) \approx \frac{\star(x,t+\delta t_g) + \star(x,t)}{2} \text{ für } \star \in \{\rho_g,u_g,f_{g,i}^\text{neq}\}, x \in \G\]
@@ -513,11 +520,6 @@ Der Interpolationsoperator vierter Ordnung (\ref{eq:ipol4ord}) löst sich dabei 
 \ipolarg{\star}{x_{g \to f}^f} = &\frac{9}{16}(\star(x_{g \to f}^f-\delta x_f v, t+\delta t_f) + \star(x_{g \to f}^f+\delta x_f v, t+\delta t_f))\\
 + &\frac{1}{16}(\star(x_{g \to f}^f-3\delta x_f v, t+\delta t_f) + \star(x_{g \to f}^f+3\delta x_f v, t+\delta t_f))
 \end{align*}
-\begin{figure}[h]
-\centering
-\input{img/algo_completion_overview.tikz}
-\caption{Übersicht der zu vervollständigenden Knoten}
-\end{figure}
 
 \item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+\delta t_g\):] Dieser zweite Rekonstruktionsschritt auf dem feinen Gitter gestaltet sich einfacher, da die benötigten groben Verteilungen in \(\U_{g \to f}\) zur Zeitpunkt \(t+\delta t_g\) bereits durch den initialen Simulationschritt auf dem groben Gitter bekannt sind. Entsprechend können die Kopplungsformeln (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) direkt zur Vervollständigung von \(\F\) angewandt werden.
 
@@ -528,6 +530,9 @@ f_{g,i}(x_{f \to g},t+\delta t_g) &= f_i^\text{eq}(\rho_f(x_{f \to g},t+\delta t
 \end{align*}
 \end{description}
 Zu erwähnen bleibt, dass wir aus Konsistenzgründen alle Kopplungsformeln immer auf alle -- und nicht nur die fehlenden -- Richtungen \(i \in [q-1]\) einer betrachteten Zelle \(x\) anwenden.
+
+Nach Durchführung der drei Vervollständigungsschritte haben wir die Invariante für \(t+\delta t_g\) wieder hergestellt und können von vorne beginnen.
+
 
 % ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten
 % ToDo: Randfälle der Restriktion ausarbeiten, analog zu Interpolation (fehlt im Paper)

@@ -1,8 +1,8 @@
 \begin{tikzpicture}[
 	scale=1.5,
-	coarse/.style={circle,draw=gray,inner sep=4pt},
+	coarse/.style={circle,draw=gray,inner sep=4},
+	fine/.style={cross out,draw=gray,inner sep=2},
 	ibase/.style={coarse,draw=black,very thick},
-	fine/.style={cross out,draw=gray,minimum size=8pt},
 	wantedfine/.style={fine,draw=black,ultra thick},
 	arrow/.style={-{Latex[length=2mm]},thick}
 ]
@@ -21,7 +21,7 @@
 \node[ibase] at (2,0){ };
 \node[ibase] at (2,-1){ };
 
-\draw[dashed,thick] (1.8,-1.2) rectangle (2.2,2.2);
+\draw[dashed,very thick] (1.8,-1.2) rectangle (2.2,2.2);
 \draw[dashed,draw=gray] (2.8,-1.2) rectangle (3.2,2.2);
 
 \draw[arrow] (2,3.3) node[right] {Interpolation von grob nach fein, \(\U_{g \to f}\)} -- (2,2.3);

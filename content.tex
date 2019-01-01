@@ -134,7 +134,7 @@ Bemerkenswert ist an dieser Stelle, dass die Momente der Verteilungen mit \(\ove
 \end{align*}
 
 \newpage
-\subsubsection{Implementierung}
+\subsubsection{Algorithmus}
 \label{kap:LBMimpl}
 
 Bei der Implementierung der {diskreten LBM BGK Gleichung}~\ref{def:LBGKeq} auf einem Computer ist die Aufteilung in Kollisions- und Strömungsschritt üblich.
@@ -225,7 +225,7 @@ Kern des Multi-Domain Ansatzes ist es, außerhalb von etwaigen verfahrensbedingt
 Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speicherbedarf sowie erwartete Einsparungen in der benötigten Rechenzeit. Erkauft werden diese Vorteile durch aufwendigere Kopplung \cite[Kap.~3.1]{lagrava12} der verschiedenen Teilgitter in den Übergangsbereichen.
 
 \newpage
-\section{Verfeinerungsmethode}
+\section{Verfeinerungsmethode nach Lagrava et al.}
 
 Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{lagrava12}~\cite{lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Stuktur dieses Verfahrens, mit potenziell austauschbaren Restriktions- und Interpolationsverfahren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
 
@@ -529,9 +529,10 @@ f_{g,i}(x_{f \to g},t+\delta t_g) &= f_i^\text{eq}(\rho_f(x_{f \to g},t+\delta t
 &+ \frac{1}{\alpha} \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j,t+\delta t_g)
 \end{align*}
 \end{description}
-Zu erwähnen bleibt, dass wir aus Konsistenzgründen alle Kopplungsformeln immer auf alle -- und nicht nur die fehlenden -- Richtungen \(i \in [q-1]\) einer betrachteten Zelle \(x\) anwenden.
+Zu erwähnen bleibt, dass wir aus Konsistenzgründen alle Kopplungsformeln immer auf alle -- und nicht nur die fehlenden -- diskreten Richtungen \(i \in [q-1]\) einer betrachteten Zelle \(x\) anwenden.
 
-Nach Durchführung der drei Vervollständigungsschritte haben wir die Invariante für \(t+\delta t_g\) wieder hergestellt und können von vorne beginnen.
+\bigskip
+Nach Durchführung der drei Vervollständigungsschritte haben wir die Invariante für \(t+\delta t_g\) wieder hergestellt und können von vorne beginnen. Wir haben damit an dieser Stelle das Verfeinerungsverfahren von Lagrava et al. vollständig nachvollzogen und können mit der Implementierung in OpenLB fortfahren.
 
 
 % ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten

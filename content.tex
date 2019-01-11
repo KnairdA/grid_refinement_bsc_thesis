@@ -224,6 +224,27 @@ Kern des Multi-Domain Ansatzes ist es, außerhalb von etwaigen verfahrensbedingt
 \noindent
 Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speicherbedarf sowie erwartete Einsparungen in der benötigten Rechenzeit. Erkauft werden diese Vorteile durch aufwendigere Kopplung \cite[Kap.~3.1]{lagrava12} der verschiedenen Teilgitter in den Übergangsbereichen.
 
+\subsubsection{Koinzidierende und versetzte Gitter}
+
+Neben der Unterscheidung zwischen Multi-Grid und Multi-Domain Ansätzen kann auch die Positionierung des groben im Bezug auf das feine Gitter varieren. Gitterkonstellationen, in denen grobe Knoten soweit möglich mit feinen Knoten übereinstimmen -- wie auch in den beiden vorherigen Abbildung zu sehen -- werden als koinzidierend bezeichnet:
+
+\begin{figure}[h]
+\centering
+\input{img/coinciding_grid.tikz}
+\caption{Koinzidierende Gitter}
+\label{fig:StaggeredGrid}
+\end{figure}
+
+\noindent
+Lösen wir uns von dieser Einschränkung und positionieren das feine Gitter abseits der groben Gitterknoten, sprechen wir über zueinander versetzte -- im angelsächsischen Sprachraum als \emph{staggered} beschriebene -- Gitter:
+
+\begin{figure}[h]
+\centering
+\input{img/staggered_grid.tikz}
+\caption{Zueinander versetzte Gitter ohne überlappende Knoten}
+\label{fig:StaggeredGrid}
+\end{figure}
+
 \newpage
 \section{Verfeinerungsmethode nach Lagrava et al.}
 
@@ -231,7 +252,7 @@ Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird,
 
 \subsection{Übersicht}
 
-Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[Kap.~3.1]{lagrava12} , bei welcher die feiner aufgelösten Teilbereiche der Simulationsdomäne aus dem gröber aufgelösten Gitter ausgeschlossen werden und sich nur in Übergangsbereichen überlappen.
+Das Verfahren basiert auf dem Multi-Domain Ansatz \cite[Kap.~3.1]{lagrava12} mit koinzidierenden Gittern. Es werden also die feiner aufgelösten Teilbereiche der Simulationsdomäne so aus dem gröber aufgelösten Gitter ausgeschlossen, dass sie sich nur in Übergangsbereichen überlappen.
 
 \begin{figure}[h]
 \centering
@@ -240,15 +261,20 @@ Das Verfahren basiert auf der Multi-Domain Herangehensweise \cite[Kap.~3.1]{lagr
 \label{fig:MultiDomainOverlap}
 \end{figure}
 
+\noindent
 In diesen Übergangsbereichen, welche eine Breite von mindestens einer Einheit des gröberen Zellabstands haben, liegt die Hauptarbeit des Verfeinerungsverfahrens.
 
+\bigskip
 Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf eine skalierte und gefilterte Restriktion der Verteilungen beschränkt, gestaltet sich der Übergang vom groben zum feinen Gitter aufwendiger, da feine Knoten, für deren Position kein grober Knoten existiert, aus den übrigen Daten interpoliert werden müssen.
 
-Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen. Um diese Kopplung der verschiedenen Gitterauflösungen theoretisch erfassen zu können, müssen wir zunächst die Gitter selbst konkreter definieren:
+Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf der Auswahl des Interpolationsverfahrens sowie der Skalierung der physikalischen Werte zwischen den unterschiedlich aufgelösten Verteilungen. Um diese Kopplung der verschiedenen Gitterauflösungen theoretisch erfassen zu können, müssen wir zunächst die Gitter selbst konkreter definieren.
 
-\begin{Definition}[Diskretisierung der Gitter]
+\newpage
+\subsection{Gitterdiskretisierung}
+
+\begin{Definition}[Diskretisierung der Simulationsdomänen]
 \label{def:DiskretRefinedGitter}
-Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierung der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer Diskretisierungsgitter darstellen.
+Wir betrachten kartesischen Gitter \(\G\) und \(\F\) als Diskretisierungen der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben.
 \begin{align*}
 \G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
 \F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
@@ -256,7 +282,7 @@ Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierung der phys
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
-Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während im Kontext der LBM an sich weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
+Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während, im Kontext der LBM an sich, weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
 
 Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\). Diese stellen gerade die Definitionsmengen der groben bzw. feinen Verteilungsfunktionen dar.
 
@@ -281,7 +307,21 @@ u_\#(x) &:= \frac{1}{\rho_\#(x)} \sum_{j=0}^{q-1} \xi_j f_{\#,j}(x)
 \end{align*}
 \end{Definition}
 
-Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Wir benötigen diese, in Form der Gitter diskretisierten, Mengen, um die Gitterknoten der Übergangsbereiche näher zu klassifizieren:
+Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Formal sei dabei das Innere der groben Domäne \(D_g\) ohne den Übergangsbereich gegeben als:
+\[ D_g^\circ := \{ x \in D_g | \forall y \in \R^2 \setminus D_g : \|x-y\| \geq \delta x_g \} \]
+Unter der Annahme, dass \(D_g\) die feine Simulationsdomäne \(D_f\) komplett umschließt, fordern wir dann für den Rand des feinen Gitters:
+\[ \partial D_f \stackrel{!}{\subset} \partial D_g^\circ \numberthis\label{eq:FineBorderIntersectCoarseGrid} \]
+Diese Einschränkung garantiert, dass die äußersten Gitterknoten des feinen Gitters sich soweit möglich mit groben Gitterknoten schneiden und nicht etwas zwischen zwei groben \emph{Gitterreihen} liegen.
+
+\begin{figure}[h]
+\centering
+\input{img/invalid_overlap_area.tikz}
+\caption{Mit Forderung (\ref{eq:FineBorderIntersectCoarseGrid}) ausgeschlossener Übergangsbereich \cite[vgl. Abb.~9]{lagrava12}}
+\label{fig:InvalidOverlapArea}
+\end{figure}
+
+\noindent
+Wir können die Gitterknoten der Übergangsbereiche nun detailliert klassifizieren:
 
 \begin{figure}[h]
 \centering
@@ -304,7 +344,8 @@ Die Übertragungsrichtungen in \(\U_{g \to f}\) und \(\U_{f \to g}\) ergeben sic
 
 Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches \(\U_g \cup \U_f\) der Mindestbreite \(\delta x_g\) erklären: Gäbe es diesen nicht, so fehlten an der Grenze zwischen grobem und feinem Gitter Verteilungsfunktionen in beide Richtungen zugleich.
 
-Die Aufgabe der Skalierungs-, Restriktions- und Interpolationsschritte des Verfahrens besteht also \emph{nur} darin, diese jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
+\bigskip
+Zusammenfassend wird die Aufgabe der im kommenden Kapitel zu erarbeitenden Skalierungs-, Restriktions- und Interpolationsschritte also \emph{nur} darin bestehen, die jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
 
 \newpage
 \subsection{Komponenten der Gitterkopplung}
@@ -401,10 +442,11 @@ Wir bemerken an dieser Stelle, dass nur die Nicht-Equilibriumsverteilung durch e
 Die skalierte Dekomposition \ref{eq:basicF2G} lässt sich in der Schreibweise von \ref{eq:restrictedF2G} formulieren, wenn die Identität als Restriktionsoperation eingesetzt wird: \[\resarg{i}{x_{f \to g}} := f_{f,i}^\text{neq}(x_{f \to g})\]
 
 Die für unser Verfahren \cite[Kap.~3.3]{lagrava12} beschriebene Restriktion ist der Mittelwert aller umliegenden gerichteten Nicht-Equilibriumanteilen:
-\[\resarg{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
+\[\resarg{i}{x_{f \to g}} := \frac{1}{q} \sum_{j=0}^{q-1} f_{f,i}^\text{neq}(x_{f \to g} + \delta x_f \xi_j) \numberthis\label{eq:neqAvgRestrictionF2G}\]
 
 \newpage
 \subsubsection{Interpolation}
+\label{kap:Interpolation}
 
 Zunächst ergänzen wir die Gitterteilmengen aus Definition~\ref{def:OverlapGridNodes} um eine Unterscheidung zwischen alleinstehenden feinen Knoten und solchen für die ein, der Übertragung von grob nach fein dienlicher, grober Knoten existiert.
 \begin{Definition}[Gitterknoten mit Übertragung von grob nach fein]
@@ -557,3 +599,9 @@ OpenLB~\cite{olb12}
 \subsection{Wahl der Beispiele}
 
 \subsection{Rohrströmung}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=2.0]{img/refined_poiseuille_1.png}
+\caption{Halbseitig verfeinerte Poiseuille Rohrströmung}
+\end{figure}

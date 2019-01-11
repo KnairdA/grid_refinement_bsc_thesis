@@ -1,0 +1,12 @@
+\begin{tikzpicture}[
+	scale=1.0,
+	fine/.style={circle,draw=black,thick,inner sep=2},
+]
+
+\draw[step=1.0,black] (0.75,0.75) grid (6.25,6.25);
+\draw[step=0.5,gray,thin] (2,2) grid (5,5);
+
+\foreach \x in {0,...,6}
+	\foreach \y in {0,...,6}
+		\node[fine] at (2+0.5*\x,2+0.5*\y){ };
+\end{tikzpicture}

@@ -592,18 +592,30 @@ Zu erwähnen bleibt, dass wir aus Konsistenzgründen alle Kopplungsformeln immer
 \bigskip
 Nach Durchführung der drei Vervollständigungsschritte haben wir die Invariante für \(t+\delta t_g\) wieder hergestellt und können von vorne beginnen. Wir haben damit an dieser Stelle das Verfeinerungsverfahren von Lagrava et al. vollständig nachvollzogen und können mit der Implementierung in OpenLB fortfahren.
 
-% ToDo: Revisit Multi-Grid: Kopplung über der ganzen Domäne
-	% Sollte so sein - Kopplung nur am Rand macht Inneres irrelevant, d.h. Domain==Grid
-% ToDo: Einschränkungen der Gitterpositionierung (keine hängenden feinen Knoten) ausarbeiten
 % ToDo: Randfälle der Restriktion ausarbeiten, analog zu Interpolation (fehlt im Paper)
 % ToDo: Experimentelle Begründung, warum Kopplungsformel immer auf alle Richtungen angewandt wird
 
 \newpage
 \section{Implementierung in OpenLB}
 
-OpenLB~\cite{olb12}
+OpenLB~\cite{olb12} ist ein umfangreiches frei verfügbares C++ Framework zur Implementierung von LBM basierenden Simulationen. Schwerpunkte sind dabei eine große Flexibilität in Hinblick auf die unterstützten Lattice Boltzmann Modelle sowie weitreichende Modularisierung zur einfachen Umsetzung neuer Anwendungen bei gleichzeitiger Eignung für hochperformante Berechnungen durch Skalierbarkeit auf parallele Großrechner.
 
-\subsection{Auswahl der Verfeinerungsmethode}\label{sec:olbRefinementChoice}
+\bigskip
+Eine LBM Bibliothek mit idealer Unterstützung für Gitterverfeinerung würde es erlauben, dass zu lösende physikalische Problem zunächst ohne Rücksicht auf die konkrete Zusammensetzung des Gitters zu modellieren. Würde dann im Konflikt zwischen Rechenressourcen und angestrebter Ergebnisqualität ein Bedarf für Gitterverfeinerung festgestellt, sollte diese a posteriori ohne weitere Anpassungen hinzugeschalten werden können. In einer solchen Umgebung wäre es dann sogar denkbar, die Entscheidung über Position und Ausmaß der Verfeinerung an ein automatisches Kriterium \cite{lagrava15} zu übertragen.
+
+Diese Vision ist selbstredend von großem Anspruch und weit außerhalb der Grenzen dieser Arbeit. Ein erster Schritt muss jedoch die Ergänzung von OpenLB um grundlegende Unterstützung für manuelle Gitterverfeinerung sein -- d.h. Position, Größe und Auflösung des zu verfeinernden Bereichs müssen durch den Nutzer vorgegeben werden können.
+
+\subsection{Architekturüberblick}
+
+OpenLB verwaltet die Diskretisierung der zu modellierenden Simulationsdomäne in einer \texttt{CuboidGeometry2D} Instanz. Diese Klasse teilt eine gegebene physikalische Domäne in eine beliebige Anzahl von quaderförmigen \texttt{Cuboid2D} Instanzen mit definierter Auflösung ein. Diese Aufteilung dient der Parallelisierung, da die Gitter dieser einzelnen Quader außerhalb von kommunizierenden Randbereichen vollständig nebenläufig verarbeitet werden können. Entsprechend werden diese Teilbereiche von einer Implementierung der \texttt{LoadBalancer} Schnittstelle auf die zu Verfügung stehenden Prozessoren aufgeteilt.
+
+Auf Grundlage dieses räumlichen Umrisses wird dann das eigentliche Gitter in einer \texttt{SuperLattice2D} Instanz abhängig des gewählten Lattice Boltzmann Modells aufgebaut. Die einzelnen Gitterzellen werden dabei von \texttt{Cell} Klassen abgebildet, welche anhand des spezifischen, durch einen sogenannten Deskriptor \emph{beschriebenen} und von \texttt{Dynamics} Instanzen durchgeführten, Kollisionsschrittes der lokalen Umsetzung des LBM Modells Sorge tragen.
+
+Diese \texttt{Dynamics} beschreiben dabei zusammen mit zellübergreifenden Postprozessoren nicht nur das einfache Strömungsverhalten, sondern modellieren auch die zahlreichen Randkonditionen, welche die Abbildung komplexer Geometrien in LBM erst ermöglichen.
+Zur einfacheren Zuordnung dieser zellspezifischen Klassen verwendet OpenLB sogenannte Materialzahlen, welche von einer \texttt{SuperGeometry2D} Instanz verwaltet werden.
+
+\subsection{Auswahl der Verfeinerungsmethode}
+\label{sec:olbRefinementChoice}
 
 \subsection{Struktur des Gitterverfeinerungsframework}
 

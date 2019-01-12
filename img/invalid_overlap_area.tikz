@@ -14,5 +14,5 @@
 		\node[fine] at (1.5+\x*0.5,\y*0.5){ };
 
 \draw[arrow] (1.5,2.8) node[right] {Feine Knoten in \(\partial D_f \not\subset \partial D_g^\circ\)} -- (1.5,2.3);
-\draw[dashed,thick] (1.3,-0.2) rectangle (1.7,2.2);
+\draw[dashed,thick,pattern=north west lines, pattern color=red] (1.3,-0.2) rectangle (1.7,2.2);
 \end{tikzpicture}

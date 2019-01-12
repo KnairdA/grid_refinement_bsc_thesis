@@ -6,7 +6,7 @@ Die einfachsten und zugleich am weitesten verbreiteten Umsetzungen von Simulatio
 
 Die Genauigkeit von Lattice Boltzmann basierenden Simulationen hängt maßgeblich von der Auflösung des verwendeten Gitters ab. Bei Außerachtlassung weiterer wichtiger Faktoren wie dem verwendeten Kollisionsterm und Randkonditionen kann im Allgemeinen davon ausgegangen werden, dass eine feinere Auflösung des Gitters zu besseren Ergebnissen führt.
 
-In praktischen Beispielen können innerhalb eines Modells große Unterschiede in der Strömungskomplexität existieren. So kann es große Gebiete eines Modells geben, die mit einem vergleichsweise groben Gitter gut simuliert werden können, während in anderen Gebieten \textendash{} beispielsweise in komplexen Geometrien und an Rändern \textendash{} ein vielfach feineres Gitter zur adäquaten Behandlung benötigt wird. In uniformen Gittern muss jedoch das gesamte Modell unabhängig der lokalen Situation mit der maximal benötigten Auflösung abgebildet werden.
+In praktischen Beispielen können innerhalb eines Modells große Unterschiede in der Strömungskomplexität existieren. So kann es große Gebiete eines Modells geben, die mit einem vergleichsweise groben Gitter gut simuliert werden können, während in anderen Gebieten -- beispielsweise in komplexen Geometrien und an Rändern -- ein vielfach feineres Gitter zur adäquaten Behandlung benötigt wird. In uniformen Gittern muss jedoch das gesamte Modell unabhängig der lokalen Situation mit der maximal benötigten Auflösung abgebildet werden.
 
 Da die Anzahl der benötigten Gitterpunkte sich maßgeblich auf den Speicherbedarf und Rechenaufwand auswirkt, ist es wünschenswert die Anzahl der Gitterpunkte zu minimieren. Ein Ansatz, dies zu erreichen, ist die lokale Variation der Gitterauflösung.
 
@@ -272,6 +272,22 @@ Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf
 \newpage
 \subsection{Gitterdiskretisierung}
 
+\begin{Definition}[Grobe und feine Simulationsdomänen]
+\label{def:SimDomain}
+Sei \(D \subseteq \R^2\) die physikalische Simulationsdomäne unabhängig der verwendeten Gitterauflösung. Diese Teilmenge von \(\R^2\) sei dabei bereits in Hinblick auf die angestrebte kartesische Diskretisierung gewählt, d.h. als Vereinigung zusammenhängender Rechtecke.
+
+Den durch ein grobes Gitter abzubildenden Teilbereich bezeichnen wir mit \(D_g \subset D\). Weiter ist \(D_f \subset D\) mit \(D_f \cap D_g \neq \emptyset\) der zu verfeinernde Teilbereich. O.B.d.A. nehmen wir an, dass \(D_g \cup D_f = D\) gilt, die Simulationsdomäne also in genau zwei Auflösungsstufen aufgeteilt wird.
+\end{Definition}
+
+\begin{figure}[h]
+\centering
+\input{img/simulation_domain.tikz}
+\caption{Schematische Darstellung der Simulationsdomänen der Gitter}
+\label{fig:SimDomain}
+\end{figure}
+
+Die Annahme von zwei Verfeinerungsstufen ist berechtigt, da mehrfach verfeinerte Gitter sich durch erneute -- rekursive -- Anwendung von Definition~\ref{def:SimDomain} mit \(\tilde{D} := D_f\) modellieren lassen. Auch Verfeinerung eines groben Gitters in mehreren disjunkten Bereichen kann unter dieser Annahme betrachtet werden, da für die Koppelung zwischen Gittern nur Knoten in \(D_f\) relevant sind.
+
 \begin{Definition}[Diskretisierung der Simulationsdomänen]
 \label{def:DiskretRefinedGitter}
 Wir betrachten kartesischen Gitter \(\G\) und \(\F\) als Diskretisierungen der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben.
@@ -282,7 +298,20 @@ Wir betrachten kartesischen Gitter \(\G\) und \(\F\) als Diskretisierungen der p
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
-Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während, im Kontext der LBM an sich, weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
+Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Formal sei dabei das Innere der groben Domäne \(D_g\) ohne den Übergangsbereich gegeben als:
+\[ D_g^\circ := \{ x \in D_g | \forall y \in \R^2 \setminus D_g : \|x-y\| \geq \delta x_g \} \]
+Unter der Annahme, dass \(D_g\) die feine Simulationsdomäne \(D_f\) komplett umschließt, also der komplette Rand des feinen Gitters mit dem groben gekoppelt werden soll, fordern wir dann für den Rand des feinen Gitters:
+\[ \partial D_f \stackrel{!}{\subset} \partial D_g^\circ \numberthis\label{eq:FineBorderIntersectCoarseGrid} \]
+Diese Einschränkung garantiert, dass die äußersten Gitterknoten des feinen Gitters sich soweit möglich mit groben Gitterknoten schneiden und nicht etwas zwischen zwei groben \emph{Gitterreihen} liegen.
+
+\begin{figure}[h]
+\centering
+\input{img/invalid_overlap_area.tikz}
+\caption{Mit Forderung (\ref{eq:FineBorderIntersectCoarseGrid}) ausgeschlossener Übergangsbereich \cite[vgl. Abb.~9]{lagrava12}}
+\label{fig:InvalidOverlapArea}
+\end{figure}
+
+Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während, im Kontext der LBM an sich, weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
 
 Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\). Diese stellen gerade die Definitionsmengen der groben bzw. feinen Verteilungsfunktionen dar.
 
@@ -306,19 +335,6 @@ Sei \(\# \in \{f, g\}\) wieder Symbol des feinen oder groben Gitters. Wir bezeic
 u_\#(x) &:= \frac{1}{\rho_\#(x)} \sum_{j=0}^{q-1} \xi_j f_{\#,j}(x)
 \end{align*}
 \end{Definition}
-
-Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Formal sei dabei das Innere der groben Domäne \(D_g\) ohne den Übergangsbereich gegeben als:
-\[ D_g^\circ := \{ x \in D_g | \forall y \in \R^2 \setminus D_g : \|x-y\| \geq \delta x_g \} \]
-Unter der Annahme, dass \(D_g\) die feine Simulationsdomäne \(D_f\) komplett umschließt, fordern wir dann für den Rand des feinen Gitters:
-\[ \partial D_f \stackrel{!}{\subset} \partial D_g^\circ \numberthis\label{eq:FineBorderIntersectCoarseGrid} \]
-Diese Einschränkung garantiert, dass die äußersten Gitterknoten des feinen Gitters sich soweit möglich mit groben Gitterknoten schneiden und nicht etwas zwischen zwei groben \emph{Gitterreihen} liegen.
-
-\begin{figure}[h]
-\centering
-\input{img/invalid_overlap_area.tikz}
-\caption{Mit Forderung (\ref{eq:FineBorderIntersectCoarseGrid}) ausgeschlossener Übergangsbereich \cite[vgl. Abb.~9]{lagrava12}}
-\label{fig:InvalidOverlapArea}
-\end{figure}
 
 \noindent
 Wir können die Gitterknoten der Übergangsbereiche nun detailliert klassifizieren:
@@ -568,7 +584,7 @@ Der Interpolationsoperator vierter Ordnung (\ref{eq:ipol4ord}) löst sich dabei 
 \item[Vervollständigung von \(\G\) zu Zeitpunkt \(t+\delta t_g\):] Nach zweimaliger Vervollständigung des feinen Gitters verbleibt zur Wiederherstellung der Schleifeninvariante der Abschluss des eingehenden Kollisions- und Strömungsschritts auf dem groben Gitter durch Restriktion der aus Richtung des feinen Gitters eingehenden Verteilungsfunktionen. Hierzu erlaubt die, durch die zuvorkommenden Schritte garantierte, Vollständigkeit des feinen Gitters zu Zeitpunkt \(t+\delta t_g\), die direkte Anwendung der Kopplungsformel (\ref{eq:restrictedF2G}) mit Restriktionsoperator (\ref{eq:neqAvgRestrictionF2G}) auf die Knoten in \(\U_{f \to g}\).
 \begin{align*}
 f_{g,i}(x_{f \to g},t+\delta t_g) &= f_i^\text{eq}(\rho_f(x_{f \to g},t+\delta t_g), u_f(x_{f \to g},t+\delta t_g))\\
-&+ \frac{1}{\alpha} \frac{1}{q} \sum_{j=0}^{q-1} f_{f,j}^\text{neq}(x_{f \to g} + \delta x_f \xi_j,t+\delta t_g)
+&+ \frac{1}{\alpha} \frac{1}{q} \sum_{j=0}^{q-1} f_{f,i}^\text{neq}(x_{f \to g} + \delta x_f \xi_j,t+\delta t_g)
 \end{align*}
 \end{description}
 Zu erwähnen bleibt, dass wir aus Konsistenzgründen alle Kopplungsformeln immer auf alle -- und nicht nur die fehlenden -- diskreten Richtungen \(i \in [q-1]\) einer betrachteten Zelle \(x\) anwenden.

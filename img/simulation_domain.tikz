@@ -1,0 +1,62 @@
+\begin{tikzpicture}[
+	scale=0.9,
+	x={(-10:1cm)},y={(220:1cm)},z={(90:1cm)},
+	coarse/.style={circle,draw=black,inner sep=2},
+	fine/.style={cross out,draw=black,inner sep=1},
+]
+
+\draw[opacity=0.5,dotted] (0,0,-2) -- (0,0,0);
+\draw[opacity=0.5,dotted] (0,5,-2) -- (0,5,0);
+\draw[opacity=0.5,dotted] (5,0,-2) -- (5,0,0);
+\draw[opacity=0.5,dotted] (5,5,-2) -- (5,5,0);
+
+\draw[opacity=0.5,dotted] (1,1,-2) -- (1,1,4);
+\draw[opacity=0.5,dotted] (1,4,-2) -- (1,4,4);
+\draw[opacity=0.5,dotted] (4,1,-2) -- (4,1,4);
+\draw[opacity=0.5,dotted] (4,4,-2) -- (4,4,4);
+
+\draw[opacity=0.5,dotted] (1.5,1.5,-2) -- (1.5,1.5,2);
+\draw[opacity=0.5,dotted] (1.5,3.5,-2) -- (1.5,3.5,2);
+\draw[opacity=0.5,dotted] (3.5,1.5,-2) -- (3.5,1.5,2);
+\draw[opacity=0.5,dotted] (3.5,3.5,-2) -- (3.5,3.5,2);
+
+\begin{scope}[xyp=-2]
+\foreach \x in {0,...,10}
+	\foreach \y in {0,...,10}{
+		\ifthenelse{\x>6 \OR \x<4 \OR \y>6 \OR \y<4}{
+			\node[coarse] at (0.5*\x,0.5*\y){ };
+		}{}
+	}
+
+\foreach \x in {0,...,12}
+	\foreach \y in {0,...,12}{
+		\node[fine] at (1+0.25*\x,1+0.25*\y){ };
+	}
+
+\node[right] at (6,0) {Gitter \(\G\) und \(\F\)};
+\end{scope}
+
+\begin{scope}[xyp=0]
+\fill[opacity=0.6,gray,even odd rule] (0,0) rectangle (5,5) (1.5,1.5) rectangle (3.5,3.5);
+\draw[thick,even odd rule] (0,0) rectangle (5,5) (1.5,1.5) rectangle (3.5,3.5);
+\draw[dashed] (1,1) rectangle (4,4);
+\draw[pattern=north east lines,even odd rule] (1,1) rectangle (4,4) (1.5,1.5) rectangle (3.5,3.5);
+
+\node[right] at (6,0) {Grobe Domäne \(D_g\)};
+\end{scope}
+
+\begin{scope}[xyp=2]
+\fill[thick,opacity=0.6,gray,even odd rule] (1,1) rectangle (4,4) (1.5,1.5) rectangle (3.5,3.5);
+\draw[thick] (1,1) rectangle (4,4) (1.5,1.5) rectangle (3.5,3.5);
+
+\node[right] at (6,0) {Übergangsbereich \(D_g \cap D_f\)};
+\end{scope}
+
+\begin{scope}[xyp=4]
+\draw[thick] (1,1) rectangle (4,4);
+\fill[opacity=0.6,gray] (1,1) rectangle (4,4);
+
+\node[right] at (6,0) {Feine Domäne \(D_f\)};
+\end{scope}
+
+\end{tikzpicture}

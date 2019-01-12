@@ -30,5 +30,16 @@
 \newcommand{\V}[2]{\ensuremath{\begin{pmatrix}#1\\#2\end{pmatrix}}}
 \newenvironment{rcases}{\left.\begin{aligned}}{\end{aligned}\right\rbrace}
 
-%\renewcommand{\labelenumii}{\theenumii}
-%\renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+% See: https://tex.stackexchange.com/questions/108140/draw-3d-rectangle
+\makeatletter
+\tikzoption{canvas is xy plane at z}[]{%
+	\def\tikz@plane@origin{\pgfpointxyz{0}{0}{#1}}%
+	\def\tikz@plane@x{\pgfpointxyz{1}{0}{#1}}%
+	\def\tikz@plane@y{\pgfpointxyz{0}{1}{#1}}%
+	\tikz@canvas@is@plane
+}
+\makeatother
+
+\tikzset{xyp/.style={canvas is xy plane at z=#1}}
+\tikzset{xzp/.style={canvas is xz plane at y=#1}}
+\tikzset{yzp/.style={canvas is yz plane at x=#1}}

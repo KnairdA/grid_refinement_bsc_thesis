@@ -634,6 +634,16 @@ In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter
 \subsection{Auswahl der Verfeinerungsmethode}
 \label{sec:olbRefinementChoice}
 
+Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Aufteilung der Simulationsdomäne in, durch \class{Cuboid2D} beschriebene, Quader. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die bestehende Architektur sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung scheint ein solcher Ansatz sinnvoll.
+
+Bei Variation der Auflösung einzelner Quader in Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden. Weiter würde das Problemfeld der Domänendekomposition in \class{CuboidGeometry2D} um die Restriktion von Auflösungsübergängen auf das Verhältnis \(1:2\) erweitert. Diese starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein schwerwiegendes Gegenargument zu diesem ersten Gedanken.
+
+\bigskip
+Der tatsächlich umgesetzte Ansatz ergibt sich aus der Betrachtung von Gitterverfeinerung als Kopplung von ansonsten komplett allein stehenden Simulationen. Die Übergangsbereiche wären in diesem Modell mit Randkonditionen vergleichbar, wie sie für Ein- und Ausflüsse verwendet werden. Gitterverfeinerung könnte so weitestgehend von der bestehenden Architektur getrennt ergänzt werden, was insbesondere auch die veränderungsfreie Unterstützung existierender Anwendungen begünstigen würde. Eine solche nebenläufige Überlagerung von Simulationen mit jeweils komplett eigenständig verwalteten Gittern gebietet sich bei erster Betrachtung als klarer Umriss eines Multi-Grid Verfahrens. Beachten wir jedoch, dass es einfach möglich ist, die überlagerten Gitterflächen durch \emph{Nullen} der entsprechenden Materialzahlen effizient aus der Verarbeitung auszuschließen und trotzdem bei Bedarf -- z.B. in Hinblick auf Verschiebung von verfeinerten Bereiche während der Simulation -- zu reaktivieren, stellen sich auch Multi-Domain Ansätze in diesem Modell als sinnvoll implementierbar heraus.
+
+Ein Vorbild für dieses Konzept zur Umsetzung von Gitterverfeinerung existiert in Form der Optimierungskomponente von OpenLB, welche ebenfalls komplette Simulationen in einem sogenannten \class{Solver} kapselt. Langfristig könnten mit diesem Ansatz also beide gitterübergreifenden Module in einem gemeinsamen Konzept abgebildet werden.
+
+\newpage
 \subsection{Struktur des Gitterverfeinerungsframework}
 
 \subsection{Umsetzung des Verfahrens von Lagrava et al.}

@@ -605,14 +605,31 @@ Eine LBM Bibliothek mit idealer Unterstützung für Gitterverfeinerung würde es
 
 Diese Vision ist selbstredend von großem Anspruch und weit außerhalb der Grenzen dieser Arbeit. Ein erster Schritt muss jedoch die Ergänzung von OpenLB um grundlegende Unterstützung für manuelle Gitterverfeinerung sein -- d.h. Position, Größe und Auflösung des zu verfeinernden Bereichs müssen durch den Nutzer vorgegeben werden können.
 
-\subsection{Architekturüberblick}
+\subsection{Architekturübersicht}
 
-OpenLB verwaltet die Diskretisierung der zu modellierenden Simulationsdomäne in einer \texttt{CuboidGeometry2D} Instanz. Diese Klasse teilt eine gegebene physikalische Domäne in eine beliebige Anzahl von quaderförmigen \texttt{Cuboid2D} Instanzen mit definierter Auflösung ein. Diese Aufteilung dient der Parallelisierung, da die Gitter dieser einzelnen Quader außerhalb von kommunizierenden Randbereichen vollständig nebenläufig verarbeitet werden können. Entsprechend werden diese Teilbereiche von einer Implementierung der \texttt{LoadBalancer} Schnittstelle auf die zu Verfügung stehenden Prozessoren aufgeteilt.
+OpenLB verwaltet die Diskretisierung der zu modellierenden Simulationsdomäne in einer \class{CuboidGeometry2D} Instanz. Diese Klasse teilt eine gegebene physikalische Domäne in eine beliebige Anzahl von quaderförmigen \class{Cuboid2D} Instanzen mit definierter Auflösung ein. Diese Aufteilung dient der Parallelisierung, da die Gitter dieser einzelnen Quader außerhalb von kommunizierenden Randbereichen vollständig nebenläufig verarbeitet werden können. Entsprechend werden diese Teilbereiche von einer Implementierung der \class{LoadBalancer} Schnittstelle auf die zu Verfügung stehenden Prozessoren aufgeteilt.
 
-Auf Grundlage dieses räumlichen Umrisses wird dann das eigentliche Gitter in einer \texttt{SuperLattice2D} Instanz abhängig des gewählten Lattice Boltzmann Modells aufgebaut. Die einzelnen Gitterzellen werden dabei von \texttt{Cell} Klassen abgebildet, welche anhand des spezifischen, durch einen sogenannten Deskriptor \emph{beschriebenen} und von \texttt{Dynamics} Instanzen durchgeführten, Kollisionsschrittes der lokalen Umsetzung des LBM Modells Sorge tragen.
+Auf Grundlage dieses räumlichen Umrisses wird dann das eigentliche Gitter in einer \class{SuperLattice2D} Instanz abhängig des gewählten Lattice Boltzmann Modells aufgebaut. Die einzelnen Gitterzellen werden dabei von \class{Cell} Klassen abgebildet, welche anhand des spezifischen, durch einen sogenannten Deskriptor \emph{beschriebenen} und von \class{Dynamics} Instanzen durchgeführten, Kollisionsschrittes der lokalen Umsetzung des LBM Modells Sorge tragen.
 
-Diese \texttt{Dynamics} beschreiben dabei zusammen mit zellübergreifenden Postprozessoren nicht nur das einfache Strömungsverhalten, sondern modellieren auch die zahlreichen Randkonditionen, welche die Abbildung komplexer Geometrien in LBM erst ermöglichen.
-Zur einfacheren Zuordnung dieser zellspezifischen Klassen verwendet OpenLB sogenannte Materialzahlen, welche von einer \texttt{SuperGeometry2D} Instanz verwaltet werden.
+Diese \class{Dynamics} beschreiben dabei zusammen mit zellübergreifenden Postprozessoren nicht nur das einfache Strömungsverhalten, sondern modellieren auch die zahlreichen Randkonditionen, welche die Abbildung komplexer Geometrien in LBM erst ermöglichen.
+Zur einfacheren Zuordnung dieser zellspezifischen Klassen verwendet OpenLB sogenannte Materialzahlen, welche von einer \class{SuperGeometry2D} Instanz verwaltet werden.
+
+Parallel zu diesen Strukturen kapselt und berechnet die \class{UnitConverter} Klasse etwaig benötigte Konstanten zur Konvertierung zwischen physikalischen Einheiten und den, diese modellierenden, Lattice-Einheiten sowie Relaxionszeiten und Fluidkonstanten wie die Reynolds-Nummer.
+
+\bigskip
+Im Allgemeinen ergibt sich aus diesen Komponenten folgende übliche Struktur von OpenLB-basierenden Anwendungen \cite[Kap.~2.1]{olb12userguide}:
+\begin{enumerate}
+	\item Erstellung des \class{UnitConverter} mit den beabsichtigten Gitterkonstanten
+	\item Beschreibung der Simulationsdomäne durch Konstruktion einer \class{CuboidGeometry2D}
+	\item Bereitstellung eines \class{LoadBalancer} zur Instantierung einer \class{SuperGeometry2D}
+	\item Definition der Materialzahlen in einer \method{prepareGeometry} Methode
+	\item Konstruktion der \class{SuperLattice2D} Instanz aus der \class{SuperGeometry2D}
+	\item Instantierung der benötigten \class{Dynamics} und etwaigen Randkonditionen
+	\item Bindung von \class{Dynamics} und Randkonditionen an die, von \class{SuperLattice2D} verwalteten, \class{Cell} Objekte anhand der Materialzahlen in einer \method{prepareLattice} Methode
+	\item Starten der Simulationsschleife zum Aufruf von \method{SuperLattice2D::collideAndStream}
+\end{enumerate}
+
+In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter durch kanonisch benannte Funktionen wie \method{getResults} und \method{error} die Ergebnisse zur Analyse in Dateien geschrieben, Fehlernormen berechnet und Konvergenzkriterien bestimmt.
 
 \subsection{Auswahl der Verfeinerungsmethode}
 \label{sec:olbRefinementChoice}

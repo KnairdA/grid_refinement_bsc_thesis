@@ -11,12 +11,14 @@ stdenv.mkDerivation rec {
       eulervm
       cm-super
       enumitem
+      minted fvextra ifplatform framed
       bibtex biblatex logreq xstring
       ;
     };
   in [
     gnumake
     texlive-custom
+    python3Packages.pygments
   ];
 
   shellHook = ''

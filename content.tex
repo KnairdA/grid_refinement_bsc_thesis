@@ -633,9 +633,9 @@ In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter
 \subsection{Auswahl der Verfeinerungsmethode}
 \label{sec:olbRefinementChoice}
 
-Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Aufteilung der Simulationsdomäne in, durch \class{Cuboid2D} beschriebene, Quader. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die bestehende Architektur sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung scheint ein solcher Ansatz sinnvoll.
+Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Aufteilung der Simulationsdomäne in, durch \class{Cuboid2D} beschriebene, Quader. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die bestehende Architektur, sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung, scheint ein solcher Ansatz sinnvoll.
 
-Bei Variation der Auflösung einzelner Quader in Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden.
+Bei Variation der Auflösung einzelner Quader im Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg, benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden.
 
 Zur Ermöglichung von Parallelisierung berücksichtigt die, der Gitterverwaltung in \class{SuperLattice2D} zugrundeliegende, Aufteilung der Domäne durch \class{CuboidGeometry2D} bereits Übergangsbereiche, deren Funktion mit zusätzlicher Auflösungskopplung in Einklang zu bringen wäre.
 
@@ -644,17 +644,17 @@ Weiter würde das Problemfeld eben dieser Dekomposition um die Restriktion auf A
 \bigskip
 Der tatsächlich umgesetzte Ansatz ergibt sich aus dem Verständnis von Gitterverfeinerung als Kopplung von ansonsten komplett allein stehenden Simulationen. Die Übergangsbereiche wären in diesem Modell mit Randkonditionen vergleichbar, wie sie für Ein- und Ausflüsse verwendet werden. Gitterverfeinerung könnte so weitestgehend von der bestehenden Architektur getrennt ergänzt werden, was insbesondere auch die veränderungsfreie Unterstützung existierender Anwendungen begünstigen würde.
 
-Eine solche nebenläufige Überlagerung von Simulationen mit jeweils komplett eigenständig verwalteten Gittern gebietet sich bei erster Betrachtung als klarer Umriss eines Multi-Grid Verfahrens. Beachten wir jedoch, dass es einfach möglich ist, die überlagerten Gitterflächen durch \emph{Nullen} der entsprechenden Materialzahlen effizient aus der Verarbeitung auszuschließen und trotzdem bei Bedarf -- z.B. in Hinblick auf Verschiebung von verfeinerten Bereiche während der Simulation -- zu reaktivieren, stellen sich auch Multi-Domain Ansätze in diesem Modell als sinnvoll implementierbar heraus. Vorteil ist hier also gerade auch, dass prinzipiell beide Ansätze zur Gitterverfeinerung umgesetzt werden können und wir nicht durch Fasthalten an der existierenden Struktur auf Multi-Domain Verfahren beschränkt sind. Da die Positionierung der Gitter in diesem Ansatz komplett frei wäre, ließen sich aus Architektursicht auch nicht-koinzidierende oder sogar zueinander rotierte Verfeinerungsgitter abbilden.
+Eine solche nebenläufige Überlagerung von Simulationen mit jeweils komplett eigenständig verwalteten Gittern gebietet sich bei erster Betrachtung als klarer Umriss eines Multi-Grid Verfahrens. Beachten wir jedoch, dass es einfach möglich ist, die überlagerten Gitterflächen durch \emph{Nullen} der entsprechenden Materialzahlen effizient aus der Verarbeitung auszuschließen und trotzdem bei Bedarf -- z.B. in Hinblick auf Verschiebung von verfeinerten Bereiche während des Simulationsverlaufs -- zu reaktivieren, stellen sich auch Multi-Domain Ansätze in diesem Modell als sinnvoll implementierbar heraus. Vorteil ist hier also gerade auch, dass prinzipiell beide Ansätze zur Gitterverfeinerung umgesetzt werden können und wir nicht durch Festhalten an der existierenden Struktur auf Multi-Domain Verfahren beschränkt sind. Da die Positionierung der Gitter in diesem Ansatz komplett frei wäre, ließen sich aus Architektursicht auch nicht-koinzidierende oder sogar zueinander rotierte Verfeinerungsgitter abbilden.
 
 Ein Vorbild für dieses Konzept zur Umsetzung von Gitterverfeinerung existiert in Form der Optimierungskomponente von OpenLB, welche ebenfalls komplette Simulationen in einem sogenannten \class{Solver} kapselt. Langfristig könnten mit diesem Ansatz also beide gitterübergreifenden Module in einem gemeinsamen Konzept abgebildet werden.
 
 \bigskip
-Nachdem nun das grobe Umfeld eines Gitterverfeinerungsframeworks fest steht, gilt es, ein geeignetes Verfahren zur Umsetzung in und Nutzung mit eben diesem Framework zu wählen. Das von Lagrava et al. in \citetitle{lagrava12}~\cite{lagrava12} beschriebene Verfahren, welches insbesondere auf \cite{dupuisChopard03} und \cite{filippova98} einen anpassungsfähigen Multi-Domain Gitterverfeinerungsalgorithmus für BGK LBM auf koinzidierenden D2Q9 Gittern aufbaut, erscheint hier als guter Kandidat. Die anfängliche Beschränkung auf zwei Dimensionen passend zur Einschränkung dieser Arbeit sowie die Flexibilität in Hinblick auf die verwendeten Restriktions- und Interpolationsoperatoren bilden hier eine gute Grundlage für eine erste und doch ausbaufähige Umsetzung von Gitterverfeinerung in OpenLB.
+Nachdem nun das grobe Umfeld eines Gitterverfeinerungsframeworks feststeht, gilt es, ein geeignetes Verfahren zur Umsetzung in und Nutzung mit eben diesem Framework zu wählen. Das von Lagrava et al. in \citetitle{lagrava12}~\cite{lagrava12} beschriebene Verfahren, welches insbesondere auf \cite{dupuisChopard03} und \cite{filippova98} einen anpassungsfähigen Multi-Domain Gitterverfeinerungsalgorithmus für BGK LBM auf koinzidierenden D2Q9 Gittern aufbaut, erscheint hier als guter Kandidat. Die anfängliche Beschränkung auf zwei Dimensionen passend zur Einschränkung dieser Arbeit sowie die Flexibilität in Hinblick auf die verwendeten Restriktions- und Interpolationsoperatoren bilden hier eine gute Grundlage für eine erste und doch ausbaufähige Umsetzung von Gitterverfeinerung in OpenLB.
 
 \newpage
 \subsection{Struktur des Gitterverfeinerungsframework}
 
-Wie im vorangehenden Kapitel erläutert, soll das Framework zur Gitterverfeinerung nicht tief in die bestehenden Strukturen integriert, sondern viel mehr über diesen stehen. Eine erste Hürde zu diesem Ziel ist die größtenteils aus zwangfreien Konventionen bestehende Struktur von OpenLB Anwendungen. So sind zwar die einzelnen Komponenten der Simulation wie \class{CuboidGeometry2D} und \class{SuperLattice2D} vorgegeben, deren Konstruktion und Verknüpfung erfolgt jedoch größtenteils manuell.
+Wie im vorangehenden Kapitel erläutert, soll das Framework zur Gitterverfeinerung nicht tief in vorhandene Strukturen integriert, sondern viel mehr über diesen stehend angesiedelt werden. Eine erste Hürde zu diesem Ziel ist die, größtenteils aus zwangfreien Konventionen bestehende, Struktur von OpenLB Anwendungen. So sind zwar die einzelnen Komponenten der Simulation wie \class{CuboidGeometry2D} und \class{SuperLattice2D} vorgegeben, deren Konstruktion und Verknüpfung erfolgt jedoch größtenteils manuell.
 
 Für sich ist diese Herangehensweise des flexiblen Zusammensetzens von Modulen durchaus erhaltenswert und bildet eine der Stärken von OpenLB. Zur übergreifenden und für den Nutzer möglichst bequemen Einbindung von Gitterverfeinerung -- wir erinnern uns: das Ziel ist es, Gitter erst im Nachhinein mit einem einzigen Funktionsaufruf zu verfeinern -- muss jedoch zumindest die Konstruktion des auflösungseigenen \class{SuperLattice2D} mit dem dazugehörigen Umfeld aus \class{UnitConverter}, \class{LoadBalancer}, \class{CuboidGeometry2D} und \class{SuperGeometry2D} soweit wie möglich gekapselt werden.
 
@@ -662,18 +662,18 @@ Für sich ist diese Herangehensweise des flexiblen Zusammensetzens von Modulen d
 Entsprechend besteht das Framework aus zwei Komponenten: Einer \class{Grid2D} Klasse, die in einem Konstruktoraufruf ein \class{SuperLattice2D} zusammen mit dem benötigten Umfeld instanziiert und einer \class{Coupler2D} Klasse zur Abbildung der Übergänge zwischen mehreren \class{Grid2D} Instanzen. Die Gitterklasse stellt dabei eine Methode \method{Grid2D::refine} bereit, die anhand einer Parametrisierung der zu verfeinernden Domäne ein neues \method{Grid2D} konstruiert und über entsprechende \class{Coupler2D} Objekte mit sich selbst verknüpft. Funktionen wie \method{prepareGeometry} und \method{prepareLattice} können in diesem Umfeld dann durch entsprechende \emph{Getter} mit \class{Grid2D} zusammenarbeiten. Arbeiten diese Funktionen bereits auf Grundlage von analytischen Indikatoren, d.h. unabhängig der Auflösung, können sie sogar ohne Anpassung für alle Gitterauflösungen verwendet werden.
 
 \begin{listing}[H]
-\begin{minted}[fontsize=\footnotesize,mathescape]{cpp}
+\begin{minted}{cpp}
 template <typename T, template<typename> class DESCRIPTOR>
 RefiningGrid2D<T,DESCRIPTOR>::RefiningGrid2D(
-  Grid2D<T,DESCRIPTOR>& parentGrid, Vector<T,2> origin, Vector<T,2> extend):
-  Grid2D<T,DESCRIPTOR>(
-    std::unique_ptr<IndicatorF2D<T>>(new IndicatorCuboid2D<T>(extend, origin)),
-    2*parentGrid.getConverter().getResolution(),     // Auflösungsübergang $2:1$ 
-    2*parentGrid.getConverter().getLatticeRelaxationTime() - 0.5, // Siehe $(\ref{eq:gridTauShift})$
-    parentGrid.getConverter().getReynoldsNumber()),               // $\text{Re}_g = \text{Re}_f$
-  _origin(origin),
-  _extend(extend),
-  _parentGrid(parentGrid)
+	Grid2D<T,DESCRIPTOR>& parentGrid, Vector<T,2> origin, Vector<T,2> extend):
+	Grid2D<T,DESCRIPTOR>(
+		std::unique_ptr<IndicatorF2D<T>>(new IndicatorCuboid2D<T>(extend, origin)),
+		2*parentGrid.getConverter().getResolution(),     // Auflösungsübergang $2:1$
+		2*parentGrid.getConverter().getLatticeRelaxationTime() - 0.5, // Siehe $(\ref{eq:gridTauShift})$
+		parentGrid.getConverter().getReynoldsNumber()),               // $\text{Re}_g = \text{Re}_f$
+	_origin(origin),
+	_extend(extend),
+	_parentGrid(parentGrid)
 { }
 \end{minted}
 \caption{Konstruktor der verfeinernden Gitter}
@@ -681,26 +681,26 @@ RefiningGrid2D<T,DESCRIPTOR>::RefiningGrid2D(
 \end{listing}
 
 Die Konstruktion von \class{Grid2D} erfolgt anhand einer indikatorgegebenen Beschreibung der Simulationsdomäne sowie der gewünschten Auflösung zusammen mit der Relaxionszeit und der modellierenden Reynolds-Nummer:
-\begin{minted}[fontsize=\footnotesize]{cpp}
+\begin{minted}{cpp}
 Grid2D(FunctorPtr<IndicatorF2D<T>>&& domainF, int resolution, T tau, int re);
 \end{minted}
-Während sich die Realisierung dieser Signatur als einfache Konstruktion der erläuterten OpenLB Struktur erweist, gestaltet sich die Konstruktion der vererbten \class{RefiningGrid2D} Klasse in Listing~\ref{lst:RefiningGrid} interessanter, da hier dann Kraft der Ergebnisse von Kapitel~\ref{kap:Skalierung} die Vorgabe des groben Gitters zusammen mit dem zu verfeinernden Teilbereich zur Erstellung eines neuen Gitters ausreicht.
+Während sich die Realisierung dieser Signatur als einfache Konstruktion der erläuterten OpenLB Struktur erweist, gestaltet sich die Konstruktion der vererbten \class{RefiningGrid2D} Klasse in Listing~\ref{lst:RefiningGrid} interessanter, da hier dann Kraft der Ergebnisse von Kapitel~\ref{kap:Skalierung} die Vorgabe des groben Gitters zusammen mit dem verfeinerungsbedürftigen Teilbereich zur Erstellung eines neuen Gitters ausreicht.
 
 \begin{listing}[H]
-\inputminted[fontsize=\footnotesize,mathescape]{cpp}{code/grid2d_collide_and_stream.cpp}
+\inputminted{cpp}{code/grid2d_collide_and_stream.cpp}
 \caption{Rekursiver Kollisions- und Strömungsschritt mit Gitterkopplung}
 \label{lst:GridCollideAndStream}
 \end{listing}
 
-Wie in Kapitel~\ref{kap:Algorithmus} dargelegt, müssen zur Gitterkopplung nach jedem Kollisions- und Strömungsschritt verschiedene Schritte durchführt werden. So ist die Ausführung von Kollisions- und Strömungsschritten auf dem feinen Gitter zusammen mit der jeweiligen Vor- und Nacharbeit strikt an die Nacharbeit von Kollisions- und Strömungsschritten auf dem groben Gitter gebunden.
+Wie in Kapitel~\ref{kap:Algorithmus} dargelegt, müssen zur Gitterkopplung nach jedem Kollisions- und Strömungsschritt verschiedene Arbeiten durchführt werden. So ist die Ausführung von Kollisions- und Strömungsschritten auf dem feinen Gitter zusammen mit der jeweiligen Vor- und Nacharbeit strikt an die Nacharbeit von Kollisions- und Strömungsschritten auf dem groben Gitter gebunden.
 
-Wurde das grobe Gitter um einen Zeitschritt weiterentwickelt, muss der Zustand des feinen Gitters ebenfalls um entsprechend zwei feine Zeitschritte weiterentwickelt werden, damit die groben Verteilungsfunktionen vervollständigt werden können. Es liegt somit nahe, die Aufrufe von \method{SuperLattice2D::collideAndStream} in einer Methode \method{Grid2D::collideAndStream} zu kapseln und auf diese Weise die Aufrufe von \class{Coupler2D} an den korrekten Stellen durchzuführen.
+Wurde das grobe Gitter um einen Zeitschritt weiterentwickelt, muss der Zustand des feinen Gitters ebenfalls um entsprechend zwei feine Zeitschritte weiterentwickelt werden, damit die groben Verteilungsfunktionen vervollständigt werden können. Es liegt somit nahe, die Aufrufe von \method{SuperLattice2D::collideAndStream} in einer Methode \method{Grid2D::collideAndStream} zu kapseln, um auf diese Weise die Aufrufe von \class{Coupler2D} an den korrekten Stellen durchzuführen.
 
-Konkret erhalten wir in Listing~\ref{lst:GridCollideAndStream} bei Verwaltung der von \method{Grid2D::refine} erstellten feinen Gitter und den zugehörigen Kopplern in Listen eine der Algorithmenübersicht in Abbildung~\ref{fig:AlgorithmBirdsEye} nicht unähnliche Implementierung von \method{Grid2D::collideAndStream}.
+Konkret erhalten wir in Listing~\ref{lst:GridCollideAndStream} bei gesammelter Verwaltung der von \method{Grid2D::refine} erstellten feinen Gitter und den zugehörigen Kopplern eine, der Algorithmenübersicht in Abbildung~\ref{fig:AlgorithmBirdsEye} nicht unähnliche, Implementierung von \method{Grid2D::collideAndStream}.
 Zu bemerken ist, dass die Konstellation aus dieser Methode zusammen mit \method{Grid2D::refine} durch Selbstaufruf bereits die freie Schachtelung von Verfeinerungsbereichen erlaubt.
 
 \begin{listing}[H]
-\begin{minted}[fontsize=\footnotesize,mathescape]{cpp}
+\begin{minted}{cpp}
 // Initialisiere gröbstes Gitter mit gewünschten Fluidkonstanten
 Grid2D<T,DESCRIPTOR> coarseGrid(coarseDomain, resolution, tau, Re);
 prepareGeometry(coarseGrid);
@@ -719,10 +719,10 @@ prepareLattice(fineGrid);
 
 // Simulationsschleife mit Ausgabe
 for (int iT = 0; iT < coarseGrid->getConverter().getLatticeTime(100); ++iT) {
-  coarseGrid->collideAndStream();
+	coarseGrid->collideAndStream();
 
-  getResults(coarseGrid, iT);
-  getResults(fineGrid,   iT);
+	getResults(coarseGrid, iT);
+	getResults(fineGrid,   iT);
 }
 \end{minted}
 \caption{Beispielhafte Nutzung von \class{Grid2D}}
@@ -737,19 +737,20 @@ Zur umfassenden Beschreibung des Gitterverfeinerungsframework fehlt uns jetzt nu
 \newpage
 \subsection{Umsetzung des Verfahrens von Lagrava et al.}
 
-\begin{listing}[H]
-\inputminted[fontsize=\footnotesize,mathescape]{cpp}{code/coupler2d.cpp}
-\caption{Gemeinsame Struktur beider Übergangsrichtungen}
-\end{listing}
+Grundsätzlich implementiert jede Instanz von \class{Coupler2D} die Kopplung zweier Gitter in einer Richtung entlang einer durch Ursprung und Ausdehnung charakterisierten Linie innerhalb der physikalischen Simulationsdomäne. Für die Kopplung einer rechteckigen \class{RefiningGrid2D} Instanz werden von \method{Grid2D::refine} in diesem Fall acht Kopplungsobjekte erzeugt.
 
 \begin{listing}[H]
-\inputminted[fontsize=\footnotesize,mathescape]{cpp}{code/fineCoupler2d.cpp}
+\inputminted{cpp}{code/coupler2d.cpp}
+\caption{Gemeinsame Struktur beider Kopplungsklassen}
+\end{listing}
+
+Die im Zuge dieser Arbeit entwickelte Version von \class{Coupler2D} beschränkt sich hierbei auf zu einem Einheitsvektor parallele Gitterübergänge. Sowohl für die Kopplung der mit \class{CuboidGeometry2D} modellierbaren Aufteilungen als auch für das umzusetzende Verfahren ist diese Einschränkung kein Hindernis, da Lagrava et al. ebenfalls nur von horizontalen bzw. vertikalen Gitterübergängen ausgehen.
+
+Da \class{Grid2D} Methoden zur Diskretisierung physikalischer Koordinaten auf das Gitter bereitstellt, besteht das Fundament der beiden benötigten Kopplungsklassen größtenteils nur aus der Bestimmung aller zu setzenden Kopplungsknoten entlang der Übergangslinie. Die abgeleiteten Klassen \class{FineCoupler2D} und \class{CoarseCoupler2D} können auf die Liste dieser Knoten dann mittels \method{getFineLatticeR} und \method{getCoarseLatticeR} zugreifen und so ihre eigene Implementierung auf das Wesentliche beschränken.
+
+\begin{listing}[H]
+\inputminted{cpp}{code/fineCoupler2d.cpp}
 \caption{Struktur des Kopplers von grob nach fein}
-\end{listing}
-
-\begin{listing}[H]
-\inputminted[fontsize=\footnotesize,mathescape]{cpp}{code/coarseCoupler2d.cpp}
-\caption{Struktur des Kopplers von fein nach grob}
 \end{listing}
 
 \newpage

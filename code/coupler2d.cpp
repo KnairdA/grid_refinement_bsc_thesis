@@ -8,7 +8,7 @@ protected:
   const int  _fineSize;
   const bool _vertical;
 
-  Vector<T,2> _physOrigin;
+  const Vector<T,2> _physOrigin;
 
   const Vector<int,3>& getFineLatticeR(int y) const;
   const Vector<int,3>& getCoarseLatticeR(int y) const;

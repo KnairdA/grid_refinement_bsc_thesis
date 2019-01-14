@@ -290,7 +290,7 @@ Die Annahme von zwei Verfeinerungsstufen ist berechtigt, da mehrfach verfeinerte
 
 \begin{Definition}[Diskretisierung der Simulationsdomänen]
 \label{def:DiskretRefinedGitter}
-Wir betrachten kartesischen Gitter \(\G\) und \(\F\) als Diskretisierungen der physikalischen Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben.
+Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierungen der Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben.
 \begin{align*}
 \G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
 \F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
@@ -298,11 +298,12 @@ Wir betrachten kartesischen Gitter \(\G\) und \(\F\) als Diskretisierungen der p
 \(\delta x_g = \delta x_g / 2 \in \R_+\) seien die Diskretisierungsauflösungen im Verhältnis \(1:2\).
 \end{Definition}
 
-Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Formal sei dabei das Innere der groben Domäne \(D_g\) ohne den Übergangsbereich gegeben als:
-\[ D_g^\circ := \{ x \in D_g | \forall y \in \R^2 \setminus D_g : \|x-y\| \geq \delta x_g \} \]
+Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um mindestens eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Formal sei dabei das Innere der groben Domäne \(D_g\) ohne den Übergangsbereich der Breite \(\delta x_g\) gegeben als:
+\[ D_g^\circ := \{ x \in D_g | \forall y \in \R^2 \setminus D_g : \|x-y\| > \delta x_g \} \]
+Vergleiche hierzu den unschraffierten Bereich der Darstellung von \(D_g\) in Abbildung~\ref{fig:SimDomain}.
 Unter der Annahme, dass \(D_g\) die feine Simulationsdomäne \(D_f\) komplett umschließt, also der komplette Rand des feinen Gitters mit dem groben gekoppelt werden soll, fordern wir dann für den Rand des feinen Gitters:
 \[ \partial D_f \stackrel{!}{\subset} \partial D_g^\circ \numberthis\label{eq:FineBorderIntersectCoarseGrid} \]
-Diese Einschränkung garantiert, dass die äußersten Gitterknoten des feinen Gitters sich soweit möglich mit groben Gitterknoten schneiden und nicht etwas zwischen zwei groben \emph{Gitterreihen} liegen.
+Diese Einschränkung garantiert, dass die äußersten Gitterknoten des feinen Gitters sich soweit möglich mit groben Gitterknoten schneiden und nicht etwa zwischen zwei groben \emph{Gitterreihen} liegen.
 
 \begin{figure}[h]
 \centering
@@ -310,31 +311,6 @@ Diese Einschränkung garantiert, dass die äußersten Gitterknoten des feinen Gi
 \caption{Mit Forderung (\ref{eq:FineBorderIntersectCoarseGrid}) ausgeschlossener Übergangsbereich \cite[vgl. Abb.~9]{lagrava12}}
 \label{fig:InvalidOverlapArea}
 \end{figure}
-
-Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während, im Kontext der LBM an sich, weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
-
-Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\). Diese stellen gerade die Definitionsmengen der groben bzw. feinen Verteilungsfunktionen dar.
-
-\begin{Definition}[Abbildung auf implementierende Gitter]
-\label{def:BijImplGitter}
-Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters.
-Dann können wir o.B.d.A. einen beliebigen physikalischen Knoten \(x_{0,\#}^\text{phys}\) mit dem Knoten \(x_0^\text{impl} = 0 \in L\) identifizieren. Eine Bijektion zwischen physikalischen und implementierenden Gittern ist damit schon eindeutig definiert:
-\begin{align*}
-x_\#^\text{impl}(x^\text{phys}) &:= \frac{1}{\delta x_\#} (x^\text{phys} - x_{0,\#}^\text{phys}) \\
-x_\#^\text{phys}(x^\text{impl}) &:= x_{0,\#}^\text{phys} + \delta x_\# \cdot x^\text{impl}
-\end{align*}
-Diese Abbildung der physikalisch eingebetteten Gitterknoten in die Definitionsmenge der Verteilungsfunktionen nehmen wir dabei zur Vereinfachung der Notation implizit an, wann immer die Verteilung in Elementen aus \(\G\) oder \(\F\) betrachtet wird.
-\end{Definition}
-
-Da die Einbettungen von Knoten verschiedener Auflösungen in deren Übergangsbereichen nicht disjunkt sind, benötigen wir im Weiteren gitterspezifische Bezeichnungen für die Verteilungen und deren Momente:
-
-\begin{Definition}[Gitterspezifische Verteilungsfunktionen und Momente]
-Sei \(\# \in \{f, g\}\) wieder Symbol des feinen oder groben Gitters. Wir bezeichnen dann mit \(f_{\#,i}\) die \(i\)-te Verteilungsfunktion des entspechenden Gitters. Analog formulieren sich mit Definition~\ref{def:Momente} die Momente für \(x \in \G\) respektive \(x \in \F\):
-\begin{align*}
-\rho_\#(x) &:= \sum_{j=0}^{q-1} f_{\#,j}(x) \\
-u_\#(x) &:= \frac{1}{\rho_\#(x)} \sum_{j=0}^{q-1} \xi_j f_{\#,j}(x)
-\end{align*}
-\end{Definition}
 
 \noindent
 Wir können die Gitterknoten der Übergangsbereiche nun detailliert klassifizieren:
@@ -359,6 +335,32 @@ Wir können die Gitterknoten der Übergangsbereiche nun detailliert klassifizier
 Die Übertragungsrichtungen in \(\U_{g \to f}\) und \(\U_{f \to g}\) ergeben sich aus den jeweils fehlenden Verteilungsfunktionen an den Rändern der Gitter. So fehlen beispielsweise zur Kollision der groben Gitterknoten in \(\U_{f \to g}\) Verteilungsfunktionen in Richtung des feinen Gitters, während die feinen Zellen in dieser Menge noch vollständig definiert sind, da sie im Inneren des feinen Gitters liegen.
 
 Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches \(\U_g \cup \U_f\) der Mindestbreite \(\delta x_g\) erklären: Gäbe es diesen nicht, so fehlten an der Grenze zwischen grobem und feinem Gitter Verteilungsfunktionen in beide Richtungen zugleich.
+
+\bigskip
+Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während, im Kontext der LBM an sich, weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
+
+Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\). Diese stellen gerade die Definitionsmengen der groben bzw. feinen Verteilungsfunktionen dar.
+
+\begin{Definition}[Abbildung auf implementierende Gitter]
+\label{def:BijImplGitter}
+Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters.
+Dann können wir o.B.d.A. einen beliebigen physikalischen Knoten \(x_{0,\#}^\text{phys}\) mit dem Knoten \(x_0^\text{impl} = 0 \in L\) identifizieren. Eine Bijektion zwischen physikalischen und implementierenden Gittern ist damit schon eindeutig definiert:
+\begin{align*}
+x_\#^\text{impl}(x^\text{phys}) &:= \frac{1}{\delta x_\#} (x^\text{phys} - x_{0,\#}^\text{phys}) \\
+x_\#^\text{phys}(x^\text{impl}) &:= x_{0,\#}^\text{phys} + \delta x_\# \cdot x^\text{impl}
+\end{align*}
+Diese Abbildung der physikalisch eingebetteten Gitterknoten in die Definitionsmenge der Verteilungsfunktionen nehmen wir dabei zur Vereinfachung der Notation implizit an, wann immer die Verteilung in Elementen aus \(\G\) oder \(\F\) betrachtet wird.
+\end{Definition}
+
+Da die Einbettungen von Knoten verschiedener Auflösungen in deren Übergangsbereichen nicht disjunkt sind, benötigen wir im Weiteren gitterspezifische Bezeichnungen für die Verteilungen und deren Momente:
+
+\begin{Definition}[Gitterspezifische Verteilungsfunktionen und Momente]
+Sei \(\# \in \{f, g\}\) wieder Symbol des feinen oder groben Gitters. Wir bezeichnen dann mit \(f_{\#,i}\) die \(i\)-te Verteilungsfunktion des entspechenden Gitters. Analog formulieren sich mit Definition~\ref{def:Momente} die Momente für \(x \in \G\) respektive \(x \in \F\):
+\begin{align*}
+\rho_\#(x) &:= \sum_{j=0}^{q-1} f_{\#,j}(x) \\
+u_\#(x) &:= \frac{1}{\rho_\#(x)} \sum_{j=0}^{q-1} \xi_j f_{\#,j}(x)
+\end{align*}
+\end{Definition}
 
 \bigskip
 Zusammenfassend wird die Aufgabe der im kommenden Kapitel zu erarbeitenden Skalierungs-, Restriktions- und Interpolationsschritte also \emph{nur} darin bestehen, die jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
@@ -636,12 +638,21 @@ In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter
 
 Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Aufteilung der Simulationsdomäne in, durch \class{Cuboid2D} beschriebene, Quader. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die bestehende Architektur sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung scheint ein solcher Ansatz sinnvoll.
 
-Bei Variation der Auflösung einzelner Quader in Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden. Weiter würde das Problemfeld der Domänendekomposition in \class{CuboidGeometry2D} um die Restriktion von Auflösungsübergängen auf das Verhältnis \(1:2\) erweitert. Diese starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein schwerwiegendes Gegenargument zu diesem ersten Gedanken.
+Bei Variation der Auflösung einzelner Quader in Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden.
+
+Zur Ermöglichung von Parallelisierung berücksichtigt die, der Gitterverwaltung in \class{SuperLattice2D} zugrundeliegende, Aufteilung der Domäne durch \class{CuboidGeometry2D} bereits Übergangsbereiche, deren Funktion mit zusätzlicher Auflösungskopplung in Einklang zu bringen wäre.
+
+Weiter würde das Problemfeld eben dieser Dekomposition um die Restriktion auf Auflösungsübergänge im Verhältnis \(1:2\) erweitert. So müsste ein guter Algorithmus zur Dekomposition der Simulationsdomäne dann die Anforderungen an Parallelisierung, Rechenauslastung, Geometrie und Verfeinerung sinnvoll auflösen und zugleich manuelle Eingriffe erlauben. Diese zusätzliche starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein schwerwiegendes Gegenargument zu diesem ersten Gedanken.
 
 \bigskip
-Der tatsächlich umgesetzte Ansatz ergibt sich aus der Betrachtung von Gitterverfeinerung als Kopplung von ansonsten komplett allein stehenden Simulationen. Die Übergangsbereiche wären in diesem Modell mit Randkonditionen vergleichbar, wie sie für Ein- und Ausflüsse verwendet werden. Gitterverfeinerung könnte so weitestgehend von der bestehenden Architektur getrennt ergänzt werden, was insbesondere auch die veränderungsfreie Unterstützung existierender Anwendungen begünstigen würde. Eine solche nebenläufige Überlagerung von Simulationen mit jeweils komplett eigenständig verwalteten Gittern gebietet sich bei erster Betrachtung als klarer Umriss eines Multi-Grid Verfahrens. Beachten wir jedoch, dass es einfach möglich ist, die überlagerten Gitterflächen durch \emph{Nullen} der entsprechenden Materialzahlen effizient aus der Verarbeitung auszuschließen und trotzdem bei Bedarf -- z.B. in Hinblick auf Verschiebung von verfeinerten Bereiche während der Simulation -- zu reaktivieren, stellen sich auch Multi-Domain Ansätze in diesem Modell als sinnvoll implementierbar heraus.
+Der tatsächlich umgesetzte Ansatz ergibt sich aus dem Verständnis von Gitterverfeinerung als Kopplung von ansonsten komplett allein stehenden Simulationen. Die Übergangsbereiche wären in diesem Modell mit Randkonditionen vergleichbar, wie sie für Ein- und Ausflüsse verwendet werden. Gitterverfeinerung könnte so weitestgehend von der bestehenden Architektur getrennt ergänzt werden, was insbesondere auch die veränderungsfreie Unterstützung existierender Anwendungen begünstigen würde.
+
+Eine solche nebenläufige Überlagerung von Simulationen mit jeweils komplett eigenständig verwalteten Gittern gebietet sich bei erster Betrachtung als klarer Umriss eines Multi-Grid Verfahrens. Beachten wir jedoch, dass es einfach möglich ist, die überlagerten Gitterflächen durch \emph{Nullen} der entsprechenden Materialzahlen effizient aus der Verarbeitung auszuschließen und trotzdem bei Bedarf -- z.B. in Hinblick auf Verschiebung von verfeinerten Bereiche während der Simulation -- zu reaktivieren, stellen sich auch Multi-Domain Ansätze in diesem Modell als sinnvoll implementierbar heraus. Vorteil ist hier also gerade auch, dass prinzipiell beide Ansätze zur Gitterverfeinerung umgesetzt werden können und wir nicht durch Fasthalten an der existierenden Struktur auf Multi-Domain Verfahren beschränkt sind. Da die Positionierung der Gitter in diesem Ansatz komplett frei wäre, ließen sich aus Architektursicht auch nicht-koinzidierende oder sogar zueinander rotierte Verfeinerungsgitter abbilden.
 
 Ein Vorbild für dieses Konzept zur Umsetzung von Gitterverfeinerung existiert in Form der Optimierungskomponente von OpenLB, welche ebenfalls komplette Simulationen in einem sogenannten \class{Solver} kapselt. Langfristig könnten mit diesem Ansatz also beide gitterübergreifenden Module in einem gemeinsamen Konzept abgebildet werden.
+
+\bigskip
+Nachdem nun das grobe Umfeld eines Gitterverfeinerungsframeworks fest steht, gilt es, ein geeignetes Verfahren zur Umsetzung in und Nutzung mit eben diesem Framework zu wählen. Das von Lagrava et al. in \citetitle{lagrava12}~\cite{lagrava12} beschriebene Verfahren, welches insbesondere auf \cite{dupuisChopard03} und \cite{filippova98} einen anpassungsfähigen Multi-Domain Gitterverfeinerungsalgorithmus für BGK LBM auf koinzidierenden D2Q9 Gittern aufbaut, erscheint hier als guter Kandidat. Die anfängliche Beschränkung auf zwei Dimensionen passend zur Einschränkung dieser Arbeit sowie die Flexibilität in Hinblick auf die verwendeten Restriktions- und Interpolationsoperatoren bilden hier eine gute Grundlage für eine erste und doch ausbaufähige Umsetzung von Gitterverfeinerung in OpenLB.
 
 \newpage
 \subsection{Struktur des Gitterverfeinerungsframework}

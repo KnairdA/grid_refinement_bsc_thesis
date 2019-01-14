@@ -692,15 +692,65 @@ Während sich die Realisierung dieser Signatur als einfache Konstruktion der erl
 \label{lst:GridCollideAndStream}
 \end{listing}
 
-Wie in Kapitel~\ref{kap:Algorithmus} dargelegt, müssen zur Gitterkopplung nach jedem Kollisions- und Strömungsschritt verschiedene Schritte durchführt werden. So ist die Durchführung von Kollisions- und Strömungsschritten auf dem feinen Gitter zusammen mit der jeweiligen Vor- und Nacharbeit strikt an die Nacharbeit von Kollisions- und Strömungsschritten auf dem groben Gitter gebunden.
+Wie in Kapitel~\ref{kap:Algorithmus} dargelegt, müssen zur Gitterkopplung nach jedem Kollisions- und Strömungsschritt verschiedene Schritte durchführt werden. So ist die Ausführung von Kollisions- und Strömungsschritten auf dem feinen Gitter zusammen mit der jeweiligen Vor- und Nacharbeit strikt an die Nacharbeit von Kollisions- und Strömungsschritten auf dem groben Gitter gebunden.
 
 Wurde das grobe Gitter um einen Zeitschritt weiterentwickelt, muss der Zustand des feinen Gitters ebenfalls um entsprechend zwei feine Zeitschritte weiterentwickelt werden, damit die groben Verteilungsfunktionen vervollständigt werden können. Es liegt somit nahe, die Aufrufe von \method{SuperLattice2D::collideAndStream} in einer Methode \method{Grid2D::collideAndStream} zu kapseln und auf diese Weise die Aufrufe von \class{Coupler2D} an den korrekten Stellen durchzuführen.
 
 Konkret erhalten wir in Listing~\ref{lst:GridCollideAndStream} bei Verwaltung der von \method{Grid2D::refine} erstellten feinen Gitter und den zugehörigen Kopplern in Listen eine der Algorithmenübersicht in Abbildung~\ref{fig:AlgorithmBirdsEye} nicht unähnliche Implementierung von \method{Grid2D::collideAndStream}.
 Zu bemerken ist, dass die Konstellation aus dieser Methode zusammen mit \method{Grid2D::refine} durch Selbstaufruf bereits die freie Schachtelung von Verfeinerungsbereichen erlaubt.
 
+\begin{listing}[H]
+\begin{minted}[fontsize=\footnotesize,mathescape]{cpp}
+// Initialisiere gröbstes Gitter mit gewünschten Fluidkonstanten
+Grid2D<T,DESCRIPTOR> coarseGrid(coarseDomain, resolution, tau, Re);
+prepareGeometry(coarseGrid);
+
+// Verfeinere ein Einheitsquadrat beginnend bei $(0.5,0.5) \in \R^2$
+auto fineGrid = coarseGrid.refine({0.5, 0.5}, {1.0, 1.0});
+prepareGeometry(fineGrid);
+
+// Schließe den feinen Bereich auf dem groben Gitter aus (optional)
+auto refinedOverlap = fineGrid.getRefinedOverlap();
+coarseGrid->getSuperGeometry().rename(1,0,*refinedOverlap);
+
+// Binde Dynamics und Randkonditionen an die beiden Gitter
+prepareLattice(coarseGrid);
+prepareLattice(fineGrid);
+
+// Simulationsschleife mit Ausgabe
+for (int iT = 0; iT < coarseGrid->getConverter().getLatticeTime(100); ++iT) {
+  coarseGrid->collideAndStream();
+
+  getResults(coarseGrid, iT);
+  getResults(fineGrid,   iT);
+}
+\end{minted}
+\caption{Beispielhafte Nutzung von \class{Grid2D}}
+\label{lst:RefinementUsageExample}
+\end{listing}
+
+Wie in diesem leicht vereinfachten Listing zu sehen, kann Gitterverfeinerung mit dem beschriebenen Framework schon erfreulich kompakt formuliert werden. Tatsächlich fehlt zum Etappenziel der einzeilig aktivierbaren manuell positionierten Gitterverfeinerung nur eine weitere Abstraktion von von \method{prepareGeometry} und \method{prepareLattice}.
+
+\bigskip
+Zur umfassenden Beschreibung des Gitterverfeinerungsframework fehlt uns jetzt nur noch die Definition der \class{Coupler2D} Objekte. Da diese die Einzelheiten des Verfeinerungsverfahrens umsetzen, werden sie im Rahmen des folgenden Kapitels zur Implementierung des Verfahrens von Lagrava et al. näher beleuchtet werden.
+
 \newpage
 \subsection{Umsetzung des Verfahrens von Lagrava et al.}
+
+\begin{listing}[H]
+\inputminted[fontsize=\footnotesize,mathescape]{cpp}{code/coupler2d.cpp}
+\caption{Gemeinsame Struktur beider Übergangsrichtungen}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted[fontsize=\footnotesize,mathescape]{cpp}{code/fineCoupler2d.cpp}
+\caption{Struktur des Kopplers von grob nach fein}
+\end{listing}
+
+\begin{listing}[H]
+\inputminted[fontsize=\footnotesize,mathescape]{cpp}{code/coarseCoupler2d.cpp}
+\caption{Struktur des Kopplers von fein nach grob}
+\end{listing}
 
 \newpage
 \section{Evaluierung}

@@ -737,11 +737,12 @@ Zur umfassenden Beschreibung des Gitterverfeinerungsframework fehlt uns jetzt nu
 \newpage
 \subsection{Umsetzung des Verfahrens von Lagrava et al.}
 
-Grundsätzlich implementiert jede Instanz von \class{Coupler2D} die Kopplung zweier Gitter in einer Richtung entlang einer durch Ursprung und Ausdehnung charakterisierten Linie innerhalb der physikalischen Simulationsdomäne. Für die Kopplung einer rechteckigen \class{RefiningGrid2D} Instanz werden von \method{Grid2D::refine} in diesem Fall acht Kopplungsobjekte erzeugt.
+Grundsätzlich implementiert jede Instanz von \class{Coupler2D} die Kopplung zweier Gitter in einer Richtung entlang einer, durch Ursprung und Ausdehnung charakterisierten, Linie innerhalb der physikalischen Simulationsdomäne. Für die Kopplung einer rechteckigen \class{RefiningGrid2D} Instanz werden von \method{Grid2D::refine} in diesem Fall acht Kopplungsobjekte erzeugt -- vier Seiten mit jeweils zwei Kopplern.
 
 \begin{listing}[H]
 \inputminted{cpp}{code/coupler2d.cpp}
 \caption{Gemeinsame Struktur beider Kopplungsklassen}
+\label{lst:Coupler2D}
 \end{listing}
 
 Die im Zuge dieser Arbeit entwickelte Version von \class{Coupler2D} beschränkt sich hierbei auf zu einem Einheitsvektor parallele Gitterübergänge. Sowohl für die Kopplung der mit \class{CuboidGeometry2D} modellierbaren Aufteilungen als auch für das umzusetzende Verfahren ist diese Einschränkung kein Hindernis, da Lagrava et al. ebenfalls nur von horizontalen bzw. vertikalen Gitterübergängen ausgehen.
@@ -751,7 +752,40 @@ Da \class{Grid2D} Methoden zur Diskretisierung physikalischer Koordinaten auf da
 \begin{listing}[H]
 \inputminted{cpp}{code/fineCoupler2d.cpp}
 \caption{Struktur des Kopplers von grob nach fein}
+\label{lst:FineCoupler2D}
 \end{listing}
+
+Wie in Listing~\ref{lst:FineCoupler2D} zu sehen, benötigt das Setzen der feinen Verteilungsfunktionen in \method{FineCoupler2D::couple} einen Zwischenspeicher der groben Verteilungsmomente und der groben Nicht-Equilibriumsverteilung entlang der Kopplungslinie. Dieser wird in der Methode \method{FineCoupler2D::store} gesetzt und dient in \method{FineCoupler2D::interpolate} der linearen Zeitinterpolation der groben Verteilungsfunktionen zu Zeitpunkt \(t+\delta t_f\) entsprechend der Ausführungen in Kapitel~\ref{kap:Algorithmus}.
+
+\begin{listing}[H]
+\inputminted{cpp}{code/fineCoupler2d_couple_extract.cpp}
+\caption{Ausschnitt der Methode \method{FineCoupler2D::couple}}
+\label{lst:FineCoupler2D_couple_extract}
+\end{listing}
+
+Zur Beleuchtung des Herzstücks der feinen Kopplung sehen wir in Listing~\ref{lst:FineCoupler2D_couple_extract} einen Ausschnitt der Kopplungsfunktion für Knoten \(x_{g \to f}^f \in \F\) mit räumlicher Interpolation der benötigten groben Werte. Zusammen mit der zugehörigen Interpolationsfunktion in Listing~\ref{lst:ipol4ord} lässt sich dabei sehen, wie sich das Verfeinerungsvefahren durch Verwenden von OpenLB Modulen wie den \class{lbHelpers} und der \class{Vector} Datenstruktur sehr nah an seiner mathematischen Formulierung umsetzen lässt.
+
+\begin{listing}[H]
+\begin{minted}{cpp}
+template <typename T, unsigned N>
+Vector<T,N> order4interpolation(const std::vector<Vector<T,N>>& data, int y)
+{
+	return 9./16. * (data[y] + data[y+1]) - 1./16. * (data[y-1] + data[y+2]);
+}
+\end{minted}
+\caption{Templatefunktion der Interpolationsformel (\ref{eq:ipol4ord})}
+\label{lst:ipol4ord}
+\end{listing}
+
+Der Koppler \class{CoarseCoupler2D} zum Setzen der groben Verteilungsfunktionen gestaltet sich derweil einfacher, da kein Zwischenspeicher benötigt wird und nur eine Restriktionsoperation anzuwenden ist.
+
+\begin{listing}[H]
+\inputminted{cpp}{code/computeRestrictedFneq.cpp}
+\caption{Umsetzung der Restriktionsoperation (\ref{eq:neqAvgRestrictionF2G})}
+\label{lst:CoarseCoupler2D_restriction}
+\end{listing}
+
+Hiermit sind die zentralen Bestandteile der Umsetzung des Verfahrens von Lagrava et al. im Kontext des in dieser Arbeit entwickelten Gitterverfeinerungsframework für OpenLB beschrieben. Zum Abschluss verbleibt nun noch die Evaluierung der Qualität eben dieses Verfahrens anhand verschiedener Beispiele.
 
 \newpage
 \section{Evaluierung}

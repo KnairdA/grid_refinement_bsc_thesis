@@ -13,7 +13,7 @@ protected:
   const Vector<int,3>& getFineLatticeR(int y) const;
   const Vector<int,3>& getCoarseLatticeR(int y) const;
 
-  T getScalingFactor() const;
+  T getScalingFactor() const; // Skalierungsfaktor $(\ref{eq:scaleFneq})$ der Nicht-Equilibriumsverteilung
   T getInvScalingFactor() const;
 
 private:

@@ -13,6 +13,7 @@ stdenv.mkDerivation rec {
       enumitem
       minted fvextra ifplatform framed
       bibtex biblatex logreq xstring
+      pgfplots
       ;
     };
   in [

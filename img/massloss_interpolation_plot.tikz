@@ -1,0 +1,54 @@
+\begin{tikzpicture}
+\begin{axis}[
+	scale only axis,
+	height=9cm,
+	width=0.9*\textwidth,
+	mark size=0,
+	line width=0.2pt,
+	legend pos=south west
+]
+
+\addplot table[
+	x=x, y=cubic,
+	col sep=semicolon,
+	/pgf/number format/read comma as period
+]{img/data/poiseuille2d_bisected_re100_both.csv};
+\addlegendentry{Druckverlauf bei Interpolation mit (\ref{eq:ipol4ord})};
+
+\addplot table[
+	x=x, y=linear,
+	col sep=semicolon,
+	/pgf/number format/read comma as period
+]{img/data/poiseuille2d_bisected_re100_both.csv};
+\draw [dotted] (axis cs:1.9,1.35) rectangle (axis cs:2.09,1.45);
+\addlegendentry{Druckverlauf bei Interpolation mit (\ref{eq:ipol2ord})};
+\end{axis}
+
+\begin{axis}[
+	yshift=4.5cm,
+	xshift=9cm,
+	scale only axis,
+	height=3cm,
+	width=4cm,
+	mark size=0,
+	line width=0.2pt,
+	ticks=none,
+	xticklabels={,},
+	title=Übergangsbereich
+]
+
+\addplot table[
+	x=x, y=cubic,
+	col sep=semicolon,
+	/pgf/number format/read comma as period
+]{img/data/poiseuille2d_bisected_re100_detail.csv};
+
+\addplot table[
+	x=x, y=linear,
+	col sep=semicolon,
+	/pgf/number format/read comma as period
+]{img/data/poiseuille2d_bisected_re100_detail.csv};
+\draw [dashed,gray] (axis cs:1.98,\pgfkeysvalueof{/pgfplots/ymin}) -- (axis cs:1.98,\pgfkeysvalueof{/pgfplots/ymax});
+\draw [dashed,gray] (axis cs:2.00,\pgfkeysvalueof{/pgfplots/ymin}) -- (axis cs:2.00,\pgfkeysvalueof{/pgfplots/ymax});
+\end{axis}
+\end{tikzpicture}

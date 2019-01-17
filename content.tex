@@ -418,21 +418,21 @@ Für die zur expliziten Lösung der diskreten LBM BGK Gleichung in Definition~\r
 Die Equilibriumsverteilung \(f_i^\text{eq}\) ergibt sich nach Definition~\ref{def:fieq} aus Geschwindigkeit \(u\) und Dichte \(\rho\). Sie sind also explizit unabhängig der Gitterauflösung und, wie erwähnt, stetig im Gitterübergang. Diese Aussage gilt nicht für die Nicht-Equilibriumsverteilung \(f_i^\text{neq}\), da diese nach (\ref{eq:approxFneq}) von dem Geschwindigkeitsgradienten \(\nabla u\) abhängt.
 
 Bezeichnen nun \(f_{f,i}^\text{neq}\) und \(f_{g,i}^\text{neq}\) die gitterspezifischen Nicht-Equilibriumanteile und \(\mathrm{S}_f\) sowie \(\mathrm{S}_g\) die entsprechenden Verzerrungstensoren. Zur Skalierung von \(f_{f,i}^\text{neq}\) suchen wir ein \(\alpha \in \R\) s.d. gilt: \[f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneqReq}\]
-
-Mit Hilfe von \ref{eq:approxFneq} lässt sich diese Relation nun nach \(\alpha\) auflösen:
+Mit Hilfe von (\ref{eq:approxFneq}) lässt sich diese Relation nach \(\alpha\) auflösen:
 \begin{align*}
 f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} &\iff -\frac{w_i \rho \overline{\tau_f}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_f = -\alpha \left( \frac{w_i \rho \overline{\tau_g}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_g \right) \\
 &\iff \overline{\tau_f} \mathrm{Q}_i : \mathrm{S}_f = \alpha \overline{\tau_g} \mathrm{Q}_i : \mathrm{S}_g \\
-&\iff \frac{\overline{\tau_f}}{\delta t_f} \mathrm{Q}_i : \mathrm{S} = \alpha \frac{\overline{\tau_g}}{\delta t_g} \mathrm{Q}_i : \mathrm{S} \\
-&\iff \alpha = \frac{\delta t_g}{\delta t_f} \frac{\overline{\tau_f}}{\overline{\tau_g}}\\
+&\iff \overline{\tau_f} \delta t_f \mathrm{Q}_i : \mathrm{S} = \alpha \overline{\tau_g} \delta t_g \mathrm{Q}_i : \mathrm{S} \\
+&\iff \alpha = \frac{\delta t_f}{\delta t_g} \frac{\overline{\tau_f}}{\overline{\tau_g}}\\
 \end{align*}
-
-Auflösen dieses \(\alpha\) in (\ref{eq:scaleFneqReq}) und Einsetzen der Relationen (\ref{eq:gridTime}) sowie (\ref{eq:gridTauShift}) ergibt dann:
+Einsetzen der Relationen (\ref{eq:gridTime}) und (\ref{eq:gridTauShift}) reduziert den Skalierungsfaktor auf einen nur von der groben Relaxionszeit abhängigen Ausdruck:
 \begin{align*}
-f_{f,i}^\text{neq} &= \frac{\delta t_g}{\delta t_f} \frac{\overline{\tau_f}}{\overline{\tau_g}} f_{g,i}^\text{neq} \\
-&= 2 \frac{2\overline{\tau_g} - \frac{1}{2}}{\overline{\tau_g}} f_{g,i}^\text{neq} \\
-&= \left( 4 - \frac{1}{\overline{\tau_g}} \right) f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneq}
+\alpha &= \frac{\delta t_f}{\delta t_g} \frac{\overline{\tau_f}}{\overline{\tau_g}} \\
+&= \frac{1}{2} \frac{2\overline{\tau_g} - \frac{1}{2}}{\overline{\tau_g}} \\
+&= 1 - \frac{1}{4\overline{\tau_g}} \numberthis\label{eq:scaleFactor}
 \end{align*}
+Schließlich erhalten wir so die folgende Relation der Nicht-Equilibriumsverteilungen:
+\[f_{f,i}^\text{neq} = \left( 1-\frac{1}{4\overline{\tau_g}} \right) f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneq}\]
 
 Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zeit, der Relaxionszeit sowie der Nicht-Equilibriumsverteilung zwischen den Gittern \(\F\) und \(\G\) hergeleitet.
 
@@ -440,8 +440,8 @@ Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zei
 
 Seien \(x_{f \to g} \in \U_{f \to g}\) und \(x_{g \to f} \in \U_{g \to f}\) die Knoten aus dem Übergangsbereich mit Übertragung von fein nach grob bzw. von grob nach fein. Dann gelten bei Erinnerung an die implizite Knotenabbildung~\ref{def:BijImplGitter}:
 \begin{align}
-f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(4-\frac{1}{\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}(x_{f \to g}) \label{eq:basicF2G} \\
-f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(4-\frac{1}{\overline{\tau_g}}\right) f_{g,i}^\text{neq}(x_{g \to f}) \label{eq:basicG2F}
+f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left(1-\frac{1}{4\overline{\tau_g}}\right)^{-1} f_{f,i}^\text{neq}(x_{f \to g}) \label{eq:basicF2G} \\
+f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(1-\frac{1}{4\overline{\tau_g}}\right) f_{g,i}^\text{neq}(x_{g \to f}) \label{eq:basicG2F}
 \end{align}
 
 Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten potenziell komplizierter, als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.

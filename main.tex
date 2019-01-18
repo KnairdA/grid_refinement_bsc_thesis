@@ -26,6 +26,10 @@
 	pdfpagemode=UseOutlines,
 }
 
+\usepackage[backend=bibtex,style=numeric,maxbibnames=10,sorting=none]{biblatex}
+\DefineBibliographyStrings{ngerman}{andothers={et\ \addabbrvspace al\adddot}}
+\addbibresource{quellen.bib}
+
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usetikzlibrary{matrix}
@@ -35,12 +39,12 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{external}
 
 \usepackage{pgfplots}
+\usepgfplotslibrary{external}
 
-\usepackage[backend=bibtex,style=numeric,maxbibnames=10,sorting=none]{biblatex}
-\DefineBibliographyStrings{ngerman}{andothers={et\ \addabbrvspace al\adddot}}
-\addbibresource{quellen.bib}
+\tikzexternalize[prefix=tikzcache/]
 
 \setlength{\topmargin}{-15mm}
 

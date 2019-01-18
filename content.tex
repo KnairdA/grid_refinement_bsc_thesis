@@ -230,7 +230,7 @@ Neben der Unterscheidung zwischen Multi-Grid und Multi-Domain Ansätzen kann auc
 \centering
 \input{img/coinciding_grid.tikz}
 \caption{Koinzidierende Gitter}
-\label{fig:StaggeredGrid}
+\label{fig:CoincidingGrid}
 \end{figure}
 
 \noindent
@@ -791,6 +791,19 @@ Hiermit sind die zentralen Bestandteile der Umsetzung des Verfahrens von Lagrava
 \section{Evaluierung}
 
 \subsection{Rohrströmung}
+
+Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfeinerungsverfahren an einem möglichst einfachen Beispiel gegen möglichst korrekte Vergleichsdaten testen. Ein solches Beispiel ist gegeben durch die laminare Strömung in einem geradenen Rohr mit kreisförmigem Querschnitt und ohne jegliche Hindernisse abseits der Wände.
+
+Eine solche Rohrströmung stellt nicht nur eine der denkbar einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille Fluss auch eine analytische Lösung, so dass wir ideale Vergleichbedingungen erhalten. Lieferte unser Verfahren hier keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
+
+\begin{figure}[h]
+\centering
+%\includegraphics[scale=0.35]{img/static/poiseuille2d_materialzahlen.png}
+\input{img/poiseuille2d_setup.tikz}
+\caption{Gitterstruktur einer halbseitig verfeinerten Rohrströmung}
+\end{figure}
+
+\subsubsection{Vergleich der Interpolationsverfahren}
 
 \begin{figure}[h]
 \centering

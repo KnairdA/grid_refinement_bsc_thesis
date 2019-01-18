@@ -14,6 +14,7 @@ stdenv.mkDerivation rec {
       minted fvextra ifplatform framed
       bibtex biblatex logreq xstring
       pgfplots
+      adjustbox collectbox
       ;
     };
   in [

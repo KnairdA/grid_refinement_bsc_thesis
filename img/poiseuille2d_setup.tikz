@@ -1,5 +1,5 @@
 \begin{tikzpicture}[
-	scale=0.375,
+	scale=1.1*\textwidth/41cm,
 	coarse/.style={circle,thick,inner sep=2},
 	fine/.style={cross out,thick,inner sep=0.75},
 	legend/.style={minimum height=1,minimum width=1}

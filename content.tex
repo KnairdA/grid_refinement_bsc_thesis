@@ -790,6 +790,15 @@ Hiermit sind die zentralen Bestandteile der Umsetzung des Verfahrens von Lagrava
 \newpage
 \section{Evaluierung}
 
+Die Auswahl von Beispielen zur Evaluation der Qualität eines Gitterverfeinerungsverfahrens gestaltet sich ohne Detailkenntnis des Versuchsaufbaus eines real zu simulierenden Strömungsproblem zunächst unklarer, als man annehmen könnte. So stellt OpenLB zwar eine gute Auswahl verschiedener Simulationsbeispiele bereit, aber nur wenige von ihnen beinhalten auch analytische Lösungen oder auch nur einfach zu verwendende Vergleichsdaten realer Versuche.
+
+Unter diesen Einschränkungen ist es -- abseits offensichtlicher Gütekriterien wie dem Ausschluss divergierender Simulationen -- schwer zu sagen, ob zwei auf verschiedenen Weisen simulierte Lösungen nun besser oder schlechter als die jeweils andere Lösung sind. Entsprechend beschränken wir uns auf die Betrachtung der folgenden Gütekriterien:
+\begin{enumerate}
+	\item Subjektive Qualität des Strömungsbildes
+	\item Erhalt von Masse im Gitterübergang
+	\item Stetigkeit der Momente im Gitterübergang
+\end{enumerate}
+
 \subsection{Rohrströmung}
 
 Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfeinerungsverfahren an einem möglichst einfachen Beispiel gegen möglichst korrekte Vergleichsdaten testen. Ein solches Beispiel ist gegeben durch die laminare Strömung in einem geradenen Rohr mit kreisförmigem Querschnitt und ohne jegliche Hindernisse abseits der Wände.
@@ -797,11 +806,24 @@ Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfein
 Eine solche Rohrströmung stellt nicht nur eine der denkbar einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille Fluss auch eine analytische Lösung, so dass wir ideale Vergleichbedingungen erhalten. Lieferte unser Verfahren hier keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
 
 \begin{figure}[h]
-\centering
-%\includegraphics[scale=0.35]{img/static/poiseuille2d_materialzahlen.png}
+\begin{adjustbox}{center}
 \input{img/poiseuille2d_setup.tikz}
+\end{adjustbox}
 \caption{Gitterstruktur einer halbseitig verfeinerten Rohrströmung}
+\label{fig:PoiseuilleSetup}
 \end{figure}
+
+Wir wollen in einem Rohr mit Dimensionen \(1 \times 4\) in Längeneinheiten einen Poiseuille Fluss simulieren. Als Auflösung der Längeneinheit sei dabei \(N=10\) gewählt, was in der Gitterdiskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird. In Abbilddung~\ref{fig:PoiseuilleSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen.
+
+Diese Materialzahlen werden dabei wie folgt an das Strömungsverhalten modellierende \class{Dynamics} gebunden: Wandzellen werden mit einfachen Bounce-Back Randbedingungen umgesetzt. Weiter wird für den Einfluss wird eine Geschwindigkeitsrandbedingung mit dem analytischen Poiseuille Geschwindigkeitsprofil gesetzt. Der Ausfluss erhält eine korrespondierende Druckrandbedingung. Die verbleibenden Fluidzellen werden mit Ausnahme der Durchführung des, allen Gitterzellen dieser Arbeit gemeinen, D2Q9 BGK Kollisions- und Strömungsschritt nicht besonders behandelt.
+
+\begin{figure}[h]
+\includegraphics[width=1.1\textwidth,center]{img/static/refined_poiseuille_1.png}
+\caption{Norm der Geschwindigkeiten im simulierten Poiseuille Fluss}
+\label{fig:PoiseuilleSim}
+\end{figure}
+
+Neben dieses knotenspezifischen Materialeigenschaften sei \(0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(10\) die modellierte Reynolds-Zahl. Konstruieren wir unsere grobe \class{Grid2D} Instanz mit diesen Werten und führen die Simulation aus, erblicken wir bei Darstellung in ParaView schließlich das in Abbildung~\ref{fig:PoiseuilleSim} ersichtliche Strömungsbild.
 
 \subsubsection{Vergleich der Interpolationsverfahren}
 

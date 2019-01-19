@@ -1,0 +1,28 @@
+\begin{tikzpicture}
+\begin{axis}[
+	scale only axis,
+	height=(1.1*\textwidth)/4,
+	width=1.1*\textwidth,
+	axis equal,
+	xmin=0, xmax=4,
+	ymin=0, ymax=1,
+	point meta=explicit,
+	colormap/bluered,
+	colorbar,
+	colorbar horizontal,
+	colorbar style={
+		/pgf/number format/precision=2,
+		at={(0.5,-0.2)},
+		anchor=north,
+		width=0.5*\pgfkeysvalueof{/pgfplots/parent axis width},
+	},
+	scatter/use mapped color={color=mapped color}
+]
+
+\addplot[scatter,only marks] table[
+	x=x, y=y, meta=ux,
+	col sep=semicolon,
+	/pgf/number format/read comma as period
+] {img/data/poiseuille2d_re10_n10_grid.csv};
+\end{axis}
+\end{tikzpicture}

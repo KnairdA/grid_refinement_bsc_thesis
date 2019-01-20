@@ -805,42 +805,62 @@ Unter diesen Einschränkungen ist es -- abseits offensichtlicher Gütekriterien 
 
 Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfeinerungsverfahren an einem möglichst einfachen Beispiel gegen möglichst korrekte Vergleichsdaten testen. Ein solches Beispiel ist gegeben durch die laminare Strömung in einem Rohr mit kreisförmigem Querschnitt und ohne Hindernisse abseits der Wände.
 
-Eine solche Rohrströmung stellt nicht nur eine der denkbar einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille-Fluss auch eine analytische Lösung, so dass wir ideale Vergleichsbedingungen vorfinden. Lieferte unser Verfahren in diesem Beispiel keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
+Eine solche Rohrströmung stellt nicht nur eine der einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille-Fluss auch eine analytische Lösung, so dass wir ideale Vergleichsbedingungen vorfinden. Lieferte unser Verfahren in diesem Beispiel keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
+
+\begin{Definition}[Analytische Lösung des Poiseuille-Flusses]
+Seien \(L_x, L_y \in \R_+\) die räumlichen Rohrdimensionen, \(\nu\) die kinematische Viskosität und \(\Delta p := p_1 - p_0\) die Druckdifferenz zwischen Ein- und Ausfluss. Dann ist die analytische Geschwindigkeit in \(x\)-Richtung gegeben als:
+\[u_x(y) = \frac{1}{2\nu} \frac{\Delta p}{L_x} y (y-L_y)\]
+Dies kann mit \(u_x(L_y/2):=1\) und \(\Delta p = 1 - p_0\) vereinfacht werden zu:
+\[u_x(y) = -\frac{4}{L_y^2} y (y-L_y)\]
+Das Geschwindigkeitsprofil des Poiseuille-Flusses ist also parabelförmig.
+\end{Definition}
+
+Wir wollen in einem \(1 \times 4\) Längeneinheiten bemessenden Rohr einen Poiseuille-Fluss simulieren. Als Auflösung einer Längeneinheit sei dabei \(N=10\) gewählt, was in der Gitterdiskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird. In Abbilddung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
 \input{img/poiseuille2d_grid.tikz}
 \end{adjustbox}
 \caption{Gitterstruktur einer halbseitig verfeinerten Rohrströmung}
-\label{fig:PoiseuilleSetup}
+\label{fig:PoiseuilleGridSetup}
 \end{figure}
 
-Wir wollen in einem Rohr mit Dimensionen \(1 \times 4\) in Längeneinheiten einen Poiseuille-Fluss simulieren. Als Auflösung der Längeneinheit sei dabei \(N=10\) gewählt, was in der Gitterdiskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird. In Abbilddung~\ref{fig:PoiseuilleSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen.
+Wand- und Einflusszellen werden nach dieser Vorlage mit Geschwindigkeitsrandbedingungen umgesetzt. Während für den Einfluss dabei das Geschwindigkeitsprofil der analytischen Poiseuille-Lösung vorausgesetzt wird, erhält der Ausfluss eine Druckrandbedingung. Die noch verbleibenden normalen Fluidzellen erfahren, abgesehen von den üblichen Kollisions- und Strömungsschritten, keine besondere Behandlung.
 
-Wandzellen werden nach dieser Vorlage mit einfachen ungerichteten Bounce-Back Randbedingungen umgesetzt. Weiter wird für den Einfluss eine Geschwindigkeitsrandbedingung mit dem analytischen Poiseuille-Geschwindigkeitsprofil gesetzt. Der Ausfluss erhält eine korrespondierende Druckrandbedingung. Die verbleibenden Fluidzellen benötigen mit Ausnahme der Durchführung des, allen Gitterzellen dieser Arbeit gemeinen, D2Q9 BGK Kollisions- und Strömungsschritt keine besondere Behandlung.
-
-Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleSim} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \(1\mathrm{e}{-5}\), gefallen ist.
 \begin{figure}[h]
 \begin{adjustbox}{center}
 \input{img/poiseuille2d_velocity_grid.tikz}
 \end{adjustbox}
-\caption{Norm der Geschwindigkeiten im simulierten Poiseuille Fluss}
-\label{fig:PoiseuilleSim}
+\caption{Geschwindigkeiten in \(x\)-Richtung im simulierten Poiseuille-Fluss}
+\label{fig:PoiseuilleVelocityGrid}
+\end{figure}
+
+Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \(1\mathrm{e}{-5}\), gefallen ist.
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\input{img/poiseuille2d_velocity_outflow.tikz}
+\end{adjustbox}
+\caption{Vergleich der Poiseuille-Ausflussgeschwindigkeiten}
+\label{fig:PoiseuilleOutflowProfile}
 \end{figure}
 
 Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterübergang subjektiv ideal bestritten hat. Es treten also keine ungewöhnlichen Artefakte im Geschwindigkeitsbild auf und dieses setzt sich nach dem Übergang in bis auf die neuen Zwischenwerte unveränderter Weise fort. Tatsächlich ist bei Interpolation der Knotenzwischenbereiche zur Bildung einer geschlossenen Fläche kein Gitterübergang erkennbar.
+
+Dieser Eindruck bestätigt sich auch im Vergleich der simulierten und analytischen Ausflussgeschwindigkeiten in Abbildung~\ref{fig:PoiseuilleOutflowProfile}.
 
 \subsubsection{Vergleich der Interpolationsverfahren}
 
 Den Poiseuille Simulationsaufbau können wir an dieser Stelle auch zur Nachvollziehung des, von Lagrava et al. für die Verwendung eines Verfahrens vierter Ordnung in der räumlichen Interpolation feiner Übergangsknoten ohne koinzidierende grobe Stützpunkte hervorgebrachten \cite[Kap.~3.7]{lagrava12}, Arguments verwenden.
 
-Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) als Reynolds-Zahl und eine Geschwindigkeitsrandbedingung mit Poiseuilleprofil im Ausfluss. Führen wir dann die Simulation mit dem linearen Interpolationsverfahren (\ref{eq:ipol2ord}) aus und vergleichen den Verlauf des physikalischen Drucks auf einer vertikal zentrierten horizontalen Linie mit den, aus einem Durchlauf mit dem Verfahren vierter Ordnung (\ref{eq:ipol4ord}) gewonnen, Daten, erhalten wir den in Abbildung~\ref{fig:massloss} zu sehenden Plot.
+Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) als Reynolds-Zahl und eine Geschwindigkeitsrandbedingung mit Poiseuilleprofil im Ausfluss. Führen wir dann die Simulation mit dem linearen Interpolationsverfahren (\ref{eq:ipol2ord}) aus und vergleichen den Verlauf des physikalischen Drucks auf einer vertikal zentrierten horizontalen Linie mit den, aus einem Durchlauf mit dem Verfahren vierter Ordnung (\ref{eq:ipol4ord}) gewonnen, Daten, erhalten wir den in Abbildung~\ref{fig:PoiseuilleMassloss} zu sehenden Plot.
 
 \begin{figure}[h]
-\centering
+\begin{adjustbox}{center}
 \input{img/massloss_interpolation_plot.tikz}
+\end{adjustbox}
 \caption{Druckverlauf bei linearer und kubischer Interpolation}
-\label{fig:massloss}
+\label{fig:PoiseuilleMassloss}
 \end{figure}
 
 \subsection{Umströmter Zylinder}

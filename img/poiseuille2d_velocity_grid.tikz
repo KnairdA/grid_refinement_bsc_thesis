@@ -7,14 +7,25 @@
 	xmin=0, xmax=4,
 	ymin=0, ymax=1,
 	point meta=explicit,
-	colormap/bluered,
 	colorbar,
+	colormap/RdYlBu-4,
+	colormap={reverse RdYlBu-4}{
+		indices of colormap={
+			\pgfplotscolormaplastindexof{RdYlBu-4},...,0 of RdYlBu-4
+		}
+	},
 	colorbar horizontal,
 	colorbar style={
 		/pgf/number format/precision=2,
 		at={(0.5,-0.2)},
 		anchor=north,
 		width=0.5*\pgfkeysvalueof{/pgfplots/parent axis width},
+		ylabel=\(m/s\),
+		y label style={
+			at={(axis description cs:1.3,0.5)},
+			rotate=-90,
+			anchor=east
+		}
 	},
 	scatter/use mapped color={color=mapped color}
 ]

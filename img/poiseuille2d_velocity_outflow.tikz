@@ -1,0 +1,115 @@
+\begin{tikzpicture}
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_refined_order4ipol_velocity_outflow_velocity_walls.csv}\refinedCubicIpol
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_refined_order2ipol_velocity_outflow_velocity_walls.csv}\refinedLinearIpol
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_unrefined_velocity_outflow_velocity_walls.csv}\unrefined
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_unrefined_coarse_velocity_outflow_velocity_walls.csv}\coarse
+
+\begin{axis}[
+	scale only axis,
+	height=8cm,
+	width=0.4*\textwidth,
+	mark size=4,
+	legend cell align=left,
+	legend style={at={(0.9,-0.1)},anchor=north},
+	grid=both,
+	ylabel=\(x\)-Geschwindigkeit
+	xtick={0,0.25,0.5,0.75,1},
+	title=Geschwindigkeitsprofil,
+	every axis plot/.append style={thick}
+]
+
+\addplot[
+	only marks,
+	mark=x,
+	color=green!70!black
+] table [
+	x=y, y=ux
+] {\refinedCubicIpol};
+\addlegendentry{Halbseitig verfeinertes Gitter mit kubischer Interpolation};
+
+\addplot[
+	only marks,
+	mark=+,
+	color=red!70!black
+] table [
+	x=y, y=ux
+] {\refinedLinearIpol};
+\addlegendentry{Halbseitig verfeinertes Gitter mit linearer Interpolation};
+
+\addplot[
+	only marks,
+	mark=asterisk,
+	color=blue!50!white
+] table[
+	x=y, y=ux
+] {\unrefined};
+\addlegendentry{Uniform fein aufgelöstes Gitter};
+
+\addplot[
+	only marks,
+	mark=star,
+	color=gray
+] table[
+	x=y, y=ux
+] {\coarse};
+\addlegendentry{Uniform grob aufgelöstes Gitter};
+
+\addplot [domain=0.05:0.95, samples=100]{-4*x*(x-1)};
+\addlegendentry{Analytische Lösung}
+\end{axis}
+
+\begin{axis}[
+	scale only axis,
+	height=8cm,
+	width=0.4*\textwidth,
+	mark size=4,
+	grid=both,
+	xtick={0,0.25,0.5,0.75,1},
+	xshift=7cm,
+	scaled y ticks=false,
+	ylabel=Fehler,
+	yticklabel pos=right,
+	y tick label style={/pgf/number format/sci},
+	title=Fehler zur analytischen Lösung,
+	every axis plot/.append style={thick}
+]
+
+\addplot[
+	only marks,
+	mark=x,
+	color=green!70!black
+] table [
+	x=y,
+	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
+] {\refinedCubicIpol};
+
+\addplot[
+	only marks,
+	mark=+,
+	color=red!70!black
+] table [
+	x=y,
+	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
+] {\refinedLinearIpol};
+
+\addplot[
+	only marks,
+	mark=asterisk,
+	color=blue!50!white
+] table[
+	x=y,
+	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
+] {\unrefined};
+
+\addplot[
+	only marks,
+	mark=star,
+	color=gray
+] table[
+	x=y,
+	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
+] {\coarse};
+
+\addplot [domain=0:1, samples=100]{0};
+\end{axis}
+\end{tikzpicture}

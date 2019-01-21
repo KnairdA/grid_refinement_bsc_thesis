@@ -1,5 +1,20 @@
 \section{Einführung}
 
+\subsection{Wieso Strömungen simulieren?}
+
+Das hoch technisierte Lebensumfeld des modernen Menschen ist ohne ein detailliertes Verständnis des Verhaltens der, durch ihn in wachsendem Maße kontrollierten, Natur undenkbar. Eine wichtige Komponente dieses Naturverständnisses ist das Wissen um das Verhalten von Flüssigkeiten und Gasen, die sich als Strömungen bewegen. Ohne dieses Verständnis führe kein Automobil, flöge kein Flugzeug und drehten sich weder ein Windrad um seine Achse noch ein Satellit um unseren Planeten.
+
+Experimente zur Bestimmung des Verhaltens von Strömungen sind möglich, liefern naturnaheste Ergebnisse und sind zentrale Komponenten der Entwicklung eben genannter Errungenschaften. Leider sind reale Experimente im Allgemeinen nicht nur sehr aufwändig in Aufbau und Durchführung, sondern stoßen auch insbesondere bei der Betrachtung mikroskopischer Probleme -- etwa im Bereich der Medizin, deren menschliches Subjekt zu einem großen Teil ebenfalls eine \emph{Strömungsmaschine} bildet -- an Grenzen von Messmethoden und Ethik.
+
+So trifft es sich, dass der Wunsch nach theoretischer Beantwortung komplexer und nur schwer analytisch lösbaren Strömungsprobleme mit der Entwicklung von immer leistungsfähigeren Rechenmaschinen nicht nur einherging sondern auch eine der Triebfedern in deren initialen Entwicklung war. Moderne numerische Verfahren zur Simulation von Strömungen versprechen eine zunehmende Reduzierung benötigter realer Experimente und sind heute gängiges Werkzeug in Forschung und Maschinenbau.
+
+\subsection{Weshalb mit Lattice Boltzmann Methoden?}
+
+Während Finite Elemente Methoden den wohl verbreitetsten Ansatz zur numerischen Strömungsdynamik bilden, erfreut sich auch die Herangehensweise der Lattice Boltzmann Methoden in den letzten Jahrzehnten wachsender Nutzbarkeit und Verbreitung. Im Gegensatz zu anderen Lösungsmethoden werden hier die strömungsbeschreibenden Navier-Stokes Gleichungen nicht direkt numerisch gelöst. Lösungen ergeben sich hier vielmehr aus der Simulation des Fluidverhaltens auf \emph{mesoskopischer} Ebene -- d.h. aus der Betrachtung nicht aus Sicht der Kollision einzelner Fluidpartikel und nicht aus Sicht der analytischen Strömungsbeschreibung, sondern aus Sicht der Wahrscheinlichkeit, dass sich das Fluid zu bestimmter Zeit an einem bestimmten Ort mit bestimmter Geschwindigkeit bewegt.
+
+\bigskip
+Ein Vorteil dieses, auf den Arbeiten von Ludwig Eduard Boltzmann im Bereich der statistischen Physik aufbauenden, Ansatzes ist seine Eignung für komplexe Geometrien mit verschiedensten Randbedingungen. Weiterhin gewinnt in den letzten Jahren auch die gute Parallelisierbarkeit von Lattice Boltzmann Methoden in Hinblick auf einen technischen Fortschritt, nach welchem die Leistungsfähigkeit von Großrechnern eher aus deren Parallelität als aus individueller Prozessorleistung erwächst, an Anziehungskraft.
+
 \subsection{Warum Gitterverfeinerung?}
 
 Die einfachsten und zugleich am weitesten verbreiteten Umsetzungen von Simulationen mit Lattice Boltzmann Methoden basieren auf uniformen Gittern, in denen Zellen immer den gleichen Abstand zu ihren Nachbarzellen haben.
@@ -791,7 +806,7 @@ Hiermit sind die zentralen Bestandteile der Umsetzung des Verfahrens von Lagrava
 \newpage
 \section{Evaluierung}
 
-Die Auswahl von Beispielen zur Evaluation der Qualität eines Gitterverfeinerungsverfahrens gestaltet sich ohne Detailkenntnis des Versuchsaufbaus eines real zu simulierenden Strömungsproblem zunächst unklarer, als man annehmen könnte. So stellt OpenLB zwar eine gute Auswahl verschiedener Simulationsbeispiele bereit, aber nur wenige von ihnen beinhalten auch analytische Lösungen oder auch nur einfach zu verwendende Vergleichsdaten realer Versuche.
+Die Auswahl von Beispielen zur Evaluation der Qualität eines Gitterverfeinerungsverfahrens gestaltet sich ohne Detailkenntnis des Versuchsaufbaus eines real zu simulierenden Strömungsproblem zunächst unklarer, als man annehmen könnte. So stellt OpenLB zwar eine gute Auswahl verschiedener Simulationsbeispiele bereit, aber nur wenige von ihnen beinhalten auch analytische Lösungen oder einfach zu verwendende Vergleichsdaten.
 
 Unter diesen Einschränkungen ist es -- abseits offensichtlicher Gütekriterien wie dem Ausschluss divergierender Simulationen -- schwer zu sagen, ob zwei auf verschiedenen Weisen simulierte Lösungen nun besser oder schlechter als die jeweils andere Lösung sind. Entsprechend beschränken wir uns je nach Beispiel auf die Betrachtung einer Auswahl der folgenden Gütekriterien:
 \begin{enumerate}
@@ -808,7 +823,7 @@ Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfein
 Eine solche Rohrströmung stellt nicht nur eine der einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille-Fluss auch eine analytische Lösung, so dass wir ideale Vergleichsbedingungen vorfinden. Lieferte unser Verfahren in diesem Beispiel keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
 
 \begin{Definition}[Analytische Lösung des Poiseuille-Flusses]
-Seien \(L_x, L_y \in \R_+\) die räumlichen Rohrdimensionen, \(\nu\) die kinematische Viskosität und \(\Delta p := p_1 - p_0\) die Druckdifferenz zwischen Ein- und Ausfluss. Dann ist die analytische Geschwindigkeit in \(x\)-Richtung gegeben als:
+	Seien \(L_x, L_y \in \R_+\) die räumlichen Rohrdimensionen, \(\nu\) die kinematische Viskosität und \(\Delta p := p_1 - p_0\) die Druckdifferenz zwischen Ein- und Ausfluss. Dann ist die analytische Geschwindigkeit in \(x\)-Richtung gegeben als \cite[vgl.~Kap.~4]{bao11}:
 \[u_x(y) = \frac{1}{2\nu} \frac{\Delta p}{L_x} y (y-L_y)\]
 Dies kann mit \(u_x(L_y/2):=1\) und \(\Delta p = 1 - p_0\) vereinfacht werden zu:
 \[u_x(y) = -\frac{4}{L_y^2} y (y-L_y)\]
@@ -849,9 +864,10 @@ Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterüberg
 
 Dieser Eindruck bestätigt sich auch im Vergleich der simulierten und analytischen Ausflussgeschwindigkeiten in Abbildung~\ref{fig:PoiseuilleOutflowProfile}.
 
+\newpage
 \subsubsection{Vergleich der Interpolationsverfahren}
 
-Den Poiseuille Simulationsaufbau können wir an dieser Stelle auch zur Nachvollziehung des, von Lagrava et al. für die Verwendung eines Verfahrens vierter Ordnung in der räumlichen Interpolation feiner Übergangsknoten ohne koinzidierende grobe Stützpunkte hervorgebrachten \cite[Kap.~3.7]{lagrava12}, Arguments verwenden.
+Den Poiseuille Simulationsaufbau können wir an dieser Stelle auch zur Nachvollziehung des, von Lagrava et al. für die Verwendung eines Verfahrens vierter Ordnung in der räumlichen Interpolation feiner Übergangsknoten ohne koinzidierende grobe Stützpunkte hervorgebrachten, Arguments verwenden.
 
 Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) als Reynolds-Zahl und eine Geschwindigkeitsrandbedingung mit Poiseuilleprofil im Ausfluss. Führen wir dann die Simulation mit dem linearen Interpolationsverfahren (\ref{eq:ipol2ord}) aus und vergleichen den Verlauf des physikalischen Drucks auf einer vertikal zentrierten horizontalen Linie mit den, aus einem Durchlauf mit dem Verfahren vierter Ordnung (\ref{eq:ipol4ord}) gewonnen, Daten, erhalten wir den in Abbildung~\ref{fig:PoiseuilleMassloss} zu sehenden Plot.
 
@@ -859,9 +875,11 @@ Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) al
 \begin{adjustbox}{center}
 \input{img/massloss_interpolation_plot.tikz}
 \end{adjustbox}
-\caption{Druckverlauf bei linearer und kubischer Interpolation}
+\caption{Druckverlauf bei linearer und kubischer Interpolation \cite[vgl.~Abb.~11]{lagrava12}}
 \label{fig:PoiseuilleMassloss}
 \end{figure}
+
+Entsprechend der Beobachtungen in \cite[Kap.~3.7]{lagrava12} sehen auch wir bei linearer Interpolation einen prominenten Abfall des physikalischen Drucks im Übergangsbereich der Gitter. Bei kubischer Interpolation tritt dieser Fehler nicht auf, der Druckverlauf ist in diesem Fall so glatt, dass der Übergang nicht mehr zu erkennen ist.
 
 \subsection{Umströmter Zylinder}
 

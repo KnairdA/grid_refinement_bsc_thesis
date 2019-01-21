@@ -45,15 +45,6 @@
 ] {\unrefined};
 \addlegendentry{Uniform fein aufgelöstes Gitter};
 
-\addplot[
-	only marks,
-	mark=star,
-	color=gray
-] table[
-	x=y, y=ux
-] {\coarse};
-\addlegendentry{Uniform grob aufgelöstes Gitter};
-
 \addplot [domain=0.05:0.95, samples=100]{-4*x*(x-1)};
 \addlegendentry{Analytische Lösung}
 \end{axis}
@@ -100,15 +91,6 @@
 	x=y,
 	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
 ] {\unrefined};
-
-\addplot[
-	only marks,
-	mark=star,
-	color=gray
-] table[
-	x=y,
-	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
-] {\coarse};
 
 \addplot [domain=0:1, samples=100]{0};
 \end{axis}

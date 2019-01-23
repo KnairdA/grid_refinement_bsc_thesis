@@ -6,7 +6,7 @@ Das hoch technisierte Lebensumfeld des modernen Menschen ist ohne ein detaillier
 
 Experimente zur Bestimmung des Verhaltens von Strömungen -- z.B. in Wind- und Wasserkanälen -- sind möglich, liefern naturnaheste Ergebnisse und stellen eine zentrale Komponente der Entwicklung eben genannter Errungenschaften dar. Leider sind reale Experimente im Allgemeinen nicht nur sehr aufwändig in Aufbau und Durchführung, sondern stoßen auch insbesondere bei der Betrachtung mikroskopischer Probleme -- etwa im Bereich der Medizin, deren menschliches Subjekt zu einem großen Teil ebenfalls eine \emph{Strömungsmaschine} bildet -- an Grenzen von Messmethoden und Ethik.
 
-So trifft es sich, dass der Wunsch nach theoretischer Lösung komplexer und nur schwer analytisch zugänglichen Strömungsprobleme mit der Entwicklung von immer leistungsfähigeren Rechenmaschinen nicht nur einherging sondern auch eine der Triebfedern in deren initialen Entwicklung war. Moderne numerische Verfahren zur Simulation von Strömungen versprechen eine zunehmende Reduzierung benötigter realer Experimente und sind heute gängiges Werkzeug in Forschung und Maschinenbau.
+So trifft es sich, dass der Wunsch nach theoretischer Lösung komplexer und nur schwer analytisch zugänglicher Strömungsprobleme mit der Entwicklung von immer leistungsfähigeren Rechenmaschinen nicht nur einherging sondern auch eine der Triebfedern in deren initialen Entwicklung war. Moderne numerische Verfahren zur Simulation von Strömungen versprechen eine zunehmende Reduzierung benötigter realer Experimente und sind heute gängiges Werkzeug in Forschung und Maschinenbau.
 
 \subsection{Weshalb mit Lattice Boltzmann Methoden?}
 
@@ -881,7 +881,29 @@ Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) al
 
 Entsprechend der Beobachtungen in \cite[Kap.~3.7]{lagrava12} sehen auch wir bei linearer Interpolation einen prominenten Abfall des physikalischen Drucks im Übergangsbereich der Gitter. Bei kubischer Interpolation tritt dieser Fehler nicht auf, der Druckverlauf ist in diesem Fall so glatt, dass der Übergang nicht mehr zu erkennen ist.
 
+\newpage
 \subsection{Umströmter Zylinder}
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/poiseuille2d_unrefined_60s_full.pdf}
+\end{adjustbox}
+\caption{Uniform aufgelöstes Strömungsbild zu \(t=60s\)}
+\end{figure}
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/poiseuille2d_single_refinement_60s_full.pdf}
+\end{adjustbox}
+\caption{Einfach verfeinertes Strömungsbild zu \(t=60s\)}
+\end{figure}
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/poiseuille2d_single_refinement_60s_knudsen_full.pdf}
+\end{adjustbox}
+\caption{Einfach verfeinertes Knudsenkriterium zu \(t=60s\)}
+\end{figure}
 
 \subsection{Dipol}
 

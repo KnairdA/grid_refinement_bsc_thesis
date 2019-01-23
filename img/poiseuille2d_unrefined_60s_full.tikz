@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\begin{axis}[
+	scale only axis,
+	height=(1.1*\textwidth)/4,
+	width=1.1*\textwidth,
+	axis equal
+]
+\end{axis}
+\end{tikzpicture}

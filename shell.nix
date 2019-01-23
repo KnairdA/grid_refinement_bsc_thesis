@@ -21,6 +21,7 @@ stdenv.mkDerivation rec {
     gnumake
     texlive-custom
     python3Packages.pygments
+    gnuplot
   ];
 
   shellHook = ''

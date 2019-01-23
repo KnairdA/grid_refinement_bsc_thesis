@@ -4,7 +4,7 @@
 	height=9cm,
 	width=0.9*\textwidth,
 	mark size=0,
-	line width=0.2pt,
+	line width=0.5pt,
 	legend pos=south west,
 	xlabel=Horizontale Kanalposition (\(m\)),
 	ylabel=Druck (\(N/m^2\))
@@ -34,7 +34,7 @@
 	height=3cm,
 	width=4cm,
 	mark size=0,
-	line width=0.2pt,
+	line width=0.5pt,
 	ticks=none,
 	title=Übergangsbereich
 ]

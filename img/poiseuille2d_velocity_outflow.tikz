@@ -3,12 +3,13 @@
 \pgfplotstableread[col sep=comma]{img/data/poiseuille2d_refined_order2ipol_velocity_profile_at_3.csv}\refinedLinearIpol
 %\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_unrefined_coarse_velocity_profile_at_3.csv}\unrefinedCoarse
 \pgfplotstableread[col sep=comma]{img/data/poiseuille2d_unrefined_fine_velocity_profile_at_3.csv}\unrefinedFine
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_borderless_refine_velocity_profile_at_3.csv}\borderlessRefine
 
 \begin{axis}[
 	scale only axis,
 	height=8cm,
 	width=0.4*\textwidth,
-	mark size=4,
+	mark size=3,
 	legend cell align=left,
 	legend style={at={(0.9,-0.1)},anchor=north},
 	grid=both,
@@ -38,6 +39,15 @@
 
 \addplot[
 	only marks,
+	mark=star,
+	color=gray!50!black
+] table [
+	x=y, y=ux
+] {\borderlessRefine};
+\addlegendentry{Halbseitig randlos verfeinertes Gitter mit kubischer Interpolation};
+
+\addplot[
+	only marks,
 	mark=asterisk,
 	color=blue!50!white
 ] table[
@@ -53,7 +63,7 @@
 	scale only axis,
 	height=8cm,
 	width=0.4*\textwidth,
-	mark size=4,
+	mark size=3,
 	grid=both,
 	xtick={0,0.25,0.5,0.75,1},
 	xshift=7cm,
@@ -82,6 +92,15 @@
 	x=y,
 	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
 ] {\refinedLinearIpol};
+
+\addplot[
+	only marks,
+	mark=star,
+	color=gray!50!black
+] table [
+	x=y,
+	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
+] {\borderlessRefine};
 
 \addplot[
 	only marks,

@@ -859,8 +859,9 @@ Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterüberg
 
 Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung~\ref{def:analyticPoiseuille} von Geschwindigkeit und Druck des Poiseuille-Flusses heran. Wir können diese in \mbox{OpenLB} einfach mit Hilfe des \class{SuperRelativeErrorL2Norm2D} Funktors auf beiden Gittern mit der simulierten Lösung vergleichen:
 
-\begin{center}
-\begin{tabular}{ l l l l }
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l}
 Gitterstruktur & Geschwindigkeitsfehler & Druckfehler \\
 \hline
 \(11 \times 41\) & 1.88337e-3 & 3.11534e-3 \\
@@ -873,7 +874,8 @@ Gitterstruktur & Geschwindigkeitsfehler & Druckfehler \\
 \(11 \times 41\) & 1.77561e-3 & 3.11244e-3 \\
 \hphantom{\(11 \times 41\)} \(17 \times 41\) & 2.04335e-3 & 3.39432e-3 \\
 \end{tabular}
-\end{center}
+\caption{L2 Normen der Geschwindigkeits- und Druckfehler in verschiedenen Gittern}
+\end{table}
 
 \noindent
 Die halbseitig verfeinerte Lösung aus Abbildung~\ref{fig:PoiseuilleGridSetup} ist zunächst also um eine Größenordnung schlechter als eine gleichmäßig mit \(n=20\) aufgelöste Berechnung. Etwas überraschend ist ihr Fehler auch deutlich größer als der Fehler einer uniform mit \(n=10\) aufgelösten Simulation -- zumindest in diesem speziellen Beispiel hat Gitterverfeinerung also einen messbar negativen Einfluss auf die Genauigkeit der Simulation.

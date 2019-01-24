@@ -1,7 +1,8 @@
 \begin{tikzpicture}
-\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_refined_order4ipol_pressure_outflow_velocity_walls.csv}\refinedCubicIpol
-\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_refined_order2ipol_pressure_outflow_velocity_walls.csv}\refinedLinearIpol
-\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_unrefined_fine_pressure_outflow_velocity_walls.csv}\unrefined
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_refined_order4ipol_velocity_profile_at_3.csv}\refinedCubicIpol
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_refined_order2ipol_velocity_profile_at_3.csv}\refinedLinearIpol
+%\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_unrefined_coarse_velocity_profile_at_3.csv}\unrefinedCoarse
+\pgfplotstableread[col sep=comma]{img/data/poiseuille2d_unrefined_fine_velocity_profile_at_3.csv}\unrefinedFine
 
 \begin{axis}[
 	scale only axis,
@@ -41,10 +42,10 @@
 	color=blue!50!white
 ] table[
 	x=y, y=ux
-] {\unrefined};
+] {\unrefinedFine};
 \addlegendentry{Uniform fein aufgelöstes Gitter};
 
-\addplot [domain=0.05:0.95, samples=100]{-4*x*(x-1)};
+\addplot [domain=0:1, samples=100]{-4*x*(x-1)};
 \addlegendentry{Analytische Lösung}
 \end{axis}
 
@@ -89,7 +90,7 @@
 ] table[
 	x=y,
 	y expr=\thisrow{ux}+4*\thisrow{y}*(\thisrow{y}-1)
-] {\unrefined};
+] {\unrefinedFine};
 
 \addplot [domain=0:1, samples=100]{0};
 \end{axis}

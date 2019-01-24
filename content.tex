@@ -823,7 +823,8 @@ Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfein
 Eine solche Rohrströmung stellt nicht nur eine der einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille-Fluss auch eine analytische Lösung, so dass wir ideale Vergleichsbedingungen vorfinden. Lieferte unser Verfahren in diesem Beispiel keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
 
 \begin{Definition}[Analytische Lösung des Poiseuille-Flusses]
-	Seien \(L_x, L_y \in \R_+\) die räumlichen Rohrdimensionen, \(\nu\) die kinematische Viskosität und \(\Delta p := p_1 - p_0\) die Druckdifferenz zwischen Ein- und Ausfluss. Dann ist die analytische Geschwindigkeit in \(x\)-Richtung gegeben als \cite[vgl.~Kap.~4]{bao11}:
+\label{def:analyticPoiseuille}
+Seien \(L_x, L_y \in \R_+\) die räumlichen Rohrdimensionen, \(\nu\) die kinematische Viskosität und \(\Delta p := p_1 - p_0\) die Druckdifferenz zwischen Ein- und Ausfluss. Dann ist die analytische Geschwindigkeit in \(x\)-Richtung gegeben als \cite[vgl.~Kap.~4]{bao11}:
 \[u_x(y) = \frac{1}{2\nu} \frac{\Delta p}{L_x} y (y-L_y)\]
 Dies kann mit \(u_x(L_y/2):=1\) und \(\Delta p = 1 - p_0\) vereinfacht werden zu:
 \[u_x(y) = -\frac{4}{L_y^2} y (y-L_y)\]
@@ -852,24 +853,15 @@ Wand- und Einflusszellen werden nach dieser Vorlage mit Geschwindigkeitsrandbedi
 
 Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \(1\mathrm{e}{-5}\), gefallen ist.
 
-\begin{figure}[h]
-\begin{adjustbox}{center}
-\input{img/poiseuille2d_velocity_outflow.tikz}
-\end{adjustbox}
-\caption{Vergleich der Poiseuille-Ausflussgeschwindigkeiten}
-\label{fig:PoiseuilleOutflowProfile}
-\end{figure}
+Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterübergang subjektiv ideal bestritten hat. Es treten also keine ungewöhnlichen Artefakte im Geschwindigkeitsbild auf und dieses setzt sich nach dem Übergang in, bis auf die neuen Zwischenwerte, unveränderter Weise fort. Tatsächlich ist bei Interpolation der Knotenzwischenbereiche zur Bildung einer geschlossenen Fläche kein Gitterübergang erkennbar.
 
-Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterübergang subjektiv ideal bestritten hat. Es treten also keine ungewöhnlichen Artefakte im Geschwindigkeitsbild auf und dieses setzt sich nach dem Übergang in bis auf die neuen Zwischenwerte unveränderter Weise fort. Tatsächlich ist bei Interpolation der Knotenzwischenbereiche zur Bildung einer geschlossenen Fläche kein Gitterübergang erkennbar.
+\bigskip
 
-Dieser Eindruck bestätigt sich auch im Vergleich der simulierten und analytischen Ausflussgeschwindigkeiten in Abbildung~\ref{fig:PoiseuilleOutflowProfile}.
+Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung~\ref{def:analyticPoiseuille} von Geschwindigkeit und Druck des Poiseuille-Flusses heran. Wir können diese in \mbox{OpenLB} einfach mit Hilfe des \class{SuperRelativeErrorL2Norm2D} Funktors auf beiden Gittern mit der simulierten Lösung vergleichen.
 
-\newpage
 \subsubsection{Vergleich der Interpolationsverfahren}
 
 Den Poiseuille Simulationsaufbau können wir an dieser Stelle auch zur Nachvollziehung des, von Lagrava et al. für die Verwendung eines Verfahrens vierter Ordnung in der räumlichen Interpolation feiner Übergangsknoten ohne koinzidierende grobe Stützpunkte hervorgebrachten, Arguments verwenden.
-
-Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) als Reynolds-Zahl und eine Geschwindigkeitsrandbedingung mit Poiseuilleprofil im Ausfluss. Führen wir dann die Simulation mit dem linearen Interpolationsverfahren (\ref{eq:ipol2ord}) aus und vergleichen den Verlauf des physikalischen Drucks auf einer vertikal zentrierten horizontalen Linie mit den, aus einem Durchlauf mit dem Verfahren vierter Ordnung (\ref{eq:ipol4ord}) gewonnen, Daten, erhalten wir den in Abbildung~\ref{fig:PoiseuilleMassloss} zu sehenden Plot.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -879,32 +871,43 @@ Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) al
 \label{fig:PoiseuilleMassloss}
 \end{figure}
 
+Wir setzen dazu \(N=50\) als Auflösung der Längeneinheit, \(\text{Re}=100\) als Reynolds-Zahl und eine Geschwindigkeitsrandbedingung mit Poiseuilleprofil im Ausfluss. Führen wir dann die Simulation mit dem linearen Interpolationsverfahren (\ref{eq:ipol2ord}) aus und vergleichen den Verlauf des physikalischen Drucks auf einer vertikal zentrierten horizontalen Linie mit den, aus einem Durchlauf mit dem Verfahren vierter Ordnung (\ref{eq:ipol4ord}) gewonnen, Daten, erhalten wir den in Abbildung~\ref{fig:PoiseuilleMassloss} zu sehenden Plot.
+
 Entsprechend der Beobachtungen in \cite[Kap.~3.7]{lagrava12} sehen auch wir bei linearer Interpolation einen prominenten Abfall des physikalischen Drucks im Übergangsbereich der Gitter. Bei kubischer Interpolation tritt dieser Fehler nicht auf, der Druckverlauf ist in diesem Fall so glatt, dass der Übergang nicht mehr zu erkennen ist.
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\input{img/poiseuille2d_velocity_outflow.tikz}
+\end{adjustbox}
+\caption{Vergleich des vertikalen Geschwindigkeitsprofil bei \(x=3\)}
+\label{fig:PoiseuilleOutflowProfile}
+\end{figure}
 
 \newpage
 \subsection{Umströmter Zylinder}
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/poiseuille2d_unrefined_60s_full.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_60s_full.pdf}
 \end{adjustbox}
 \caption{Uniform aufgelöstes Strömungsbild zu \(t=60s\)}
 \end{figure}
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/poiseuille2d_single_refinement_60s_full.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_60s_full.pdf}
 \end{adjustbox}
 \caption{Einfach verfeinertes Strömungsbild zu \(t=60s\)}
 \end{figure}
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/poiseuille2d_single_refinement_60s_knudsen_full.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_60s_knudsen_full.pdf}
 \end{adjustbox}
 \caption{Einfach verfeinertes Knudsenkriterium zu \(t=60s\)}
 \end{figure}
 
 \subsection{Dipol}
 
+\newpage
 \section{Fazit}

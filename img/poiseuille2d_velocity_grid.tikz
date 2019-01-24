@@ -32,8 +32,7 @@
 
 \addplot[scatter,only marks] table[
 	x=x, y=y, meta=ux,
-	col sep=semicolon,
-	/pgf/number format/read comma as period
-] {img/data/poiseuille2d_re10_n10_grid.csv};
+	col sep=comma
+] {img/data/poiseuille2d_refined_re10_n10_grid.csv};
 \end{axis}
 \end{tikzpicture}

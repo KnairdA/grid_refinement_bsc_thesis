@@ -22,6 +22,7 @@ stdenv.mkDerivation rec {
     texlive-custom
     python3Packages.pygments
     gnuplot
+    ghostscript
   ];
 
   shellHook = ''

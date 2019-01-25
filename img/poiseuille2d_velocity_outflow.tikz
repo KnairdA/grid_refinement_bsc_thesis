@@ -11,9 +11,10 @@
 	width=0.4*\textwidth,
 	mark size=3,
 	legend cell align=left,
-	legend style={at={(0.9,-0.1)},anchor=north},
+	legend style={at={(1.05,-0.2)},anchor=north},
 	grid=both,
 	ylabel=\(x\)-Geschwindigkeit,
+	xlabel=\(y\)-Position,
 	xtick={0,0.25,0.5,0.75,1},
 	title=Geschwindigkeitsprofil,
 	every axis plot/.append style={thick}
@@ -26,7 +27,7 @@
 ] table [
 	x=y, y=ux
 ] {\refinedCubicIpol};
-\addlegendentry{Halbseitig verfeinertes Gitter mit kubischer Interpolation};
+\addlegendentry{Halbseitig verfeinertes \(n=10\) Gitter mit kubischer Interpolation};
 
 \addplot[
 	only marks,
@@ -35,7 +36,7 @@
 ] table [
 	x=y, y=ux
 ] {\refinedLinearIpol};
-\addlegendentry{Halbseitig verfeinertes Gitter mit linearer Interpolation};
+\addlegendentry{Halbseitig verfeinertes \(n=10\) Gitter mit linearer Interpolation};
 
 \addplot[
 	only marks,
@@ -44,7 +45,7 @@
 ] table [
 	x=y, y=ux
 ] {\borderlessRefine};
-\addlegendentry{Halbseitig randlos verfeinertes Gitter mit kubischer Interpolation};
+\addlegendentry{Halbseitig randlos verfeinertes \(n=10\) Gitter mit kubischer Interpolation};
 
 \addplot[
 	only marks,
@@ -53,7 +54,7 @@
 ] table[
 	x=y, y=ux
 ] {\unrefinedFine};
-\addlegendentry{Uniform fein aufgelöstes Gitter};
+\addlegendentry{Uniform fein mit \(n=20\) aufgelöstes Gitter};
 
 \addplot [domain=0:1, samples=100]{-4*x*(x-1)};
 \addlegendentry{Analytische Lösung}
@@ -68,9 +69,10 @@
 	xtick={0,0.25,0.5,0.75,1},
 	xshift=7cm,
 	scaled y ticks=false,
-	ylabel=Fehler,
-	yticklabel pos=right,
 	y tick label style={/pgf/number format/sci},
+	ylabel=Fehler,
+	xlabel=\(y\)-Position,
+	yticklabel pos=right,
 	title=Fehler zur analytischen Lösung,
 	every axis plot/.append style={thick}
 ]

@@ -816,6 +816,7 @@ Unter diesen Einschränkungen ist es -- abseits offensichtlicher Gütekriterien 
 	\item Vergleich der Lösungen von lokal verfeinerten und global hochaufgelösten Gittern
 \end{enumerate}
 
+\newpage
 \subsection{Rohrströmung}
 
 Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfeinerungsverfahren an einem möglichst einfachen Beispiel gegen möglichst korrekte Vergleichsdaten testen. Ein solches Beispiel ist gegeben durch die laminare Strömung in einem Rohr mit kreisförmigem Querschnitt und ohne Hindernisse abseits der Wände.
@@ -831,7 +832,7 @@ Dies kann mit \(u_x(L_y/2):=1\) und \(\Delta p = 1 - p_0\) vereinfacht werden zu
 Das Geschwindigkeitsprofil des Poiseuille-Flusses ist also parabelförmig.
 \end{Definition}
 
-Wir wollen in einem \(1 \times 4\) Längeneinheiten bemessenden Rohr einen Poiseuille-Fluss simulieren. Als Auflösung einer Längeneinheit sei dabei \(N=10\) gewählt, was in der Gitterdiskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird. In Abbilddung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen.
+Wir wollen in einem \(1 \times 4\) Längeneinheiten bemessenden Rohr einen Poiseuille-Fluss simulieren. Als Auflösung einer Längeneinheit sei dabei \(N=10\) gewählt, was in der Gitterdiskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -841,7 +842,9 @@ Wir wollen in einem \(1 \times 4\) Längeneinheiten bemessenden Rohr einen Poise
 \label{fig:PoiseuilleGridSetup}
 \end{figure}
 
-Wand- und Einflusszellen werden nach dieser Vorlage mit Geschwindigkeitsrandbedingungen umgesetzt. Während für den Einfluss dabei das Geschwindigkeitsprofil der analytischen Poiseuille-Lösung vorausgesetzt wird, erhält der Ausfluss eine Druckrandbedingung. Die noch verbleibenden normalen Fluidzellen erfahren, abgesehen von den üblichen Kollisions- und Strömungsschritten, keine besondere Behandlung.
+In Abbilddung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen. Wand- und Einflusszellen werden nach dieser Vorlage mit lokalen Geschwindigkeitsrandbedingungen umgesetzt. Während für den Einfluss dabei das Geschwindigkeitsprofil der analytischen Poiseuille-Lösung vorausgesetzt wird, erhält der Ausfluss eine Druckrandbedingung. Die noch verbleibenden gewöhnlichen Fluidzellen erfahren, abgesehen von den üblichen Kollisions- und Strömungsschritten, keine besondere Behandlung.
+
+Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \(1\mathrm{e}{-5}\), gefallen ist.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -851,13 +854,12 @@ Wand- und Einflusszellen werden nach dieser Vorlage mit Geschwindigkeitsrandbedi
 \label{fig:PoiseuilleVelocityGrid}
 \end{figure}
 
-Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \(1\mathrm{e}{-5}\), gefallen ist.
-
 Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterübergang subjektiv ideal bestritten hat. Es treten also keine ungewöhnlichen Artefakte im Geschwindigkeitsbild auf und dieses setzt sich nach dem Übergang in, bis auf die neuen Zwischenwerte, unveränderter Weise fort. Tatsächlich ist bei Interpolation der Knotenzwischenbereiche zur Bildung einer geschlossenen Fläche kein Gitterübergang erkennbar.
 
-\bigskip
+\newpage
+\subsubsection{Vergleich mit der analytischen Lösung}
 
-Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung~\ref{def:analyticPoiseuille} von Geschwindigkeit und Druck des Poiseuille-Flusses heran. Wir können diese in \mbox{OpenLB} einfach mit Hilfe des \class{SuperRelativeErrorL2Norm2D} Funktors auf beiden Gittern mit der simulierten Lösung vergleichen:
+Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung von Geschwindigkeit und Druck des Poiseuille-Flusses in Definition~\ref{def:analyticPoiseuille} heran. Wir können diese in \mbox{OpenLB} einfach mit Hilfe des \class{SuperRelativeErrorL2Norm2D} Funktors auf beiden Gittern mit der simulierten Lösung vergleichen:
 
 \begin{figure}[h]
 \centering

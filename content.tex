@@ -865,12 +865,13 @@ Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung
 \centering
 \input{img/poiseuille2d_error_comparison.tikz}
 \caption{Geschwindigkeits- und Druckfehler in verschiedenen Gittern}
+\label{fig:PoiseuilleErrorNorm}
 \end{figure}
 
 \noindent
-Die halbseitig verfeinerte Lösung aus Abbildung~\ref{fig:PoiseuilleGridSetup} ist zunächst also um eine Größenordnung schlechter als eine gleichmäßig mit \(n=20\) aufgelöste Berechnung. Etwas überraschend ist ihr Fehler auch deutlich größer als der Fehler einer uniform mit \(n=10\) aufgelösten Simulation -- zumindest in diesem speziellen Beispiel hat Gitterverfeinerung also einen messbar negativen Einfluss auf die Genauigkeit der Simulation.
+Die halbseitig verfeinerte Lösung aus Abbildung~\ref{fig:PoiseuilleGridSetup} ist zunächst also um eine Größenordnung schlechter als eine gleichmäßig mit \(n=20\) aufgelöste Berechnung. Auch im Vergleich mit dem uniform \(n=10\) aufgelösten Gitter erweist sich der Fehler der verfeinerten Lösung als deutlich größer -- zumindest in diesem speziellen Beispiel hat Gitterverfeinerung also einen messbar negativen Einfluss auf die Genauigkeit der Simulation.
 
-Nicht vergessen werden sollte jedoch, dass die untersuchte halbseitig verfeinerte Poiseuille-Strömung als Beispiel sehr konstruiert und nicht realitätsnah ist. Auch die noch folgenden Beobachtungen in Abbildung~\ref{fig:PoiseuilleOutflowProfile}, nach welchen die lineare Interpolation zu kleineren Geschwindigkeitsfehlern führt, deutet auf eine beschränkte Aussagekraft dieses Beispiels hin.
+Nicht vergessen werden sollte jedoch, dass die untersuchte halbseitig verfeinerte Rohrströmung als Beispiel sehr konstruiert und nicht realitätsnah ist. Auch die noch folgenden Beobachtungen in Abbildung~\ref{fig:PoiseuilleOutflowProfile}, nach welchen die lineare Interpolation zu kleineren Geschwindigkeitsfehlern führt, deutet auf eine beschränkte Aussagekraft dieses Beispiels hin.
 Eine Besonderheit ist in diesem Kontext auch die Existenz von Randbedingungen im Übergangsbereich. Eine etwaige Behandlung dieser wurde weder von Lagrava et al. angesprochen, noch in der dem Leser vorliegenden Arbeit näher untersucht. Tatsächlich verschwindet der \emph{Verfeinerungsfehler} fast vollständig, wenn die Wände aus dem verfeinerten Bereich ausgespart werden.
 
 \bigskip
@@ -900,6 +901,14 @@ Entsprechend der Beobachtungen in \cite[Kap.~3.7]{lagrava12} sehen auch wir bei 
 \caption{Vergleich des vertikalen Geschwindigkeitsprofil bei \(x=3\)}
 \label{fig:PoiseuilleOutflowProfile}
 \end{figure}
+
+Zum Abschluss dieses Beispiels vergleichen wir in Abbildung~\ref{fig:PoiseuilleOutflowProfile} das Geschwindigkeitsprofil entlang einer die gesamte Rohbreite durchgeschreitenden vertikalen Linie bei \(x=3\) im halbseitig verfeinerten Fall. Wie sehen hier zunächst die subjektiv beurteilt gute Qualität des Strömungsbildes erneut bestätig, erkennen aber auch den größeren Fehler im Vergleich mit der uniform fein aufgelösten Simulation. Interessant ist hier, dass die den Druckabfall ausgleichende kubische Interpolation zugleich den Geschwindigkeitsfehler gegenüber der linearen Interpolation leicht zu erhöhen scheint.
+
+Legen wir jedoch erneut ein randlos halbseitig verfeinertes Gitter wie beim Vergleich der L2-Normen in Abbildung~\ref{fig:PoiseuilleErrorNorm} an, verschwindet dieses Problem und wir erhalten bei dieser Messung sogar einen leicht geringeren Fehler als im uniform fein aufgelösten Gitter.
+
+\bigskip
+
+Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es erscheinen also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild. Wichtig ist jedoch im Besonderen der negative Einfluss von Randbedingungen im Übergangsbereich der Gitter -- solange korrekte Behandlung nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden.
 
 \newpage
 \subsection{Umströmter Zylinder}

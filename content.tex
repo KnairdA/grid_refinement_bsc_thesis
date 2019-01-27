@@ -259,7 +259,7 @@ Lösen wir uns von dieser Einschränkung und positionieren das feine Gitter abse
 \end{figure}
 
 \newpage
-\section{Verfeinerungsmethode nach Lagrava et al.}
+\section{Verfeinerungsmethode nach Lagrava et al.}\label{kap:lagrava}
 
 Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{lagrava12}~\cite{lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Stuktur dieses Verfahrens, mit potenziell austauschbaren Restriktions- und Interpolationsverfahren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
 
@@ -821,7 +821,7 @@ Unter diesen Einschränkungen ist es -- abseits offensichtlicher Gütekriterien 
 
 Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfeinerungsverfahren an einem möglichst einfachen Beispiel gegen möglichst korrekte Vergleichsdaten testen. Ein solches Beispiel ist gegeben durch die laminare Strömung in einem Rohr mit kreisförmigem Querschnitt und ohne Hindernisse abseits der Wände.
 
-Eine solche Rohrströmung stellt nicht nur eine der einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille-Fluss auch eine analytische Lösung, so dass wir ideale Vergleichsbedingungen vorfinden. Lieferte unser Verfahren in diesem Beispiel keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
+Diese Rohrströmung stellt nicht nur eine der einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille-Fluss auch eine analytische Lösung, so dass wir ideale Vergleichsbedingungen vorfinden. Lieferte unser Verfahren in diesem Beispiel keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
 
 \begin{Definition}[Analytische Lösung des Poiseuille-Flusses]
 \label{def:analyticPoiseuille}
@@ -868,8 +868,7 @@ Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung
 \label{fig:PoiseuilleErrorNorm}
 \end{figure}
 
-\noindent
-Die halbseitig verfeinerte Lösung aus Abbildung~\ref{fig:PoiseuilleGridSetup} ist zunächst also um eine Größenordnung schlechter als eine gleichmäßig mit \(n=20\) aufgelöste Berechnung. Auch im Vergleich mit dem uniform \(n=10\) aufgelösten Gitter erweist sich der Fehler der verfeinerten Lösung als deutlich größer -- zumindest in diesem speziellen Beispiel hat Gitterverfeinerung also einen messbar negativen Einfluss auf die Genauigkeit der Simulation.
+Zunächst ist die halbseitig verfeinerte Lösung aus Abbildung~\ref{fig:PoiseuilleGridSetup} also um etwa eine Größenordnung schlechter als eine gleichmäßig mit \(n=20\) aufgelöste Berechnung. Auch im Vergleich mit dem uniform \(n=10\) aufgelösten Gitter erweist sich der Fehler der verfeinerten Lösung als deutlich größer -- zumindest in diesem speziellen Beispiel ist Gitterverfeinerung also der Simulationsgenauigkeit messbar abträglich.
 
 Nicht vergessen werden sollte jedoch, dass die untersuchte halbseitig verfeinerte Rohrströmung als Beispiel sehr konstruiert und nicht realitätsnah ist. Auch die noch folgenden Beobachtungen in Abbildung~\ref{fig:PoiseuilleOutflowProfile}, nach welchen die lineare Interpolation zu kleineren Geschwindigkeitsfehlern führt, deutet auf eine beschränkte Aussagekraft dieses Beispiels hin.
 Eine Besonderheit ist in diesem Kontext auch die Existenz von Randbedingungen im Übergangsbereich. Eine etwaige Behandlung dieser wurde weder von Lagrava et al. angesprochen, noch in der dem Leser vorliegenden Arbeit näher untersucht. Tatsächlich verschwindet der \emph{Verfeinerungsfehler} fast vollständig, wenn die Wände aus dem verfeinerten Bereich ausgespart werden.
@@ -878,6 +877,7 @@ Eine Besonderheit ist in diesem Kontext auch die Existenz von Randbedingungen im
 
 Abschließend erscheint es beispielübergreifend intuitiv erwartbar, dass eine nicht aus dem konkreten Strömungsproblem informierte Anwendung von Gitterverfeinerung -- und damit eine unbegründete Erhöhung der Simulationskomplexität gegenüber einem uniformen Gitter -- einer Verbesserung der Präzision nicht zuträglich ist.
 
+\newpage
 \subsubsection{Vergleich der Interpolationsverfahren}
 
 Den halbseitig verfeinerten Poiseuille Simulationsaufbau können wir an dieser Stelle auch zur Nachvollziehung des, von Lagrava et al. für die Verwendung eines Verfahrens vierter Ordnung in der räumlichen Interpolation feiner Übergangsknoten ohne koinzidierende grobe Stützpunkte hervorgebrachten, Arguments verwenden.
@@ -902,13 +902,13 @@ Entsprechend der Beobachtungen in \cite[Kap.~3.7]{lagrava12} sehen auch wir bei 
 \label{fig:PoiseuilleOutflowProfile}
 \end{figure}
 
-Zum Abschluss dieses Beispiels vergleichen wir in Abbildung~\ref{fig:PoiseuilleOutflowProfile} das Geschwindigkeitsprofil entlang einer die gesamte Rohbreite durchgeschreitenden vertikalen Linie bei \(x=3\) im halbseitig verfeinerten Fall. Wie sehen hier zunächst die subjektiv beurteilt gute Qualität des Strömungsbildes erneut bestätig, erkennen aber auch den größeren Fehler im Vergleich mit der uniform fein aufgelösten Simulation. Interessant ist hier, dass die den Druckabfall ausgleichende kubische Interpolation zugleich den Geschwindigkeitsfehler gegenüber der linearen Interpolation leicht zu erhöhen scheint.
+Zum Abschluss dieses Beispiels vergleichen wir in Abbildung~\ref{fig:PoiseuilleOutflowProfile} das Geschwindigkeitsprofil entlang einer die gesamte Rohrbreite durchgeschreitenden vertikalen Linie bei \(x=3\) im halbseitig verfeinerten Fall. Wir sehen hier zunächst die subjektiv beurteilt gute Qualität des Strömungsbildes erneut bestätig, erkennen aber auch den größeren Fehler im Vergleich mit der uniform fein aufgelösten Simulation. Interessant ist hier, dass die den Druckabfall ausgleichende kubische Interpolation zugleich den Geschwindigkeitsfehler gegenüber der linearen Interpolation leicht zu erhöhen scheint.
 
 Legen wir jedoch erneut ein randlos halbseitig verfeinertes Gitter wie beim Vergleich der L2-Normen in Abbildung~\ref{fig:PoiseuilleErrorNorm} an, verschwindet dieses Problem und wir erhalten bei dieser Messung sogar einen leicht geringeren Fehler als im uniform fein aufgelösten Gitter.
 
 \bigskip
 
-Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es erscheinen also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild. Wichtig ist jedoch im Besonderen der negative Einfluss von Randbedingungen im Übergangsbereich der Gitter -- solange korrekte Behandlung nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden.
+Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es treten also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild auf. Wichtig ist jedoch im Besonderen der negative Einfluss von Randbedingungen im Übergangsbereich der Gitter -- solange korrekte Behandlung nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden. Nur dessen Skalierung wird in Kapitel~\ref{kap:lagrava} behandelt.
 
 \newpage
 \subsection{Umströmter Zylinder}

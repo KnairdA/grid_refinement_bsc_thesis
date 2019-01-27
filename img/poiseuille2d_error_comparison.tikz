@@ -1,7 +1,7 @@
 \begin{tikzpicture}
 \begin{axis}[
 	scale only axis,
-	height=8cm,
+	height=6.5cm,
 	width=0.7*\textwidth,
 	symbolic x coords={\texttt{uN10},\texttt{uN20},\texttt{vN10A},\texttt{vN20A},\texttt{vN10B},\texttt{vN20B}},
 	xtick=data,
@@ -37,16 +37,52 @@
 \end{tikzpicture}
 
 \bigskip
-\begin{tabular}{l l l l}
+
+\begin{tabular}{l m{4cm} l l}
 & Gitterstruktur & Geschwindigkeitsfehler & Druckfehler \\
-\hline
-\texttt{uN10} & \(11 \times 41\) & 1.88337e-3 & 3.11534e-3 \\
-\hline
-\texttt{uN20} & \(21 \times 81\) & 1.16253e-3 & 2.27404e-3 \\
-\hline
-\texttt{vN10A} & \(11 \times 21\) & 1.00761e-2 & 2.71447e-2 \\
-\texttt{vN20A} & \hphantom{\(11 \times 21\)} \(21 \times 43\) & 1.02424e-2 & 2.07924e-2 \\
-\hline
-\texttt{vN10B} & \(11 \times 41\) & 1.77561e-3 & 3.11244e-3 \\
-\texttt{vN20B} & \hphantom{\(11 \times 41\)} \(17 \times 41\) & 2.04335e-3 & 3.39432e-3 \\
+\hline \\[-1.75ex]
+
+\texttt{uN10}
+& \begin{tikzpicture}
+\draw[fill=gray!20!white] (0,0) rectangle (4,1) node[pos=.5] {\(11 \times 41\)};
+\end{tikzpicture}
+& 1.88337e-3 & 3.11534e-3 \\
+\hline \\[-1.75ex]
+
+\texttt{uN20}
+& \begin{tikzpicture}
+\draw[fill=gray!20!white] (0,0) rectangle (4,1) node[pos=.5] {\(21 \times 81\)};
+\end{tikzpicture}
+& 1.16253e-3 & 2.27404e-3 \\
+\hline \\[-1.75ex]
+
+\texttt{vN10A}
+& \begin{tikzpicture}
+\draw[fill=gray!20!white] (0,0) rectangle (2,1) node[pos=.5] {\(11 \times 21\)};
+\draw (2,0) rectangle (4,1) node[pos=.5] {\(21 \times 43\)};
+\end{tikzpicture}
+& 1.00761e-2 & 2.71447e-2 \\
+\texttt{vN20A}
+& \begin{tikzpicture}
+\draw (0,0) rectangle (2,1) node[pos=.5] {\(11 \times 21\)};
+\draw[fill=gray!20!white] (2,0) rectangle (4,1) node[pos=.5] {\(21 \times 43\)};
+\end{tikzpicture}
+& 1.02424e-2 & 2.07924e-2 \\
+\hline \\[-1.75ex]
+
+\texttt{vN10B}
+& \begin{tikzpicture}
+\draw[fill=gray!20!white] (0,0) rectangle (4,1);
+\draw[gray!20!white,text=black] (0,0) rectangle (2,1) node[pos=0.5] {\(11 \times 41\)};
+\draw (0,0) rectangle (4,1);
+\draw[fill=white,text=black] (2,0.1) rectangle (3.9,0.9) node[pos=.5] {\(17 \times 41\)};
+\end{tikzpicture}
+& 1.77561e-3 & 3.11244e-3 \\
+\texttt{vN20B}
+& \begin{tikzpicture}
+\draw[white,text=black] (0,0) rectangle (2,1) node[pos=0.5] {\(11 \times 41\)};
+\draw (0,0) rectangle (4,1);
+\draw[fill=gray!20!white,text=black] (2,0.1) rectangle (3.9,0.9) node[pos=.5] {\(17 \times 41\)};
+\end{tikzpicture}
+& 2.04335e-3 & 3.39432e-3 \\
 \end{tabular}

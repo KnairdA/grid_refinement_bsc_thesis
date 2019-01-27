@@ -1,7 +1,7 @@
 \begin{tikzpicture}
 \begin{axis}[
 	scale only axis,
-	height=9cm,
+	height=8.75cm,
 	width=0.9*\textwidth,
 	mark size=0,
 	line width=0.5pt,

@@ -821,28 +821,37 @@ Unter diesen Einschränkungen ist es -- abseits offensichtlicher Gütekriterien 
 
 Als Einstiegspunkt wollen wir zunächst die grundsätzliche Funktion des Verfeinerungsverfahren an einem möglichst einfachen Beispiel gegen möglichst korrekte Vergleichsdaten testen. Ein solches Beispiel ist gegeben durch die laminare Strömung in einem Rohr mit kreisförmigem Querschnitt und ohne Hindernisse abseits der Wände.
 
+\begin{figure}[h]
+\centering
+\input{img/poiseuille2d_overview.tikz}
+\caption{Schematische Darstellung der Rohrströmung}
+\label{fig:PoiseuilleOverview}
+\end{figure}
+
 Diese Rohrströmung stellt nicht nur eine der einfachsten Strömungssituationen dar, sondern besitzt als Poiseuille-Fluss auch eine analytische Lösung, so dass wir ideale Vergleichsbedingungen vorfinden. Lieferte unser Verfahren in diesem Beispiel keine guten Ergebnisse, wäre nicht davon auszugehen, dass dies sich in komplexeren Situationen verbessern würde.
 
 \begin{Definition}[Analytische Lösung des Poiseuille-Flusses]
 \label{def:analyticPoiseuille}
-Seien \(L_x, L_y \in \R_+\) die räumlichen Rohrdimensionen, \(\nu\) die kinematische Viskosität und \(\Delta p := p_1 - p_0\) die Druckdifferenz zwischen Ein- und Ausfluss. Dann ist die analytische Geschwindigkeit in \(x\)-Richtung gegeben als \cite[vgl.~Kap.~4]{bao11}:
+Seien \(L_x, L_y \in \R_+\) die räumlichen Rohrdimensionen, \(\nu\) die kinematische Viskosität und \(\Delta p\) der Druckgradient zwischen Ein- und Ausfluss. Dann ist die analytische Geschwindigkeit in \(x\)-Richtung gegeben als \cite[vgl.~Kap.~4]{bao11}:
 \[u_x(y) = \frac{1}{2\nu} \frac{\Delta p}{L_x} y (y-L_y)\]
-Dies kann mit \(u_x(L_y/2):=1\) und \(\Delta p = 1 - p_0\) vereinfacht werden zu:
+Dies ergibt mit \(u_x(L_y/2):=u_\text{max}\) und \(\Delta p := -p_0\) die analytische Lösung des Drucks:
+\[p_0 = \frac{8 L_x \nu u_\text{max} }{L_y^2}\]
+Mit \(u_\text{max}:=1\) vereinfacht sich damit die analytische Lösung der \(x\)-Geschwindigkeit zu:
 \[u_x(y) = -\frac{4}{L_y^2} y (y-L_y)\]
 Das Geschwindigkeitsprofil des Poiseuille-Flusses ist also parabelförmig.
 \end{Definition}
 
 Wir wollen in einem \(1 \times 4\) Längeneinheiten bemessenden Rohr einen Poiseuille-Fluss simulieren. Als Auflösung einer Längeneinheit sei dabei \(N=10\) gewählt, was in der Gitterdiskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird.
 
-\begin{figure}[h]
+In Abbildung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen. Wand- und Einflusszellen werden nach dieser Vorlage mit lokalen Geschwindigkeitsrandbedingungen umgesetzt. Während für den Einfluss dabei das Geschwindigkeitsprofil der analytischen Poiseuille-Lösung vorausgesetzt wird, erhält der Ausfluss eine Druckrandbedingung. Die noch verbleibenden gewöhnlichen Fluidzellen erfahren, abgesehen von den üblichen Kollisions- und Strömungsschritten, keine besondere Behandlung.
+
+\begin{figure}[H]
 \begin{adjustbox}{center}
 \input{img/poiseuille2d_grid.tikz}
 \end{adjustbox}
 \caption{Gitterstruktur einer halbseitig verfeinerten Rohrströmung}
 \label{fig:PoiseuilleGridSetup}
 \end{figure}
-
-In Abbilddung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen. Wand- und Einflusszellen werden nach dieser Vorlage mit lokalen Geschwindigkeitsrandbedingungen umgesetzt. Während für den Einfluss dabei das Geschwindigkeitsprofil der analytischen Poiseuille-Lösung vorausgesetzt wird, erhält der Ausfluss eine Druckrandbedingung. Die noch verbleibenden gewöhnlichen Fluidzellen erfahren, abgesehen von den üblichen Kollisions- und Strömungsschritten, keine besondere Behandlung.
 
 Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \(1\mathrm{e}{-5}\), gefallen ist.
 

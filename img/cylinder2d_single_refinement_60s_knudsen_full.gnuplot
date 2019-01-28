@@ -12,9 +12,9 @@ set cbrange [0:2]
 
 set xtics 0,2,22
 set ytics 0,1,4
-set cbtics 0,1,3
+set cbtics ("{/Symbol \243}0" 0, "1" 1, "{/Symbol \263}2" 2)
 
-set cblabel "Verfeinerungskriterium"
+set cblabel "Verfeinerungskriterium" offset 1,0
 
 set obj 1 rect from 0.75,0.55 to 8.75,3.55
 set obj 1 fillstyle empty border -1 front

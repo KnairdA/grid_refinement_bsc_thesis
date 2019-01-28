@@ -930,7 +930,7 @@ Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömun
 \label{fig:cylinder2d_overview}
 \end{figure}
 
-Während für diese Strömungssituation noch keine analytische Lösung existiert, stehen in \citetitle{SchaeferTurek96}~\cite{SchaeferTurek96} detaillierte, hochwertige und mit verschiedenen Verfahren berechnete Vergleichsdaten zur Verfügung.
+Während für diese Strömungssituation noch keine analytische Lösung gefunden wurde, stehen in \citetitle{SchaeferTurek96}~\cite{SchaeferTurek96} detaillierte, hochwertige und mit verschiedenen Verfahren berechnete Vergleichsdaten zur Verfügung. Bevor wir diese jedoch zur Evaluation heranziehen, wollen wir uns vorerst der subjektiven Qualität der Ergebnisse versichern und uns nähere Gedanken zur Lokalisierung der Verfeinerunsbereiche machen.
 
 \bigskip
 
@@ -957,12 +957,38 @@ Als Grundlage für den subjektiven Vergleich des Strömungsbildes simulieren wir
 \noindent
 Vergleichen wir diese Grundsituation mit der in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity60s} zu sehenden, um den Zylinder herum einfach verfeinerten, Simulation, wirkt das Strömungsbild subjektiv gleich: Zahl und Position der Wirbel sind identisch und der Gitterübergang ist in den Geschwindigkeitsnormen trotz komplexerer Strömungsstruktur nicht zu erkennen.
 
+\subsubsection{Anwendung eines formalen Kriteriums zur Gitterverfeinerung}
+
+An dieser Stelle wollen wir die Gelegenheit nutzen, uns näher mit der Wahl der Verfeinerungsbereiche auseinanderzusetzen. So scheint es auf der einen Seite intuitiv sinnvoll, einen Verfeinerungsbereich in besonders komplexen Regionen einer Simulationsdomäne zu platzieren -- in diesem Fall also um den Zylinder, dessen Geometrie dann u.a. feiner aufgelöst würde. Auf der anderen Seite ist eine solch intuitive Entscheidung aber leicht fehlbar und schwer qualitativ zu beurteilen oder zu optimieren. Entsprechende Gedanken bewogen auch die Autoren unseres Verfeinerungsverfahrens, in \citetitle{lagrava15}~\cite{lagrava15} ein automatisches Kriterium zur Gitterverfeinerung herzuleiten.
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_60s_knudsen_full.pdf}
+\end{adjustbox}
+\caption{Verfeinerungskriterium in einem uniform aufgelösten Gitter zu \(t=60s\)}
+\label{fig:UnrefinedCylinderKnudsen60s}
+\end{figure}
+
+Dieses, die theoretische mit der tatsächlich simulierten Knudsen-Kennzahl des Fluids vergleichende, Kriterium liefert bis auf Zellebene auflösbare Informationen zur lokalen Simulationsqualität in Form der direkten Empfehlung eines Verfeinerungsfaktors. Beschränken wir dessen Wertebereich zur besseren Unterscheidung auf eine diskrete Menge, erhalten wir die in Abbildung~\ref{fig:UnrefinedCylinderKnudsen60s} ersichtliche Darstellung der unverfeinerten Simulation.
+Große Teile des Gitters weisen demnach eine gute Auflösung mit Verfeinerungsfaktoren kleiner oder gleich Null, d.h. keinem Verfeinerungsbedarf, auf. Leichter Verfeinerungsbedarf wird hingegen an den Wänden festgestellt. Den größten Mangel an Simulationsqualität attestiert das Verfeinerungskriterium direkt um den Zylinder sowie in zwei schweifartigen Strukturen, die bei Vergleich mit dem Geschwindigkeitsbild in die Wirbelstraße münden. Bei der Interpretation der Verfeinerungsfaktoren ist zu beachten, dass einzelne kleine Bereiche mit großen Faktoren keine global mangelnde Auflösung beschreiben. Das auf den Faktoren aufbauende automatische Gitterverfeinerungskriterium betrachtet dazu jeweils die durchschnittliche Qualität von a priori kartierten möglichen Verfeinerungsdomänen -- nur wenn die extremalen Bereiche ausreichend aufgelöste Gebiete dominieren, ist demnach eine Verfeinerung empfohlen.
+
 \begin{figure}[h]
 \begin{adjustbox}{center}
 \includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_60s_knudsen_full.pdf}
 \end{adjustbox}
-\caption{Einfach verfeinertes Knudsenkriterium zu \(t=60s\)}
+\caption{Verfeinerungskriterium in einem einfach verfeinerten Gitter zu \(t=60s\)}
+\label{fig:SingleLevelRefinementCylinderKnudsen60s}
 \end{figure}
+
+Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity60s} verfeinerten Bereichs aktzeptabel. Dies bestäigt sich auch bei Berechnung des Knudsen-Kriterium für das einfach verfeinerte Gitter in Abbildung~\ref{fig:SingleLevelRefinementCylinderKnudsen60s} -- die angemahnten Bereiche im Umfeld des Zylinders sind hier deutlich reduziert.
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_improved_grid_60s_knudsen_full.pdf}
+\end{adjustbox}
+\end{figure}
+
+\subsubsection{Vergleich von Widerstands- und Auftriebskräften}
 
 \newpage
 \section{Fazit}

@@ -1,4 +1,4 @@
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[scale=0.6]
 \draw[thick,green!60!black,text=black,decorate,decoration=snake] (0,0) -- (0,4.1) node[pos=0.5,rotate=90,above] {Einfluss};
 \draw[thick,red,text=black,decorate,decoration=snake] (22,0) -- (22,4.1) node[pos=0.5,rotate=90,below] {Ausfluss};
 \draw[very thick] (0,0) -- (22,0);
@@ -7,5 +7,21 @@
 \draw[very thick,dotted] (-2,4.1) -- (0,4.1);
 \draw[very thick,dotted] (22,0) -- (24,0);
 \draw[very thick,dotted] (22,4.1) -- (24,4.1);
-\draw[very thick] (2,2) circle (0.5);
+\draw[very thick,fill=gray!20!white] (2,2) circle (0.5);
+
+\draw[Latex-Latex,thin] (3,1.5) -- (3,2.5) node[pos=0.5,right] {\(D\)};
+\draw[Latex-Latex,thin] (3,0) -- (3,1.5) node[pos=0.5,right] {\(1.5 D\)};
+\draw[Latex-Latex,thin] (3,2.5) -- (3,4.1) node[pos=0.5,right] {\(1.6 D\)};
+
+\draw[Latex-Latex,thin] (0,-0.5) -- (2,-0.5) node[pos=0.5,below] {\(2 D\)};
+\draw[Latex-Latex,thin] (2,-0.5) -- (22,-0.5) node[pos=0.5,below] {\(20 D\)};
+
+\draw[thin] (0,-0.1) -- (0,-0.7);
+\draw[thin] (2,-0.1) -- (2,-0.7);
+\draw[thin] (22,-0.1) -- (22,-0.7);
+
+\draw[thin] (2.3,1.5) -- (3.2,1.5);
+\draw[thin] (2.3,2.5) -- (3.2,2.5);
+
+\draw[thin,dotted] (2,0) -- (2,2);
 \end{tikzpicture}

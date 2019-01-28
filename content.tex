@@ -916,17 +916,21 @@ Legen wir jedoch erneut ein randlos halbseitig verfeinertes Gitter wie beim Verg
 
 \bigskip
 
-Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es treten also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild auf. Wichtig ist jedoch im Besonderen der negative Einfluss von Randbedingungen im Übergangsbereich der Gitter -- solange korrekte Behandlung nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden. Nur dessen Skalierung wird in Kapitel~\ref{kap:lagrava} behandelt.
+Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es treten also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild auf. Der beobachtete negative Einfluss von Randbedingungen im Übergangsbereich der Gitter sollte hier aber nicht unerwiedert bleiben -- bis die korrekte Behandlung solcher Randbedingungen nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden, denn nur dessen Skalierung wird in Kapitel~\ref{kap:lagrava} und \cite{lagrava12} behandelt.
 
 \newpage
 \subsection{Umströmter Zylinder}
 
+Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömungsbeispiel welches entsprechend in der Menge der OpenLB Beispielanwendungen enthalten ist. Grundsätzlich ähnelt es dem Aufbau der Rohrströmung -- simuliert wird die von zwei Wänden begrenzte Strömung zwischen Ein- und Ausfluss ergänzt um ein zylindrisches Hinderniss im Eingangsbereich.
+
 \begin{figure}[h]
 \centering
 \input{img/cylinder2d_overview.tikz}
-\caption{Schematische Darstellung des umströmten Zylinder \cite{TurekSchaefer96}}
+\caption{Schematische Darstellung des umströmten Zylinder \cite[vgl.~Abb.~1]{SchaeferTurek96}}
 \label{fig:cylinder2d_overview}
 \end{figure}
+
+Während für diese Strömungssituation noch keine analytische Lösung existiert, stehen in \citetitle{SchaeferTurek96}~\cite{SchaeferTurek96} detaillierte, hochwertige und mit verschiedenen Verfahren berechnete Vergleichsdaten zur Verfügung.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -948,8 +952,6 @@ Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeine
 \end{adjustbox}
 \caption{Einfach verfeinertes Knudsenkriterium zu \(t=60s\)}
 \end{figure}
-
-\subsection{Dipol}
 
 \newpage
 \section{Fazit}

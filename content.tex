@@ -921,7 +921,7 @@ Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeine
 \newpage
 \subsection{Umströmter Zylinder}
 
-Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömungsbeispiel welches entsprechend in der Menge der OpenLB Beispielanwendungen enthalten ist. Grundsätzlich ähnelt es dem Aufbau der Rohrströmung -- simuliert wird die von zwei Wänden begrenzte Strömung zwischen Ein- und Ausfluss ergänzt um ein zylindrisches Hinderniss im Eingangsbereich.
+Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömungsbeispiel welches entsprechend in der Menge der OpenLB Beispielanwendungen enthalten ist. Grundsätzlich ähnelt es dem Aufbau der Rohrströmung -- simuliert wird die von zwei Wänden begrenzte Strömung zwischen Ein- und Ausfluss ergänzt um ein zylindrisches Hindernis im Eingangsbereich.
 
 \begin{figure}[h]
 \centering
@@ -932,19 +932,30 @@ Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömun
 
 Während für diese Strömungssituation noch keine analytische Lösung existiert, stehen in \citetitle{SchaeferTurek96}~\cite{SchaeferTurek96} detaillierte, hochwertige und mit verschiedenen Verfahren berechnete Vergleichsdaten zur Verfügung.
 
+\bigskip
+
+Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und definieren diesen wiederum als Längeneinheit \(D := 1\,\text{LE}\). Auflösungangaben entsprechen im Folgenden also dem Durchmesser des Zylinders in groben Gitterweiten \(\delta x_g\). Für die Wände werden derweil Geschwindigkeitsrandbedingungen angelegt und der Zylinder hindere die Strömung durch einfaches Bounce-Back. Weiter ist die modellierte Reynolds-Zahl \(\text{Re}:=100\) und die Lattice-Geschwindigkeit zur Fixierung der übrigen Parameter beträgt \(u:=0.05\).
+
 \begin{figure}[h]
 \begin{adjustbox}{center}
 \includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_60s_full.pdf}
 \end{adjustbox}
-\caption{Uniform aufgelöstes Strömungsbild zu \(t=60s\)}
+\caption{Uniform mit \(N=20\) aufgelöstes Strömungsbild zu \(t=60s\)}
+\label{fig:UniformCylinderVelocity60s}
 \end{figure}
+
+Als Grundlage für den subjektiven Vergleich des Strömungsbildes simulieren wir zunächst in Abbildung~\ref{fig:UniformCylinderVelocity60s} auf einem unverfeinert mit \(N=20\) aufgelösten Gitter. Charakteristisch ist hier direkt die Bildung einer Kármánschen Wirbelstraße zu beobachten.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
 \includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_60s_full.pdf}
 \end{adjustbox}
 \caption{Einfach verfeinertes Strömungsbild zu \(t=60s\)}
+\label{fig:SingleLevelRefinementCylinderVelocity60s}
 \end{figure}
+
+\noindent
+Vergleichen wir diese Grundsituation mit der in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity60s} zu sehenden, um den Zylinder herum einfach verfeinerten, Simulation, wirkt das Strömungsbild subjektiv gleich: Zahl und Position der Wirbel sind identisch und der Gitterübergang ist in den Geschwindigkeitsnormen trotz komplexerer Strömungsstruktur nicht zu erkennen.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}

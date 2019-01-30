@@ -1,3 +1,5 @@
+reset
+
 set terminal pngcairo size 3520, 656
 
 set output 'tmp/'.plotname.'.png'

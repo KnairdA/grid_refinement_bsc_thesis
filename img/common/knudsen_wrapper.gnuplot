@@ -12,5 +12,3 @@ set cbtics ("{/Symbol \243}0" 0, "1" 1, "{/Symbol \263}2" 2)
 set cbrange [0:2]
 
 set cblabel "Verfeinerungskriterium" offset 1,0
-
-plot 'tmp/'.plotname.'.png' binary filetype=png origin=(0.00625,0.00625) dx=0.00625 dy=0.00625 with rgbimage palette

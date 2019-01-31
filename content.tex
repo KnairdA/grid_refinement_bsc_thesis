@@ -959,17 +959,41 @@ Vergleichen wir diese Grundsituation mit der in Abbildung~\ref{fig:SingleLevelRe
 
 \subsubsection{Anwendung eines formalen Kriteriums zur Gitterverfeinerung}
 
-An dieser Stelle wollen wir die Gelegenheit nutzen, uns näher mit der Wahl der Verfeinerungsbereiche auseinanderzusetzen. So scheint es auf der einen Seite intuitiv sinnvoll, einen Verfeinerungsbereich in besonders komplexen Regionen einer Simulationsdomäne zu platzieren -- in diesem Fall also um den Zylinder, dessen Geometrie dann u.a. feiner aufgelöst würde. Auf der anderen Seite ist eine solch intuitive Entscheidung aber leicht fehlbar und schwer qualitativ zu beurteilen oder zu optimieren. Entsprechende Gedanken bewogen auch die Autoren unseres Verfeinerungsverfahrens, in \citetitle{lagrava15}~\cite{lagrava15} ein automatisches Kriterium zur Gitterverfeinerung herzuleiten.
+An dieser Stelle wollen wir die Gelegenheit nutzen, uns näher mit der Wahl der Verfeinerungsbereiche auseinanderzusetzen. So scheint es auf der einen Seite intuitiv sinnvoll, einen Verfeinerungsbereich in besonders komplexen Regionen einer Simulationsdomäne zu platzieren -- in diesem Fall also um den Zylinder, dessen Geometrie dann u.a. feiner aufgelöst würde. Auf der anderen Seite ist eine solch intuitive Entscheidung aber leicht fehlbar und schwer qualitativ zu beurteilen oder zu optimieren. Entsprechende Gedanken bewogen auch die Autoren unseres Verfeinerungsverfahrens, in \citetitle{lagrava15}~\cite{lagrava15} ein auf der Knudsen-Zahl basierendes automatisches Kriterium zur Gitterverfeinerung herzuleiten.
+
+\begin{Definition}[Knudsen-Zahl]
+Sei \(\lambda\) die mittlere freie Weglänge und \(L\) die charakteristische Länge des Systems. Die Knudsen-Zahl \(\text{Kn}\) ist definiert als:
+\[ \text{Kn} := \frac{\lambda}{L} \]
+Die Knudsen-Zahl ist eine dimensionlose Kennzahl der Strömungslehre. Ihr Wert beschreibt, ob ein Gas als strömungsmechanisches Kontinuum nach Navier-Stokes oder als Bewegung einzelner Teilchen betrachtet werden kann \cite[S.~14]{krueger17}:
+\begin{description}
+\item[\(\text{Kn} \ll 1\)] Strömungsmechanisches Kontinuum nach Navier-Stokes
+\item[\(\text{Kn} \gtrsim 1\)] Betrachtung einzelner Teilchen
+\end{description}
+\end{Definition}
+
+\begin{Definition}[Auftreten der Knudsen-Zahl in LBM]
+Die Knudsen-Zahl wird im LBM-Kontext nach \cite[vgl.~(21)]{lagrava15} durch den Quotienten der Nicht-Equilibriums- und Equilibriumsverteilung in Richtung \(i \in \{0,\dots,q-1\}\) genähert:
+\[\text{Kn} \sim \frac{f_i^\text{neq}}{f_i^\text{eq}}\]
+Die Mittelung über alle Richtungen ergibt so die lokal in einem Knoten des Gitters genäherte Knudsen-Zahl:
+\[C(x) := \frac{1}{q} \sum_{i=0}^{q-1} \left|\frac{f_i^\text{neq}}{f_i^\text{eq}}\right|\]
+\end{Definition}
+
+\begin{Definition}[Lokaler Verfeinerungsfaktor]
+Nach \cite[vgl.~(29)]{lagrava15} führt die folgende Transformation der lokal genäherten Knudsen-Zahl zur Berechnung eines diskreten Verfeinerungsfaktors:
+\[ R(x) := \text{round}\left( \log_2 \left( \frac{C(x)}{\text{Kn}} \right) \right) \]
+Dieser Faktor beschreibt die Anzahl der empfohlenen Auflösungsverdoppelungen.
+\end{Definition}
+
+Dieses, die theoretische mit der tatsächlich simulierten Knudsen-Kennzahl des Fluids vergleichende, Kriterium liefert bis auf Zellebene auflösbare Informationen zur lokalen Simulationsqualität in Form der direkten Empfehlung eines Verfeinerungsfaktors. Beschränken wir dessen Wertebereich zur besseren Unterscheidung auf eine diskrete Menge, erhalten wir folgende Darstellung der unverfeinerten Simulation:
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
 \includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_60s_knudsen.pdf}
 \end{adjustbox}
-\caption{Verfeinerungskriterium in einem uniform aufgelösten Gitter zu \(t=60s\)}
+\caption{Verfeinerungskriterium in einem uniform mit \(N=20\) aufgelösten Gitter}
 \label{fig:UnrefinedCylinderKnudsen60s}
 \end{figure}
 
-Dieses, die theoretische mit der tatsächlich simulierten Knudsen-Kennzahl des Fluids vergleichende, Kriterium liefert bis auf Zellebene auflösbare Informationen zur lokalen Simulationsqualität in Form der direkten Empfehlung eines Verfeinerungsfaktors. Beschränken wir dessen Wertebereich zur besseren Unterscheidung auf eine diskrete Menge, erhalten wir die in Abbildung~\ref{fig:UnrefinedCylinderKnudsen60s} ersichtliche Darstellung der unverfeinerten Simulation.
 Große Teile des Gitters weisen demnach eine gute Auflösung mit Verfeinerungsfaktoren kleiner oder gleich Null, d.h. keinem Verfeinerungsbedarf, auf. Leichter Verfeinerungsbedarf wird hingegen an den Wänden festgestellt. Den größten Mangel an Simulationsqualität attestiert das Verfeinerungskriterium direkt um den Zylinder sowie in zwei schweifartigen Strukturen, die bei Vergleich mit dem Geschwindigkeitsbild in die Wirbelstraße münden. Bei der Interpretation der Verfeinerungsfaktoren ist zu beachten, dass einzelne kleine Bereiche mit großen Faktoren keine global mangelnde Auflösung beschreiben. Das auf den Faktoren aufbauende automatische Gitterverfeinerungskriterium betrachtet dazu jeweils die durchschnittliche Qualität von a priori kartierten möglichen Verfeinerungsdomänen -- nur wenn die extremalen Bereiche ausreichend aufgelöste Gebiete dominieren, ist demnach eine Verfeinerung empfohlen.
 
 \begin{figure}[h]
@@ -986,18 +1010,17 @@ Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbil
 \begin{adjustbox}{center}
 \includegraphics[width=1.2\textwidth]{img/static/cylinder2d_improved_grid_60s_knudsen.pdf}
 \end{adjustbox}
+\caption{Verbesserte Verfeinerungsstruktur um den Zylinder}
 \end{figure}
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-	\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s_knudsen.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s.pdf}
 \end{adjustbox}
-\end{figure}
-
-\begin{figure}[h]
 \begin{adjustbox}{center}
-	\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s_knudsen.pdf}
 \end{adjustbox}
+\caption{Analyse eines informiert verfeinerten Gitters mit \(N=5\) zu \(t=60s\)}
 \end{figure}
 
 \subsubsection{Vergleich von Widerstands- und Auftriebskräften}

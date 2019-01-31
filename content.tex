@@ -1025,6 +1025,16 @@ Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbilden
 
 Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der Gitterzellen mit den für ein stabiles uniformes Gitter benötigten Zellen vergleichen: Während das im Ausgang verfeinerte Gitter nur 2693 aktive Zellen beinhaltet, benötigt ein stabiles uniformes Gitter eine Auflösung von \(N=9\), was 7326 Zellen entspricht. Interessieren wir uns an dieser Stelle also nur für ein subjektiv korrektes und nicht-divergentes Strömungsbild, so ermöglicht uns Gitterverfeinerung ein Auskommen mit nur knapp einem Drittel der für ein unverfeinertes Gitter benötigten Zellen.
 
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s.pdf}
+\end{adjustbox}
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s_knudsen.pdf}
+\end{adjustbox}
+\caption{Analyse einer problembezogenen Verteilung der Gitterauflösung}
+\end{figure}
+
 \bigskip
 
 Auf diese Weise illustriert sich hier auch ein bisher nur in der Einführung erwähnter Vorteil von Gitterverfeinerung: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.

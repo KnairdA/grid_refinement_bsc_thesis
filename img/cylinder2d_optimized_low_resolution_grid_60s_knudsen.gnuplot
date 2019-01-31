@@ -13,10 +13,10 @@ load 'common/knudsen_wrapper.gnuplot'
 set obj 1 rect from 0.75,0.2 to 8.85,3.9
 set obj 1 fillstyle empty border -1 front lw 1
 
-set obj 2 rect from 0.95,0.95 to 5.05,3.05
+set obj 2 rect from 0.95,1.0 to 5.05,3.05
 set obj 2 fillstyle empty border -1 front lw 1
 
-set obj 3 rect from 19.95,0 to 22,4.1
+set obj 3 rect from 20.95,0 to 22,4.1
 set obj 3 fillstyle empty border -1 front lw 1
 
 load 'common/include_fluid.gnuplot'

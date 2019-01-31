@@ -13,7 +13,7 @@ So trifft es sich, dass der Wunsch nach theoretischer Lösung komplexer und nur 
 Während Finite Elemente Methoden den wohl verbreitetsten Ansatz zur numerischen Strömungsdynamik bilden, erfreut sich auch die Herangehensweise der Lattice Boltzmann Methoden in den letzten Jahrzehnten wachsender Nutzbarkeit und Verbreitung. Im Gegensatz zu anderen Lösungsmethoden werden hier die strömungsbeschreibenden Navier-Stokes Gleichungen nicht direkt numerisch gelöst. Lösungen ergeben sich vielmehr aus der Simulation des Fluidverhaltens auf \emph{mesoskopischer} Ebene -- d.h. aus der Betrachtung nicht aus Sicht der Kollision einzelner Fluidpartikel und nicht aus Sicht der analytischen Strömungsbeschreibung, sondern aus Sicht der Wahrscheinlichkeit, dass sich das Fluid zu bestimmter Zeit an einem bestimmten Ort mit bestimmter Geschwindigkeit bewegt.
 
 \bigskip
-Ein Vorteil dieses, auf den Arbeiten von Ludwig Eduard Boltzmann im Bereich der statistischen Physik aufbauenden, Ansatzes ist seine Eignung für komplexe Geometrien mit verschiedensten Randbedingungen. Weiterhin gewinnt in den letzten Jahren auch die sehr gute Parallelisierbarkeit von Lattice Boltzmann Methoden in Hinblick auf einen technischen Fortschritt an Anziehungskraft, nach welchem die Leistungsfähigkeit von Großrechnern eher aus deren Parallelität als aus individueller Prozessorleistung erwächst.
+Ein Vorteil dieses, auf den Arbeiten von Ludwig Eduard Boltzmann im Bereich der statistischen Physik aufbauenden, Ansatzes, ist seine Eignung für komplexe Geometrien mit verschiedensten Randbedingungen. Weiterhin gewinnt in den letzten Jahren auch die sehr gute Parallelisierbarkeit von Lattice Boltzmann Methoden in Hinblick auf einen technischen Fortschritt an Anziehungskraft, nach welchem die Leistungsfähigkeit von Großrechnern eher aus deren Parallelität als aus individueller Prozessorleistung erwächst.
 
 \subsection{Warum Gitterverfeinerung?}
 
@@ -1013,15 +1013,21 @@ Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbil
 \caption{Verbesserte Verfeinerungsstruktur um den Zylinder}
 \end{figure}
 
+Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbildende Reynolds-Zahlen bei kleineren Auflösungen empfindlich gegenüber Divergenz im Ausflussbereich. So divergiert ein uniform mit \(N=5\) aufgelöstes Gitter mit den verwendeten Parametern und Randbedingungen schon nach wenigen Schritten. Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger zusätzlicher Gitterknoten beheben ließe -- etwa durch Verfeinerung des Ausflussbereiches. Und tatsächlich genügt schon die Verfeinerung eines schmalen Stücks des Ausgangsbereiches zur Stabilisierung der Simulation bei dieser niedrigen Auflösung. In Abbildung~\ref{fig:CylinderOptimizedGridN5} sehen wir den Geschwindigkeitsplot eines solchen Gitters.
+
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_low_resolution_outflow_refine_60s.pdf}
 \end{adjustbox}
-\begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s_knudsen.pdf}
-\end{adjustbox}
-\caption{Analyse eines informiert verfeinerten Gitters mit \(N=5\) zu \(t=60s\)}
+\caption{Stabile Zylinderumströmung mit \(N=5\) durch Ausgangsverfeinerung}
+\label{fig:CylinderOptimizedGridN5}
 \end{figure}
+
+Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der Gitterzellen mit den für ein stabiles uniformes Gitter benötigten Zellen vergleichen: Während das im Ausgang verfeinerte Gitter nur 2693 aktive Zellen beinhaltet, benötigt ein stabiles uniformes Gitter eine Auflösung von \(N=9\), was 7326 Zellen entspricht. Interessieren wir uns an dieser Stelle also nur für ein subjektiv korrektes und nicht-divergentes Strömungsbild, so ermöglicht uns Gitterverfeinerung ein Auskommen mit nur knapp einem Drittel der für ein unverfeinertes Gitter benötigten Zellen.
+
+\bigskip
+
+Auf diese Weise illustriert sich hier auch ein bisher nur in der Einführung erwähnter Vorteil von Gitterverfeinerung: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.
 
 \subsubsection{Vergleich von Widerstands- und Auftriebskräften}
 

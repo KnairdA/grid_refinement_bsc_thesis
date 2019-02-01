@@ -1027,17 +1027,24 @@ Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der 
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unoptimized_low_resolution_grid_60s.pdf}
 \end{adjustbox}
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s_knudsen.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s.pdf}
 \end{adjustbox}
-\caption{Analyse einer problembezogenen Verteilung der Gitterauflösung}
+\caption{Vergleich von uniform und problembezogen verteilten Freiheitsgraden}
+\label{fig:CylinderOptimizedGridComparison}
 \end{figure}
+
+Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d.h. der Knotenanzahl, beschränkte Rechenressourcen besser auf die zu simulierende Strömungssituation anzupassen. Beispielsweise fällt auf, dass der zentrale Zylinder in Abbildung~\ref{fig:CylinderOptimizedGridN5} nur sehr grob modelliert wird. Entsprechend wollen wir versuchen, bei Einschränkung auf die Anzahl der Gitterknoten eines uniformen Gitters mit \(N=9\), ein besseres Gitter zu erzeugen.
+
+Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils insgesamt \(7327\pm2\) Zellen. Der kleine Unterschied in der Knotenanzahl ist dabei der Einschränkung auf quaderförmige Gitter geschuldet, welche eine exakte Fixierung der Knotenanzahl erschwert.
+
+Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretisierung des Zylinders durch Konzentration der verfügbaren Gitterknoten in dessen Umfeld. Eine formalere Analyse der Qualität dieses optimierten Gitters erwartet uns im nachfolgenden Unterkapitel.
 
 \bigskip
 
-Auf diese Weise illustriert sich hier auch ein bisher nur in der Einführung erwähnter Vorteil von Gitterverfeinerung: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.
+Bevor wir dazu kommen bemerken wir, dass sich mit dieser flexibleren Verteilung der Knotenfreiheitsgrade hier auch ein, bis jetzt nur in der Einführung erwähnter, Vorteil von Gitterverfeinerung illustriert: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.
 
 \subsubsection{Vergleich von Widerstands- und Auftriebskräften}
 

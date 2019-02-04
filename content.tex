@@ -1035,34 +1035,38 @@ Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbil
 \caption{Verbesserte Verfeinerungsstruktur um den Zylinder}
 \end{figure}
 
-Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbildende Reynolds-Zahlen bei kleineren Auflösungen empfindlich gegenüber Verteilungsdivergenz im Ausflussbereich. Dies deutet sich auch bei noch ausreichender Auslösung in den Verfeinerungsfaktoren des Ausgangsbereiches an. So divergiert ein uniform mit \(N=5\) aufgelöstes Gitter mit den verwendeten Parametern und Randbedingungen schon nach wenigen Schritten. Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger zusätzlicher Gitterknoten beheben ließe -- etwa durch Verfeinerung des Ausflussbereiches. Und tatsächlich genügt schon die Verfeinerung eines schmalen Stücks des Ausgangsbereiches zur Stabilisierung der Simulation bei dieser niedrigen Auflösung. In Abbildung~\ref{fig:CylinderOptimizedGridN5} sehen wir den Geschwindigkeitsplot eines solchen Gitters.
+Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbildende Reynolds-Zahlen bei kleineren Auflösungen empfindlich gegenüber Verteilungsdivergenz im Ausflussbereich. Dies deutet sich auch bei noch ausreichender Auslösung in den Verfeinerungsfaktoren des Ausgangsbereiches an. So divergiert ein uniform mit \(N=5\) aufgelöstes Gitter mit den verwendeten Parametern und Randbedingungen schon nach wenigen Schritten. Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger zusätzlicher Gitterknoten beheben ließe -- etwa durch Verfeinerung des Ausflussbereiches.
+Und tatsächlich genügt schon die Verfeinerung eines schmalen Stücks des Ausgangsbereiches zur Stabilisierung der Simulation bei dieser niedrigen Auflösung. In Abbildung~\ref{fig:CylinderOptimizedGridN5} sehen wir den Geschwindigkeitsplot eines solchen Gitters.
+
+\bigskip
+
+Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der Gitterzellen mit den für ein stabiles uniformes Gitter benötigten Zellen vergleichen: Während das im Ausgang verfeinerte Gitter nur 3608 aktive Zellen beinhaltet, benötigt ein stabiles uniformes Gitter eine Auflösung von mindestens \(N=12\), was 13500 Zellen entspricht. Interessieren wir uns an dieser Stelle also nur für ein subjektiv korrektes und nicht-divergentes Strömungsbild, so ermöglicht uns Gitterverfeinerung ein Auskommen mit nur etwa einem Viertel der für ein unverfeinertes Gitter benötigten Zellen.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_low_resolution_outflow_refine_60s.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_low_resolution_outflow_refine_n5_re100_16s.pdf}
 \end{adjustbox}
 \caption{Stabile Zylinderumströmung mit \(N=5\) durch Ausgangsverfeinerung}
 \label{fig:CylinderOptimizedGridN5}
 \end{figure}
 
-Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der Gitterzellen mit den für ein stabiles uniformes Gitter benötigten Zellen vergleichen: Während das im Ausgang verfeinerte Gitter nur 2693 aktive Zellen beinhaltet, benötigt ein stabiles uniformes Gitter eine Auflösung von \(N=9\), was 7326 Zellen entspricht. Interessieren wir uns an dieser Stelle also nur für ein subjektiv korrektes und nicht-divergentes Strömungsbild, so ermöglicht uns Gitterverfeinerung ein Auskommen mit nur knapp einem Drittel der für ein unverfeinertes Gitter benötigten Zellen.
+Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d.h. der Knotenanzahl, beschränkte Rechenressourcen besser auf die zu simulierende Strömungssituation anzupassen. Beispielsweise fällt auf, dass der zentrale Zylinder in Abbildung~\ref{fig:CylinderOptimizedGridN5} nur sehr grob modelliert wird. Entsprechend wollen wir versuchen, bei Einschränkung auf die Anzahl der Gitterknoten eines uniformen Gitters mit \(N=12\), ein besseres Gitter zu erzeugen.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unoptimized_low_resolution_grid_60s.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n12_re100_16s.pdf}
 \end{adjustbox}
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_low_resolution_grid_60s.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_refinement_n5_re100_16s.pdf}
 \end{adjustbox}
 \caption{Vergleich von uniform und problembezogen verteilten Freiheitsgraden}
 \label{fig:CylinderOptimizedGridComparison}
 \end{figure}
 
-Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d.h. der Knotenanzahl, beschränkte Rechenressourcen besser auf die zu simulierende Strömungssituation anzupassen. Beispielsweise fällt auf, dass der zentrale Zylinder in Abbildung~\ref{fig:CylinderOptimizedGridN5} nur sehr grob modelliert wird. Entsprechend wollen wir versuchen, bei Einschränkung auf die Anzahl der Gitterknoten eines uniformen Gitters mit \(N=9\), ein besseres Gitter zu erzeugen.
+\newpage
+Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils maximal 13500 Zellen. Der kleine Unterschied in der Knotenanzahl ist dabei der Einschränkung auf quaderförmige Gitter geschuldet, welche eine exakte Fixierung der Knotenanzahl erschwert.
 
-Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils insgesamt \(7327\pm2\) Zellen. Der kleine Unterschied in der Knotenanzahl ist dabei der Einschränkung auf quaderförmige Gitter geschuldet, welche eine exakte Fixierung der Knotenanzahl erschwert.
-
-Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretisierung des Zylinders durch Konzentration der verfügbaren Gitterknoten in dessen Umfeld. Eine formalere Analyse der Qualität dieses optimierten Gitters erwartet uns im nachfolgenden Unterkapitel.
+Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretisierung des Zylinders durch Konzentration der verfügbaren Gitterknoten in dessen Umfeld. Auch liegt dem Ausfluss des verfeinerten Gitters die Divergenz ferner als dem Ausfluss des uniformen Gitters, an welchem sich schon Artefakte abzeichnen. Eine formalere Analyse der Qualität dieses optimierten Gitters erwartet uns im nachfolgenden Unterkapitel.
 
 \bigskip
 

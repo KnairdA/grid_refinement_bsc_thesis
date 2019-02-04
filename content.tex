@@ -932,30 +932,42 @@ Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömun
 
 Während für diese Strömungssituation noch keine analytische Lösung gefunden wurde, stehen in \citetitle{SchaeferTurek96}~\cite{SchaeferTurek96} detaillierte, hochwertige und mit verschiedenen Verfahren berechnete Vergleichsdaten zur Verfügung. Bevor wir diese jedoch zur Evaluation heranziehen, wollen wir uns vorerst der subjektiven Qualität der Ergebnisse versichern und uns nähere Gedanken zur Lokalisierung der Verfeinerunsbereiche machen.
 
-\bigskip
+\begin{figure}[H]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n20_re100_16s.pdf}
+\end{adjustbox}
+\caption{Uniform mit \(N=20\) aufgelöstes Strömungsbild zu \(t=16s\)}
+\label{fig:UniformCylinderVelocity16s}
+\end{figure}
 
-Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und definieren diesen wiederum als Längeneinheit \(D := 1\,\text{LE}\). Auflösungangaben entsprechen im Folgenden also dem Durchmesser des Zylinders in groben Gitterweiten \(\delta x_g\). Für die Wände werden derweil Geschwindigkeitsrandbedingungen angelegt und der Zylinder hindere die Strömung durch einfaches Bounce-Back. Weiter ist die modellierte Reynolds-Zahl \(\text{Re}:=100\) und die Lattice-Geschwindigkeit zur Fixierung der übrigen Parameter beträgt \(u:=0.05\).
+Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und dimensionalisieren diesen wiederum als \(D := 0.1m\), was zugleich der charakteristischen Länge entspreche. Auflösungsangaben beziehen sich im Folgenden also auf den Durchmesser des Zylinders in groben Gitterweiten. Hinblickend auf die Vorgaben zum instationären Testfall \cite[Kapitel~2.2b]{SchaeferTurek96} sei \(\text{Re}:=100\) die Reynolds-Zahl und für den Einfluss sei ein Poiseuille-Geschwindigkeitsprofil angelegt. Wände und Ausflüsse werden analog zur hindernisfreien Rohrströmung durch lokale Geschwindigkeits- bzw. Druckrandbedingungen konstruiert, während der Zylinder den Fluss durch Bounce-Back hindere. Eine Relaxionszeit \(\overline\tau_g := 0.51\) des gröbsten Gitters vervollständigt unser Modell.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_60s.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_n20_re100_16s.pdf}
 \end{adjustbox}
-\caption{Uniform mit \(N=20\) aufgelöstes Strömungsbild zu \(t=60s\)}
-\label{fig:UniformCylinderVelocity60s}
+\caption{Einfach verfeinertes Strömungsbild zu \(t=16s\)}
+\label{fig:SingleLevelRefinementCylinderVelocity16s}
 \end{figure}
 
-Als Grundlage für den subjektiven Vergleich des Strömungsbildes simulieren wir zunächst in Abbildung~\ref{fig:UniformCylinderVelocity60s} auf einem unverfeinert mit \(N=20\) aufgelösten Gitter. Charakteristisch ist hier direkt die Bildung einer Kármánschen Wirbelstraße zu beobachten.
-
-\begin{figure}[h]
-\begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_60s.pdf}
-\end{adjustbox}
-\caption{Einfach verfeinertes Strömungsbild zu \(t=60s\)}
-\label{fig:SingleLevelRefinementCylinderVelocity60s}
-\end{figure}
+Als Grundlage für den subjektiven Vergleich des Strömungsbildes simulieren wir zunächst in Abbildung~\ref{fig:UniformCylinderVelocity16s} auf einem unverfeinert mit \(N=20\) aufgelösten Gitter. Charakteristisch ist hier direkt die Bildung einer Kármánschen Wirbelstraße zu beobachten.
 
 \noindent
-Vergleichen wir diese Grundsituation mit der in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity60s} zu sehenden, um den Zylinder herum einfach verfeinerten, Simulation, wirkt das Strömungsbild subjektiv gleich: Zahl und Position der Wirbel sind identisch und der Gitterübergang ist in den Geschwindigkeitsnormen trotz komplexerer Strömungsstruktur nicht zu erkennen.
+Vergleichen wir diese Grundsituation mit der in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity16s} zu sehenden, um den Zylinder herum verfeinerten, Simulation, wirkt das Strömungsbild subjektiv gut aber unterschiedlich: Während positiv auffällt, dass der der Gitterübergang im Geschwindigkeitsbild trotz komplexerer Strömungsstruktur nicht zu erkennen ist, unterscheidet sich die Position der Wirbel trotz gleichem Zeitpunkt \(t=16s\) erkennbar.
+
+\begin{figure}[H]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n40_re100_16s.pdf}
+\end{adjustbox}
+\caption{Uniform mit \(N=40\) aufgelöstes Strömungsbild zu \(t=16s\)}
+\label{fig:UniformCylinderVelocityN4016s}
+\end{figure}
+
+Ergänzen wir unsere Auswahl von Geschwindigkeitsbildern jedoch um Abbildung~\ref{fig:UniformCylinderVelocityN4016s}, welche aus einem unverfeinerten \(N=40\) Gitter hervorgeht, ist oberflächlich gegenüber dieser kein Unterschied zur einfach verfeinerten Variante erkennbar. Beachtenswert ist dabei, dass das uniform mit \(N=40\) aufgelöste Gitter \(\sim 145000\) Knoten enthält, während das subjektiv identische lokal verfeinerte \(N=20\) Gitter mit \(\sim 66000\) nicht einmal halb so viele Knoten benötigt.
+
+\bigskip
+
+Noch weiter kann diese Beobachtung hier jedoch nicht bewertet werden, da nicht klar ist, welche Wirbelkonfiguration in dieser konkreten Strömungssituation korrekt ist. Aussagekräftiger für die formale Qualitätsbewertung wird der Vergleich der von Schäfer und Turek in \cite{SchaeferTurek96} zusammengestellten Referenzwerte sein.
 
 \subsubsection{Anwendung eines formalen Kriteriums zur Gitterverfeinerung}
 
@@ -986,34 +998,44 @@ Dieser Faktor beschreibt die Anzahl der empfohlenen Auflösungsverdoppelungen.
 
 Dieses, die theoretische mit der tatsächlich simulierten Knudsen-Kennzahl des Fluids vergleichende, Kriterium liefert bis auf Zellebene auflösbare Informationen zur lokalen Simulationsqualität in Form der direkten Empfehlung eines Verfeinerungsfaktors. Beschränken wir dessen Wertebereich zur besseren Unterscheidung auf eine diskrete Menge, erhalten wir folgende Darstellung der unverfeinerten Simulation:
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_60s_knudsen.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n20_re100_16s_knudsen.pdf}
 \end{adjustbox}
 \caption{Verfeinerungskriterium in einem uniform mit \(N=20\) aufgelösten Gitter}
 \label{fig:UnrefinedCylinderKnudsen60s}
 \end{figure}
 
-Große Teile des Gitters weisen demnach eine gute Auflösung mit Verfeinerungsfaktoren kleiner oder gleich Null, d.h. keinem Verfeinerungsbedarf, auf. Leichter Verfeinerungsbedarf wird hingegen an den Wänden festgestellt. Den größten Mangel an Simulationsqualität attestiert das Verfeinerungskriterium direkt um den Zylinder sowie in zwei schweifartigen Strukturen, die bei Vergleich mit dem Geschwindigkeitsbild in die Wirbelstraße münden. Bei der Interpretation der Verfeinerungsfaktoren ist zu beachten, dass einzelne kleine Bereiche mit großen Faktoren keine global mangelnde Auflösung beschreiben. Das auf den Faktoren aufbauende automatische Gitterverfeinerungskriterium betrachtet dazu jeweils die durchschnittliche Qualität von a priori kartierten möglichen Verfeinerungsdomänen -- nur wenn die extremalen Bereiche ausreichend aufgelöste Gebiete dominieren, ist demnach eine Verfeinerung empfohlen.
+Der lokale Vergleich der Knudsen-Zahlen eröffnet einen neuen, interessanten, Blick auf die Fluidstruktur -- klar zu erkennen sind zunächst die wechselseitigen Wirbel sowie die Strömungskomplexität um den Zylinder im Eingangsbereich. Abseits dieses Hindernisses finden sich größere Bereiche mit guter Auflösung, also einem Verfeinerungsfaktor von größer oder gleich Null. Darüber hinaus weisen große Teile des Gitters mit Verfeinerungsfaktoren bis eins eine noch akzeptable Auflösung auf. Den größten Mangel an Simulationsqualität attestiert das Verfeinerungskriterium direkt um den Zylinder und in den wandnahen Wirbelbereichen.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_60s_knudsen.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n40_re100_16s_knudsen.pdf}
 \end{adjustbox}
-\caption{Verfeinerungskriterium in einem einfach verfeinerten Gitter zu \(t=60s\)}
-\label{fig:SingleLevelRefinementCylinderKnudsen60s}
+\caption{Verfeinerungskriterium in einem uniform mit \(N=40\) aufgelösten Gitter}
+\label{fig:UnrefinedCylinderKnudsenN4060s}
 \end{figure}
 
-Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity60s} verfeinerten Bereichs aktzeptabel. Dies bestätigt sich auch bei Berechnung des Knudsen-Kriterium für das einfach verfeinerte Gitter in Abbildung~\ref{fig:SingleLevelRefinementCylinderKnudsen60s} -- die angemahnten Bereiche im Umfeld des Zylinders sind hier deutlich reduziert.
+Bei der Interpretation der Verfeinerungsfaktoren ist zu beachten, dass einzelne kleine Bereiche mit großen Faktoren keine global mangelnde Auflösung beschreiben. Das auf den Faktoren aufbauende automatische Gitterverfeinerungskriterium betrachtet dazu jeweils die durchschnittliche Qualität von a priori kartierten möglichen Verfeinerungsdomänen -- nur wenn die extremalen Bereiche ausreichend aufgelöste Gebiete dominieren, ist demnach eine Verfeinerung empfohlen.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_improved_grid_60s_knudsen.pdf}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_n20_re100_16s_knudsen.pdf}
+\end{adjustbox}
+\caption{Verfeinerungskriterium in einem einfach verfeinerten \(N=20\) Gitter}
+\label{fig:SingleLevelRefinementCylinderKnudsen16s}
+\end{figure}
+
+Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity16s} verfeinerten Bereichs akzeptabel. Dies bestätigt sich auch bei Berechnung des Knudsen-Kriterium für das einfach verfeinerte Gitter in Abbildung~\ref{fig:SingleLevelRefinementCylinderKnudsen16s} -- die angemahnten Bereiche im Umfeld des Zylinders sind hier deutlich reduziert.
+
+\begin{figure}[h]
+\begin{adjustbox}{center}
+\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_improved_grid_n20_re100_16s_knudsen.pdf}
 \end{adjustbox}
 \caption{Verbesserte Verfeinerungsstruktur um den Zylinder}
 \end{figure}
 
-Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbildende Reynolds-Zahlen bei kleineren Auflösungen empfindlich gegenüber Divergenz im Ausflussbereich. So divergiert ein uniform mit \(N=5\) aufgelöstes Gitter mit den verwendeten Parametern und Randbedingungen schon nach wenigen Schritten. Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger zusätzlicher Gitterknoten beheben ließe -- etwa durch Verfeinerung des Ausflussbereiches. Und tatsächlich genügt schon die Verfeinerung eines schmalen Stücks des Ausgangsbereiches zur Stabilisierung der Simulation bei dieser niedrigen Auflösung. In Abbildung~\ref{fig:CylinderOptimizedGridN5} sehen wir den Geschwindigkeitsplot eines solchen Gitters.
+Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbildende Reynolds-Zahlen bei kleineren Auflösungen empfindlich gegenüber Verteilungsdivergenz im Ausflussbereich. Dies deutet sich auch bei noch ausreichender Auslösung in den Verfeinerungsfaktoren des Ausgangsbereiches an. So divergiert ein uniform mit \(N=5\) aufgelöstes Gitter mit den verwendeten Parametern und Randbedingungen schon nach wenigen Schritten. Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger zusätzlicher Gitterknoten beheben ließe -- etwa durch Verfeinerung des Ausflussbereiches. Und tatsächlich genügt schon die Verfeinerung eines schmalen Stücks des Ausgangsbereiches zur Stabilisierung der Simulation bei dieser niedrigen Auflösung. In Abbildung~\ref{fig:CylinderOptimizedGridN5} sehen wir den Geschwindigkeitsplot eines solchen Gitters.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -1046,7 +1068,7 @@ Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretis
 
 Bevor wir dazu kommen bemerken wir, dass sich mit dieser flexibleren Verteilung der Knotenfreiheitsgrade hier auch ein, bis jetzt nur in der Einführung erwähnter, Vorteil von Gitterverfeinerung illustriert: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.
 
-\subsubsection{Vergleich von Widerstands- und Auftriebskräften}
+\subsubsection{Vergleich von Druckdifferenz und Widerstandskraft}
 
 \newpage
 \section{Fazit}

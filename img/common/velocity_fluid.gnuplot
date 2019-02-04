@@ -13,7 +13,7 @@ set margin 0,0,0,0
 
 set yrange [0:4.1]
 set xrange [0:22]
-set cbrange [0:1.5]
+set cbrange [0:2]
 
 unset colorbox
 unset key

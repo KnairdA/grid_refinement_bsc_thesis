@@ -6,8 +6,10 @@
 	mark size=0,
 	line width=0.5pt,
 	legend pos=south west,
-	xlabel=Horizontale Kanalposition (\(m\)),
-	ylabel=Druck (\(N/m^2\))
+	xlabel=Horizontale Kanalposition,
+	ylabel=Druck,
+	y unit=N/m^2,
+	x unit=m
 ]
 
 \addplot table[

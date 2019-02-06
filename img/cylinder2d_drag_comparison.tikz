@@ -11,8 +11,10 @@
 	grid=both,
 	domain=0:16,
 	xmin=0, xmax=16,
-	xlabel={Simulierte physikalische Zeit in Sekunden},
-	ylabel={Widerstandskraft}
+	xlabel={Simulierte physikalische Zeit},
+	ylabel={Widerstandskraft},
+	x unit=s,
+	y unit=N
 ]
 
 \addplot[

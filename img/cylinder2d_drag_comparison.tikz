@@ -1,0 +1,39 @@
+\begin{tikzpicture}
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_refinement_n5_re100_drag_lift_deltap.csv}\refined
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n12_re100_drag_lift_deltap.csv}\uniform
+
+\begin{axis}[
+	scale only axis,
+	height=8cm,
+	width=0.9*\textwidth,
+	legend cell align=left,
+	legend pos=south east,
+	grid=both,
+	domain=0:16,
+	xmin=0, xmax=16,
+	xlabel={Simulierte physikalische Zeit in Sekunden},
+	ylabel={Widerstandskraft}
+]
+
+\addplot[
+	color=blue!50!white,
+	very thin
+] table [
+	x expr=\thisrow{time}, y=drag
+] {\uniform};
+\addlegendentry {Uniformes \(N=12\) Gitter};
+
+\addplot[
+	color=green!70!black,
+	thick
+] table [
+	x expr=8*\thisrow{time}, y=drag
+] {\refined};
+\addlegendentry {Problembezogen verfeinertes \(N=5\) Gitter};
+
+\addplot[color=black]{3.23};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Dmax}\)};
+
+\end{axis}
+\end{tikzpicture}
+

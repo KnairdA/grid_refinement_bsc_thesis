@@ -1079,23 +1079,23 @@ Bis hier haben wir die den Einfluss von Gitterverfeinerung auf die Zylinderumstr
 \citetitle{SchaeferTurek96}~\cite{SchaeferTurek96} liefert eine, dieser formalen Bewertung dienliche, Übersicht der, von 17 verschiedenen Forschungsgruppen beigetragenen und auf unterschiedliche Weisen gewonnenen, Lösungen einer klar definierten Zylinderumströmung. Diese Lösungen sind dabei anhand einer Auswahl von charakteristischen Messwerten wie dem Strömungswiderstands- und Auftriebskoeffizient sowie dem Druckunterschied zwischen Vorder- und Rückseite des Zylinders gegeben.
 
 \begin{Definition}[Strömungswiderstands- und Auftriebskraft]
-Beschreite der Weg \(S\) den Rand des Zylinders und sei \(n \in \R^2\) dessen Normale, \(v_t\) die Geschwindigkeit entlang der Tangente \(t:=(n_1,-n_0)\), \(P\) der Druck, \(\rho\) die Dichte sowie \(\nu\) die kinematische Viskosität. Dann sind Widerstands- und Auftriebskraft des Zylinders gegeben als:
+Beschreite der Weg \(S\) den Rand des Zylinders und sei \(n \in \R^2\) dessen Normale, \(v_t\) die Geschwindigkeit entlang der Tangente \(t:=(n_1,-n_0)\), \(\rho_c\) die charakteristische Dichte der Flüssigkeit, \(P\) der Druck sowie \(\nu\) die kinematische Viskosität. Dann sind Widerstands- und Auftriebskraft des Zylinders gegeben als:
 \begin{align*}
-F_w &= \int_S \left( \rho \nu \frac{\partial v_t}{\partial n} n_1 - P n_0 \right) dS && \text{Widerstandskraft}\\
-F_a &= - \int_S \left( \rho \nu \frac{\partial v_t}{\partial n} n_0 + P n_1 \right) dS && \text{Auftriebskraft}
+F_w &= \int_S \left( \rho_c \nu \frac{\partial v_t}{\partial n} n_1 - P n_0 \right) dS && \text{Widerstandskraft}\\
+F_a &= - \int_S \left( \rho_c \nu \frac{\partial v_t}{\partial n} n_0 + P n_1 \right) dS && \text{Auftriebskraft}
 \end{align*}
 \end{Definition}
 
 \newpage
 \begin{Definition}[Strömungswiderstands- und Auftriebskoeffizient]
-Sei \(D\) der Durchmesser des Zylinders, \(\overline{U}\) die durschnittliche Fluidgeschwindigkeit und \(\rho\) die Dichte. Dann sind die Widerstands- und Auftriebskoeffizienten gegeben als:
+Sei \(D\) der Zylinderdurchmesser, \(\overline{U}\) die durchschnittliche Fluidgeschwindigkeit und \(\rho_c\) die charakteristische Dichte. Dann sind die Widerstands- und Auftriebskoeffizienten gegeben als:
 \begin{align*}
-c_w &= \frac{2F_w}{\rho \overline{U}^2 D} && \text{Widerstandskoeffizient} \\
-c_a &= \frac{2F_a}{\rho \overline{U}^2 D} && \text{Auftriebskoeffizient}
+c_w &= \frac{2F_w}{\rho_c \overline{U}^2 D} && \text{Widerstandskoeffizient} \\
+c_a &= \frac{2F_a}{\rho_c \overline{U}^2 D} && \text{Auftriebskoeffizient}
 \end{align*}
 \end{Definition}
 
-Vergleichen wollen wir diese Koeffizienten nun im Rahmen des unstetigen Testfalls \cite[2.2b]{SchaeferTurek96} mit Reynolds-Zahl \(\text{Re}=100\) und maximaler Einflussgeschwindigkeit \(U = 1.5 m/s\). Dieses Ziel hatten wir dabei schon zu Beginn dieses Kapitels im Blick, so dass die OpenLB-basierende Modellierung der Zylinderumströmung inklusive des optimierten Gitters in Abbildung~\ref{fig:CylinderOptimizedGridComparison} direkt verwendet werden kann. Für die Berechnung der Koeffizienten stellt OpenLB dabei in Form des \class{SuperLatticePhysDrag2D} Funktors bereits ein passendes \emph{Messinstrument} bereit.
+Vergleichen wollen wir diese Koeffizienten nun im Rahmen des unstetigen Testfalls \cite[2.2b]{SchaeferTurek96} mit Reynolds-Zahl \(\text{Re}=100\), maximaler Einflussgeschwindigkeit \(U = 1.5 \,\text{m}/\text{s}\) und charakteristischer Dichte \(\rho_c = 1.0 \,\text{kg}/\text{m}^3\). Dieses Ziel hatten wir dabei schon zu Beginn dieses Kapitels im Blick, so dass die OpenLB-basierende Modellierung der Zylinderumströmung inklusive des optimierten Gitters in Abbildung~\ref{fig:CylinderOptimizedGridComparison} direkt verwendet werden kann. Für die Berechnung der Koeffizienten stellt OpenLB dabei in Form des \class{SuperLatticePhysDrag2D} Funktors bereits ein passendes \emph{Messinstrument} bereit.
 
 Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das uniform mit \(N=12\) aufgelöste Gitter berechneten Charakteristiken zusammen mit den Resultaten des problembewusst verfeinerten \(N=5\) Gitters mit näherungsweise gleicher Anzahl Freiheitsgraden. Der anzustrebende formale Referenzwert ist dabei jeweils das Mittel der oberen und unteren Grenzwerte \cite[Tabelle~4]{SchaeferTurek96}.
 

@@ -1072,24 +1072,45 @@ Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretis
 
 Bevor wir dazu kommen bemerken wir, dass sich mit dieser flexibleren Verteilung der Knotenfreiheitsgrade hier auch ein, bis jetzt nur in der Einführung erwähnter, Vorteil von Gitterverfeinerung illustriert: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.
 
-\subsubsection{Vergleich von Widerstands- und Auftriebskräften}
+\subsubsection{Vergleich von Widerstands- und Auftriebskoeffizienten}
+
+Bis hier haben wir die den Einfluss von Gitterverfeinerung auf die Zylinderumströmung entweder subjektiv, durch Vergleich der Strömungsbilder, oder grob, durch einfachen Vergleich der für eine divergenzfreie Simulation benötigten Knotenanzahl, bewertet. Wie eingangs erwähnt, existiert für die vorliegende Strömungssituation keine analytische Lösung, weshalb wir uns für eine formal belastbarere Bewertung auf vertrauenswürdige aber ebenfalls simulierte Referenzwerte stützen wollen.
+
+\citetitle{SchaeferTurek96}~\cite{SchaeferTurek96} liefert eine, dieser formalen Bewertung dienliche, Übersicht der, von 17 verschiedenen Forschungsgruppen beigetragenen und auf unterschiedliche Weisen gewonnenen, Lösungen einer klar definierten Zylinderumströmung. Diese Lösungen sind dabei anhand einer Auswahl von charakteristischen Messwerten wie dem Strömungswiderstands- und Auftriebskoeffizient sowie dem Druckunterschied zwischen Vorder- und Rückseite des Zylinders gegeben.
+
+\begin{Definition}[Strömungswiderstands- und Auftriebskraft]
+Beschreite der Weg \(S\) den Rand des Zylinders und sei \(n \in \R^2\) dessen Normale, \(v_t\) die Geschwindigkeit entlang der Tangente \(t:=(n_1,-n_0)\), \(P\) der Druck, \(\rho\) die Dichte sowie \(\nu\) die kinematische Viskosität. Dann sind Widerstands- und Auftriebskraft des Zylinders gegeben als:
+\begin{align*}
+F_w &= \int_S \left( \rho \nu \frac{\partial v_t}{\partial n} n_1 - P n_0 \right) dS && \text{Widerstandskraft}\\
+F_a &= - \int_S \left( \rho \nu \frac{\partial v_t}{\partial n} n_0 + P n_1 \right) dS && \text{Auftriebskraft}
+\end{align*}
+\end{Definition}
+
+\newpage
+\begin{Definition}[Strömungswiderstands- und Auftriebskoeffizient]
+Sei \(D\) der Durchmesser des Zylinders, \(\overline{U}\) die durschnittliche Fluidgeschwindigkeit und \(\rho\) die Dichte. Dann sind die Widerstands- und Auftriebskoeffizienten gegeben als:
+\begin{align*}
+c_w &= \frac{2F_w}{\rho \overline{U}^2 D} && \text{Widerstandskoeffizient} \\
+c_a &= \frac{2F_a}{\rho \overline{U}^2 D} && \text{Auftriebskoeffizient}
+\end{align*}
+\end{Definition}
 
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_drag_comparison.tikz}
-\caption{Verlauf der Widerstandskraft verglichen mit \cite[Tabelle~4]{SchaeferTurek96}}
+\caption{Vergleich des Strömungswiderstandskoeffizients mit \cite[Tabelle~4]{SchaeferTurek96}}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_lift_comparison.tikz}
-\caption{Verlauf der Auftriebskraft verglichen mit \cite[Tabelle~4]{SchaeferTurek96}}
+\caption{Vergleich des Auftriebskoeffizients mit \cite[Tabelle~4]{SchaeferTurek96}}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_deltap_comparison.tikz}
-\caption{Verlauf der Druckdifferenz verglichen mit \cite[Tabelle~4]{SchaeferTurek96}}
+\caption{Vergleich der Druckdifferenz mit \cite[Tabelle~4]{SchaeferTurek96}}
 \end{figure}
 
 \newpage

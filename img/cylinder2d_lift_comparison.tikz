@@ -33,7 +33,7 @@
 \addlegendentry {Problembezogen verfeinertes \(N=5\) Gitter};
 
 \addplot[color=black]{1.0};
-\addlegendentry {Gemittelte Referenzlösung \(c_\text{Lmax}\)};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Lmax} := 1\)};
 
 \end{axis}
 \end{tikzpicture}

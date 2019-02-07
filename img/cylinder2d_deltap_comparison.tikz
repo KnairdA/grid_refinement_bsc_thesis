@@ -34,7 +34,7 @@
 \addlegendentry {Problembezogen verfeinertes \(N=5\) Gitter};
 
 \addplot[color=black]{2.48};
-\addlegendentry {Gemittelte Referenzlösung \(\Delta P\)};
+\addlegendentry {Gemittelte Referenzlösung \(\Delta P := 2.48\)};
 
 \end{axis}
 \end{tikzpicture}

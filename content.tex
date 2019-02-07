@@ -1095,6 +1095,10 @@ c_a &= \frac{2F_a}{\rho \overline{U}^2 D} && \text{Auftriebskoeffizient}
 \end{align*}
 \end{Definition}
 
+Vergleichen wollen wir diese Koeffizienten nun im Rahmen des unstetigen Testfalls \cite[2.2b]{SchaeferTurek96} mit Reynolds-Zahl \(\text{Re}=100\) und maximaler Einflussgeschwindigkeit \(U = 1.5 m/s\). Dieses Ziel hatten wir dabei schon zu Beginn dieses Kapitels im Blick, so dass die OpenLB-basierende Modellierung der Zylinderumströmung inklusive des optimierten Gitters in Abbildung~\ref{fig:CylinderOptimizedGridComparison} direkt verwendet werden kann. Für die Berechnung der Koeffizienten stellt OpenLB dabei in Form des \class{SuperLatticePhysDrag2D} Funktors bereits ein passendes \emph{Messinstrument} bereit.
+
+Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das uniform mit \(N=12\) aufgelöste Gitter berechneten Charakteristiken zusammen mit den Resultaten des problembewusst verfeinerten \(N=5\) Gitters mit näherungsweise gleicher Anzahl Freiheitsgraden. Der anzustrebende formale Referenzwert ist dabei jeweils das Mittel der oberen und unteren Grenzwerte \cite[Tabelle~4]{SchaeferTurek96}.
+
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_drag_comparison.tikz}
@@ -1112,6 +1116,9 @@ c_a &= \frac{2F_a}{\rho \overline{U}^2 D} && \text{Auftriebskoeffizient}
 \input{img/cylinder2d_deltap_comparison.tikz}
 \caption{Vergleich der Druckdifferenz mit \cite[Tabelle~4]{SchaeferTurek96}}
 \end{figure}
+
+\newpage
+Klar zu erkennen ist, dass die Ergebnisse des verfeinerten Gitters über alle drei Kriterien sowohl die Referenzwerte besser treffen als auch unabhängig davon eine bessere Qualität bezogen auf Fluktuation und Konsistenz in der periodischen Strömungsphase aufweisen. Da diese Ergebnisse mit der näherungsweise fixierten Anzahl Knotenfreiheitsgraden -- tatsächlich verwendet das verfeinerte Gitter sogar 46 Knoten weniger als das uniform aufgelöste -- erzielt wurden ist somit in auch bei formaler Betrachtung der positive Nutzen von Gitterverfeinerung zur Simulation der Zylinderumströmung klar demonstriert.
 
 \newpage
 \section{Fazit}

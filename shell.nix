@@ -8,7 +8,6 @@ stdenv.mkDerivation rec {
     texlive-custom = texlive.combine {
       inherit (texlive) scheme-small collection-langgerman latexmk
       amsmath
-      eulervm
       cm-super
       enumitem
       minted fvextra ifplatform framed

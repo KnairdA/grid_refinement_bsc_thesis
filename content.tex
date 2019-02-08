@@ -812,15 +812,18 @@ Hiermit sind die zentralen Bestandteile der Umsetzung des Verfahrens von Lagrava
 \newpage
 \section{Evaluierung}
 
-Die Auswahl von Beispielen zur Evaluation der Qualität eines Gitterverfeinerungsverfahrens gestaltet sich ohne Detailkenntnis des Versuchsaufbaus eines real zu simulierenden Strömungsproblem zunächst unklarer, als man annehmen könnte. So stellt OpenLB zwar eine gute Auswahl verschiedener Simulationsbeispiele bereit, aber nur wenige von ihnen beinhalten auch analytische Lösungen oder einfach zu verwendende Vergleichsdaten.
+Die Auswahl von Beispielen und Kriterien zur Bewertung der Qualität eines Gitterverfeinerungsverfahrens gestaltet sich zunächst unklarer, als man annehmen könnte. So stellt OpenLB zwar eine gute Sammlung verschiedener Simulationsbeispiele bereit, aber nur wenige von ihnen besitzen analytische Lösungen oder einfach zu verwendende gesicherte Vergleichsdaten. Solche Referenzwerte sind -- abseits offensichtlicher Gütekriterien wie der Vermeidung divergierender Simulationen -- Voraussetzung für die Bewertung der Verfahrensqualität. Ohne diese ist beim Vergleich mit aus uniformen Gittern gewonnenen Lösungen nicht klar, welches Ergebnis besser ist.
 
-Unter diesen Einschränkungen ist es -- abseits offensichtlicher Gütekriterien wie dem Ausschluss divergierender Simulationen -- schwer zu sagen, ob zwei auf verschiedenen Weisen simulierte Lösungen nun besser oder schlechter als die jeweils andere Lösung sind. Entsprechend beschränken wir uns je nach Beispiel auf die Betrachtung einer Auswahl der folgenden Gütekriterien:
+Entsprechend beschränken wir uns je nach Beispiel auf die Betrachtung einer Auswahl der folgenden Gütekriterien:
 \begin{enumerate}
 	\item Subjektive Qualität des Strömungsbildes
-	\item Erhalt von Masse im Gitterübergang
 	\item Stetigkeit der Momente im Gitterübergang
-	\item Vergleich der Lösungen von lokal verfeinerten und global hochaufgelösten Gittern
+	\item Bestimmung des Fehlers zu einer analytischen Lösung
+	\item Anwendung eines Gitterverfeinerungskriteriums
+	\item Vergleich von lokal verfeinerten und uniformen Gittern mit gleicher Knotenanzahl
 \end{enumerate}
+
+Das hochwertigste Kriterium ist dabei der Fehlervergleich zur analytischen Lösung bei Beschränkung der Gesamtknotenanzahl. Existiert die dazu notwenige formalisierte Lösung nicht, sind auch Vergleiche mit Referenzwerten aus realen Experimenten oder gesicherten Simulationen denkbar. Die subjektive Qualitätsbewertung hingegen erlaubt nur die Bewertung von Extremfällen wie im Strömungsbild erkennbaren Übergängen zwischen Gittern oder möglicher Divergenzvermeidung durch gezielte Verfeinerung.
 
 \newpage
 \subsection{Rohrströmung}

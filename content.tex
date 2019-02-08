@@ -925,7 +925,7 @@ Legen wir jedoch erneut ein randlos halbseitig verfeinertes Gitter wie beim Verg
 
 \bigskip
 
-Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es treten also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild auf. Der beobachtete negative Einfluss von Randbedingungen im Übergangsbereich der Gitter sollte hier aber nicht unerwiedert bleiben -- bis die korrekte Behandlung solcher Randbedingungen nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden, denn nur dessen Skalierung wird in Kapitel~\ref{kap:lagrava} und \cite{lagrava12} behandelt.
+Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es treten also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild auf. Der beobachtete negative Einfluss von Randbedingungen im Übergangsbereich der Gitter sollte hier aber nicht unerwiedert bleiben -- bis die korrekte Behandlung solcher Randbedingungen nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden, denn nur dessen Skalierung wird in Kapitel~\ref{kap:lagrava} und der zugrundeliegendem Arbeit \cite{lagrava12} behandelt.
 
 \newpage
 \subsection{Umströmter Zylinder}
@@ -1035,7 +1035,7 @@ Bei der Interpretation der Verfeinerungsfaktoren ist zu beachten, dass einzelne 
 \label{fig:SingleLevelRefinementCylinderKnudsen16s}
 \end{figure}
 
-Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity16s} verfeinerten Bereichs akzeptabel. Dies bestätigt sich auch bei Berechnung des Knudsen-Kriterium für das einfach verfeinerte Gitter in Abbildung~\ref{fig:SingleLevelRefinementCylinderKnudsen16s} -- die angemahnten Bereiche im Umfeld des Zylinders sind hier deutlich reduziert.
+Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity16s} verfeinerten Bereichs akzeptabel. Dies bestätigt sich auch bei Berechnung des Knudsen-Kriterium für das einfach verfeinerte Gitter in Abbildung~\ref{fig:SingleLevelRefinementCylinderKnudsen16s} -- die angemahnten Bereiche im Umfeld des Zylinders sind hier deutlich reduziert. Gehen wir weiterhin davon aus, dass das Kriterium belastbare Aussagen zur Simulationsqualität liefert, so ist die Reduzierung des des Verfeinerungsfaktors in den verfeinerten Gebieten um genau eins ein Indiz für die Qualität des Verfeinerungsalgorithmus.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -1044,8 +1044,8 @@ Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbil
 \caption{Verbesserte Verfeinerungsstruktur um den Zylinder}
 \end{figure}
 
-Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbildende Reynolds-Zahlen bei kleineren Auflösungen empfindlich gegenüber Verteilungsdivergenz im Ausflussbereich. Dies deutet sich auch bei noch ausreichender Auslösung in den Verfeinerungsfaktoren des Ausgangsbereiches an. So divergiert ein uniform mit \(N=5\) aufgelöstes Gitter mit den verwendeten Parametern und Randbedingungen schon nach wenigen Schritten. Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger zusätzlicher Gitterknoten beheben ließe -- etwa durch Verfeinerung des Ausflussbereiches.
-Und tatsächlich genügt schon die Verfeinerung eines schmalen Stücks des Ausgangsbereiches zur Stabilisierung der Simulation bei dieser niedrigen Auflösung. In Abbildung~\ref{fig:CylinderOptimizedGridN5} sehen wir den Geschwindigkeitsplot eines solchen Gitters.
+Typischerweise sind LBM-Simulationen des umströmten Zylinders für wirbelbildende Reynolds-Zahlen bei kleineren Auflösungen empfindlich gegenüber Divergenz im Ausflussbereich. Dies deutet sich auch bei noch ausreichender Auslösung in den Verfeinerungsfaktoren des Ausflussbereiches an. So divergiert ein uniform mit \(N=5\) aufgelöstes Gitter mit den verwendeten Parametern und Randbedingungen schon nach wenigen Schritten.
+Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger zusätzlicher Gitterknoten beheben ließe. Und tatsächlich genügt schon die Verfeinerung eines schmalen Stücks des Ausgangsbereiches zur Stabilisierung der Simulation bei dieser niedrigen Auflösung. In Abbildung~\ref{fig:CylinderOptimizedGridN5} sehen wir den Geschwindigkeitsplot eines solchen Gitters.
 
 \bigskip
 
@@ -1059,9 +1059,9 @@ Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der 
 \label{fig:CylinderOptimizedGridN5}
 \end{figure}
 
-Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d.h. der Knotenanzahl, beschränkte Rechenressourcen besser auf die zu simulierende Strömungssituation anzupassen. Beispielsweise fällt auf, dass der zentrale Zylinder in Abbildung~\ref{fig:CylinderOptimizedGridN5} nur sehr grob modelliert wird. Entsprechend wollen wir versuchen, bei Einschränkung auf die Anzahl der Gitterknoten eines uniformen Gitters mit \(N=12\), ein besseres Gitter zu erzeugen.
+Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d.h. der Knotenanzahl, beschränkte Rechenressourcen besser auf die zu simulierende Strömungssituation aufzuteilen. Beispielsweise fällt auf, dass der zentrale Zylinder in Abbildung~\ref{fig:CylinderOptimizedGridN5} nur sehr grob modelliert wird. Entsprechend wollen wir versuchen, bei Einschränkung auf die Anzahl der Gitterknoten eines uniformen Gitters mit \(N=12\), ein besseres Gitter zu erzeugen.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{adjustbox}{center}
 \includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n12_re100_16s.pdf}
 \end{adjustbox}
@@ -1106,6 +1106,8 @@ c_a &= \frac{2F_a}{\rho_c \overline{U}^2 D} && \text{Auftriebskoeffizient}
 
 Vergleichen wollen wir diese Koeffizienten nun im Rahmen des unstetigen Testfalls \cite[2.2b]{SchaeferTurek96} mit Reynolds-Zahl \(\text{Re}=100\), maximaler Einflussgeschwindigkeit \(U = 1.5 \,\text{m}/\text{s}\) und charakteristischer Dichte \(\rho_c = 1.0 \,\text{kg}/\text{m}^3\). Dieses Ziel hatten wir dabei schon zu Beginn dieses Kapitels im Blick, so dass die OpenLB-basierende Modellierung der Zylinderumströmung inklusive des optimierten Gitters in Abbildung~\ref{fig:CylinderOptimizedGridComparison} direkt verwendet werden kann. Für die Berechnung der Koeffizienten stellt OpenLB dabei in Form des \class{SuperLatticePhysDrag2D} Funktors bereits ein passendes \emph{Messinstrument} bereit.
 
+\bigskip
+
 Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das uniform mit \(N=12\) aufgelöste Gitter berechneten Charakteristiken zusammen mit den Resultaten des problembewusst verfeinerten \(N=5\) Gitters mit näherungsweise gleicher Anzahl Freiheitsgraden. Der anzustrebende formale Referenzwert ist dabei jeweils das Mittel der oberen und unteren Grenzwerte \cite[Tabelle~4]{SchaeferTurek96}.
 
 \begin{figure}[H]
@@ -1127,7 +1129,7 @@ Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das 
 \end{figure}
 
 \newpage
-Klar zu erkennen ist, dass die Ergebnisse des verfeinerten Gitters über alle drei Kriterien sowohl die Referenzwerte besser treffen als auch unabhängig davon eine bessere Qualität bezogen auf Fluktuation und Konsistenz in der periodischen Strömungsphase aufweisen. Da diese Ergebnisse mit der näherungsweise fixierten Anzahl Knotenfreiheitsgraden -- tatsächlich verwendet das verfeinerte Gitter sogar 46 Knoten weniger als das uniform aufgelöste -- erzielt wurden, ist somit auch bei formaler Betrachtung der positive Nutzen von Gitterverfeinerung zur Simulation der Zylinderumströmung klar demonstriert. Wir erhalten bei leicht geringerer Anzahl von Knoten und somit näherungsweise gleichem Speicherbedarf ein deutlich besseres Simulationsergebnis.
+Klar zu erkennen ist, dass die Simulation auf dem verfeinerten Gitter über alle drei Kriterien sowohl die Referenzwerte besser trifft als auch unabhängig davon eine bessere Qualität bezogen auf Fluktuation und Konsistenz in der periodischen Strömungsphase aufweist. Da diese Ergebnisse bei näherungsweise beibehaltener Anzahl von Gitterknoten erzielt wurden -- tatsächlich verwendet das verfeinerte Gitter sogar 46 Knoten weniger als das uniform aufgelöste -- ist somit auch bei formaler Betrachtung der positive Nutzen von Gitterverfeinerung zur Simulation der Zylinderumströmung klar demonstriert. Wir erhalten bei leicht geringerer Anzahl von Knoten und somit näherungsweise gleichem Speicherbedarf ein deutlich besseres Simulationsergebnis.
 
 \newpage
 \section{Fazit}

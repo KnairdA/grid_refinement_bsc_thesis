@@ -1131,5 +1131,34 @@ Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das 
 \newpage
 Klar zu erkennen ist, dass die Simulation auf dem verfeinerten Gitter über alle drei Kriterien sowohl die Referenzwerte besser trifft als auch unabhängig davon eine bessere Qualität bezogen auf Fluktuation und Konsistenz in der periodischen Strömungsphase aufweist. Da diese Ergebnisse bei näherungsweise beibehaltener Anzahl von Gitterknoten erzielt wurden -- tatsächlich verwendet das verfeinerte Gitter sogar 46 Knoten weniger als das uniform aufgelöste -- ist somit auch bei formaler Betrachtung der positive Nutzen von Gitterverfeinerung zur Simulation der Zylinderumströmung klar demonstriert. Wir erhalten bei leicht geringerer Anzahl von Knoten und somit näherungsweise gleichem Speicherbedarf ein deutlich besseres Simulationsergebnis.
 
+\bigskip
+
+Als weiteren Vergleich betrachten wir die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_l}\) eines uniform mit \(N=40\), d.h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Gitters.
+Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die, mit nur etwa einem Zehntel der Knoten gewonnenen, Ergebnisse der verfeinerten Simulation:
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{l l l l l}
+& Uniform & Verfeinert & Referenzintervall \cite{SchaeferTurek96} \\
+\hline
+\hline
+\(\widehat{c_w}\) & 3.28433 & 3.21927 & \([3.22,\ 3.24]\) \\
+\(|\widehat{c_w}-3.23|\) & 0.05433 & 0.01073 & [0, 0.01] \\
+\hline
+\(\widehat{c_l}\) & 1.07046 & 1.10359 & \([0.99,\ 1.01]\) \\
+\(|\widehat{c_l}-1.0|\) & 0.07046 & 0.10359 & [0, 0.01]  \\
+\hline
+\(\Delta P\) & 2.5793 & 2.44285 & \([2.46,\ 2.5]\)  \\
+\(|\Delta P-2.48|\) & 0.0993 & 0.03715 & [0, 0.02] \\
+\hline
+\hline
+Knotenanzahl & 145314 & 13454 & \\
+\end{tabular}
+\caption{Vergleichswerte zweier maximal \(N=40\) aufgelöster Gitter}
+\end{figure}
+
+\noindent
+Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient und Druckdifferenz sogar kleiner als der des uniformen Gitters mit ungleich mehr Knoten.
+
 \newpage
 \section{Fazit}

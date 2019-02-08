@@ -6,11 +6,17 @@ Das hoch technisierte Lebensumfeld des modernen Menschen ist ohne ein detaillier
 
 Experimente zur Bestimmung des Verhaltens von Strömungen -- z.B. in Wind- und Wasserkanälen -- sind möglich, liefern naturnaheste Ergebnisse und stellen eine zentrale Komponente der Entwicklung eben genannter Errungenschaften dar. Leider sind reale Experimente im Allgemeinen nicht nur sehr aufwändig in Aufbau und Durchführung, sondern stoßen auch insbesondere bei der Betrachtung mikroskopischer Probleme -- etwa im Bereich der Medizin, deren menschliches Subjekt zu einem großen Teil ebenfalls eine \emph{Strömungsmaschine} bildet -- an Grenzen von Messmethoden und Ethik.
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.35]{img/static/nose.png}
+\caption{Strömung in der komplexen Geometrie der menschlichen Nase}
+\end{figure}
+
 So trifft es sich, dass der Wunsch nach theoretischer Lösung komplexer und nur schwer analytisch zugänglicher Strömungsprobleme mit der Entwicklung von immer leistungsfähigeren Rechenmaschinen nicht nur einherging sondern auch eine der Triebfedern in deren initialen Entwicklung war. Moderne numerische Verfahren zur Simulation von Strömungen versprechen eine zunehmende Reduzierung benötigter realer Experimente und sind heute gängiges Werkzeug in Forschung und Maschinenbau.
 
 \subsection{Weshalb mit Lattice Boltzmann Methoden?}
 
-Während Finite Elemente Methoden den wohl verbreitetsten Ansatz zur numerischen Strömungsdynamik bilden, erfreut sich auch die Herangehensweise der Lattice Boltzmann Methoden in den letzten Jahrzehnten wachsender Nutzbarkeit und Verbreitung. Im Gegensatz zu anderen Lösungsmethoden werden hier die strömungsbeschreibenden Navier-Stokes Gleichungen nicht direkt numerisch gelöst. Lösungen ergeben sich vielmehr aus der Simulation des Fluidverhaltens auf \emph{mesoskopischer} Ebene -- d.h. aus der Betrachtung nicht aus Sicht der Kollision einzelner Fluidpartikel und nicht aus Sicht der analytischen Strömungsbeschreibung, sondern aus Sicht der Wahrscheinlichkeit, dass sich das Fluid zu bestimmter Zeit an einem bestimmten Ort mit bestimmter Geschwindigkeit bewegt.
+Während Finite Elemente Methoden die wohl verbreitetsten Zugänge zur Lösung der strömungsbeschreibenden partiellen Differentialgleichungen und somit der numerischen Strömungsmechanik bilden, erfreut sich auch die Herangehensweise der Lattice Boltzmann Methoden in den letzten Jahrzehnten wachsender Nutzbarkeit und Verbreitung. Im Gegensatz zu anderen Lösungsmethoden werden hier die strömungsbeschreibenden Navier-Stokes Gleichungen nicht direkt numerisch gelöst. Lösungen ergeben sich vielmehr aus der Simulation des Fluidverhaltens auf \emph{mesoskopischer} Ebene -- d.h. aus der Betrachtung nicht aus Sicht der Kollision einzelner Fluidpartikel und nicht aus Sicht der analytischen Strömungsbeschreibung, sondern aus Sicht der Wahrscheinlichkeit, dass sich das Fluid zu bestimmter Zeit an einem bestimmten Ort mit bestimmter Geschwindigkeit bewegt.
 
 \bigskip
 Ein Vorteil dieses, auf den Arbeiten von Ludwig Eduard Boltzmann im Bereich der statistischen Physik aufbauenden, Ansatzes, ist seine Eignung für komplexe Geometrien mit verschiedensten Randbedingungen. Weiterhin gewinnt in den letzten Jahren auch die sehr gute Parallelisierbarkeit von Lattice Boltzmann Methoden in Hinblick auf einen technischen Fortschritt an Anziehungskraft, nach welchem die Leistungsfähigkeit von Großrechnern eher aus deren Parallelität als aus individueller Prozessorleistung erwächst.

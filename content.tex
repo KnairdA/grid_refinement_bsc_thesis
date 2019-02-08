@@ -1133,7 +1133,7 @@ Klar zu erkennen ist, dass die Simulation auf dem verfeinerten Gitter über alle
 
 \bigskip
 
-Als weiteren Vergleich betrachten wir die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_l}\) eines uniform mit \(N=40\), d.h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Gitters.
+Als weiteren Vergleich betrachten wir die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_a}\) eines uniform mit \(N=40\), d.h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Gitters.
 Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die, mit nur etwa einem Zehntel der Knoten gewonnenen, Ergebnisse der verfeinerten Simulation:
 
 \begin{figure}[h]
@@ -1145,8 +1145,8 @@ Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die
 \(\widehat{c_w}\) & 3.28433 & 3.21927 & \([3.22,\ 3.24]\) \\
 \(|\widehat{c_w}-3.23|\) & 0.05433 & 0.01073 & [0, 0.01] \\
 \hline
-\(\widehat{c_l}\) & 1.07046 & 1.10359 & \([0.99,\ 1.01]\) \\
-\(|\widehat{c_l}-1.0|\) & 0.07046 & 0.10359 & [0, 0.01]  \\
+\(\widehat{c_a}\) & 1.07046 & 1.10359 & \([0.99,\ 1.01]\) \\
+\(|\widehat{c_a}-1.0|\) & 0.07046 & 0.10359 & [0, 0.01]  \\
 \hline
 \(\Delta P\) & 2.5793 & 2.44285 & \([2.46,\ 2.5]\)  \\
 \(|\Delta P-2.48|\) & 0.0993 & 0.03715 & [0, 0.02] \\
@@ -1159,6 +1159,12 @@ Knotenanzahl & 145314 & 13454 & \\
 
 \noindent
 Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient und Druckdifferenz sogar kleiner als der des uniformen Gitters mit ungleich mehr Knoten.
+
+\begin{figure}[H]
+\centering
+\input{img/cylinder2d_high_res_comparsion.tikz}
+\caption{Aerodynamische Koeffizienten in Gittern mit \(\sim 142000\) Knoten}
+\end{figure}
 
 \newpage
 \section{Fazit}

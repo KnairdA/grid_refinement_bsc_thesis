@@ -1133,7 +1133,8 @@ Klar zu erkennen ist, dass die Simulation auf dem verfeinerten Gitter über alle
 
 \bigskip
 
-Als weiteren Vergleich betrachten wir die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_a}\) eines uniform mit \(N=40\), d.h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Gitters.
+Das diesen Resultaten zugrundeliegende Gitter orientiert sich in der Anzahl seiner Zellen an einem uniform aufgelösten Gitter, welches knapp an der Grenze zur Divergenz im Ausflussgebiet arbeitet. Die im Vergleich dazu sehr guten Ergebnisse des optimierten Gitters sind also nicht zu überraschend.
+Als weiteren Vergleich betrachten wir deshalb die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_a}\) eines uniform mit \(N=40\), d.h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Gitters.
 Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die, mit nur etwa einem Zehntel der Knoten gewonnenen, Ergebnisse der verfeinerten Simulation:
 
 \begin{figure}[h]
@@ -1160,10 +1161,18 @@ Knotenanzahl & 145314 & 13454 & \\
 \noindent
 Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient und Druckdifferenz sogar kleiner als der des uniformen Gitters mit ungleich mehr Knoten.
 
+\bigskip
+
+Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
+Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf der ganzen Simulationsdomäne der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
+
+Dazu sehen wir in Abbildung~\ref{fig:142000nodes} die charakteristischen Messwerte des uniformen \(N=40\) Gitters sowie eines problembezogen varierten Gitters mit gleicher Knotenanzahl.
+
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_high_res_comparsion.tikz}
 \caption{Aerodynamische Koeffizienten in Gittern mit \(\sim 142000\) Knoten}
+\label{fig:142000nodes}
 \end{figure}
 
 \newpage

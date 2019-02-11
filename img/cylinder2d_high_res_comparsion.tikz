@@ -1,6 +1,7 @@
 \begin{tikzpicture}
 \pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_refinement_n17_re100_drag_lift_deltap.csv}\refined
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n40_re100_drag_lift_deltap.csv}\uniform
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n40_re100_drag_lift_deltap.csv}\uniformHigh
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n80_re100_drag_lift_deltap.csv}\uniformVeryHigh
 
 \begin{axis}[
 	scale only axis,
@@ -21,7 +22,13 @@
 	very thin
 ] table [
 	x expr=\thisrow{time}, y=drag
-] {\uniform};
+] {\uniformHigh};
+\addplot[
+	color=red!50!white,
+	very thin
+] table [
+	x expr=\thisrow{time}, y=drag
+] {\uniformVeryHigh};
 \addplot[
 	color=green!70!black,
 ] table [
@@ -49,7 +56,13 @@
 	very thin
 ] table [
 	x expr=\thisrow{time}, y=lift
-] {\uniform};
+] {\uniformHigh};
+\addplot[
+	color=red!50!white,
+	very thin
+] table [
+	x expr=\thisrow{time}, y=lift
+] {\uniformVeryHigh};
 \addplot[
 	color=green!70!black,
 ] table [
@@ -78,8 +91,15 @@
 	very thin
 ] table [
 	x expr=\thisrow{time}, y=deltap
-] {\uniform};
+] {\uniformHigh};
 \addlegendentry {Uniformes \(N=40\) Gitter};
+\addplot[
+	color=red!50!white,
+	very thin
+] table [
+	x expr=\thisrow{time}, y=deltap
+] {\uniformVeryHigh};
+\addlegendentry {Uniformes \(N=80\) Gitter};
 \addplot[
 	color=green!70!black,
 ] table [

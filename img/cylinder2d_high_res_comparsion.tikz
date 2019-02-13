@@ -1,7 +1,6 @@
 \begin{tikzpicture}
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_refinement_n17_re100_drag_lift_deltap.csv}\refined
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n40_re100_drag_lift_deltap.csv}\uniformHigh
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n80_re100_drag_lift_deltap.csv}\uniformVeryHigh
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_refinement_n40_re100_drag_lift_deltap.csv}\refined
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n40_re100_drag_lift_deltap.csv}\uniformVeryHigh
 \pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n160_re100_drag_lift_deltap.csv}\uniformVeryVeryHigh
 
 \begin{axis}[
@@ -18,24 +17,9 @@
 ]
 \addplot[thick,color=black]{3.23};
 \addlegendentry {\(\widehat{c_w} := 3.23\)};
-\addplot[
-	color=blue!50!white,
-	thin
-] table [
-	x expr=\thisrow{time}, y=drag
-] {\uniformVeryVeryHigh};
-\addplot[
-	color=red!50!white,
-	thin
-] table [
-	x expr=\thisrow{time}, y=drag
-] {\uniformVeryHigh};
-\addplot[
-	color=green!70!black,
-	thin
-] table [
-	x expr=8*\thisrow{time}, y=drag
-] {\refined};
+\addplot[color=blue!50!white,thin ] table [x expr=\thisrow{time}, y=drag] {\uniformVeryVeryHigh};
+\addplot[color=red!50!white,thin  ] table [x expr=\thisrow{time}, y=drag] {\uniformVeryHigh};
+\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=drag] {\refined};
 \end{axis}
 
 \begin{axis}[
@@ -53,24 +37,9 @@
 ]
 \addplot[thick,color=black]{1.0};
 \addlegendentry {\(\widehat{c_a} := 1\)};
-\addplot[
-	color=blue!50!white,
-	thin
-] table [
-	x expr=\thisrow{time}, y=lift
-] {\uniformVeryVeryHigh};
-\addplot[
-	color=red!50!white,
-	thin
-] table [
-	x expr=\thisrow{time}, y=lift
-] {\uniformVeryHigh};
-\addplot[
-	color=green!70!black,
-	thin
-] table [
-	x expr=8*\thisrow{time}, y=lift
-] {\refined};
+\addplot[color=blue!50!white,thin ] table [x expr=\thisrow{time}, y=lift] {\uniformVeryVeryHigh};
+\addplot[color=red!50!white,thin  ] table [x expr=\thisrow{time}, y=lift] {\uniformVeryHigh};
+\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=lift] {\refined};
 \end{axis}
 
 \begin{axis}[
@@ -89,27 +58,12 @@
 	y unit=N/m^2,
 	ylabel absolute, every axis y label/.append style={yshift=0.4cm}
 ]
-\addplot[
-	color=blue!50!white,
-	thin
-] table [
-	x expr=\thisrow{time}, y=deltap
-] {\uniformVeryVeryHigh};
-\addlegendentry {Uniformes \(N=40\) Gitter mit 145314 Knoten};
-\addplot[
-	color=red!50!white,
-	thin
-] table [
-	x expr=\thisrow{time}, y=deltap
-] {\uniformVeryHigh};
-\addlegendentry {Uniformes \(N=80\) Gitter mit 576758 Knoten};
-\addplot[
-	color=green!70!black,
-	thin
-] table [
-	x expr=8*\thisrow{time}, y=deltap
-] {\refined};
-\addlegendentry {Problembezogen verfeinertes \(N=17\) Gitter};
+\addplot[color=blue!50!white,thin  ] table [x expr=\thisrow{time}, y=deltap] {\uniformVeryVeryHigh};
+\addlegendentry {Uniformes \(N=160\) Gitter mit 2298014 Knoten};
+\addplot[color=red!50!white,thin   ] table [x expr=\thisrow{time}, y=deltap] {\uniformVeryHigh};
+\addlegendentry {Uniformes \(N=40\) Gitter mit 576758 Knoten};
+\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=deltap] {\refined};
+\addlegendentry {Verfeinertes \(N=40\) Gitter mit 787592 Knoten};
 \addplot[thick,color=black]{2.48};
 \addlegendentry {\(\Delta P := 2.48\)};
 \end{axis}

@@ -622,13 +622,13 @@ Nach Durchführung der drei Vervollständigungsschritte haben wir die Invariante
 OpenLB~\cite{olb12} ist ein umfangreiches frei verfügbares C++ Framework zur Implementierung von LBM basierenden Simulationen. Schwerpunkte sind dabei eine große Flexibilität in Hinblick auf die unterstützten Lattice Boltzmann Modelle sowie weitreichende Modularisierung zur einfachen Umsetzung neuer Anwendungen bei gleichzeitiger Eignung für hochperformante Berechnungen durch Skalierbarkeit auf parallele Großrechner.
 
 \bigskip
-Eine LBM Bibliothek mit idealer Unterstützung für Gitterverfeinerung würde es erlauben, dass zu lösende physikalische Problem zunächst ohne Rücksicht auf die konkrete Zusammensetzung des Gitters zu modellieren. Würde dann im Konflikt zwischen Rechenressourcen und angestrebter Ergebnisqualität ein Bedarf für Gitterverfeinerung festgestellt, sollte diese a posteriori ohne weitere Anpassungen hinzugeschalten werden können. In einer solchen Umgebung wäre es dann sogar denkbar, die Entscheidung über Position und Ausmaß der Verfeinerung an ein automatisches Kriterium \cite{lagrava15} zu übertragen.
+Eine LBM Bibliothek mit idealer Unterstützung für Gitterverfeinerung würde es erlauben, dass zu lösende physikalische Problem zunächst ohne Rücksicht auf die konkrete Zusammensetzung des Gitters zu modellieren. Entstünde dann im Konflikt zwischen Rechenressourcen und angestrebter Ergebnisqualität ein Bedarf für Gitterverfeinerung, sollte diese a posteriori ohne weitere Anpassungen hinzugeschalten werden können. In einer solchen Umgebung wäre es dann sogar denkbar, die Entscheidung über Position und Ausmaß der Verfeinerung an ein automatisches Kriterium \cite{lagrava15} zu übertragen.
 
 Diese Vision ist selbstredend von großem Anspruch und weit außerhalb der Grenzen dieser Arbeit. Ein erster Schritt muss jedoch die Ergänzung von OpenLB um grundlegende Unterstützung für manuelle Gitterverfeinerung sein -- d.h. Position, Größe und Auflösung des zu verfeinernden Bereichs müssen durch den Nutzer vorgegeben werden können.
 
 \subsection{Architekturübersicht}
 
-OpenLB verwaltet die Diskretisierung der zu modellierenden Simulationsdomäne in einer \class{CuboidGeometry2D} Instanz. Diese Klasse teilt eine gegebene physikalische Domäne in eine beliebige Anzahl von quaderförmigen \class{Cuboid2D} Instanzen mit definierter Auflösung ein. Diese Aufteilung dient der Parallelisierung, da die Gitter dieser einzelnen Quader außerhalb von kommunizierenden Randbereichen vollständig nebenläufig verarbeitet werden können. Entsprechend werden diese Teilbereiche von einer Implementierung der \class{LoadBalancer} Schnittstelle auf die zu Verfügung stehenden Prozessoren aufgeteilt.
+OpenLB verwaltet die Diskretisierung der zu modellierenden Simulationsdomäne in einer \class{CuboidGeometry2D} Instanz. Diese Klasse teilt eine gegebene physikalische Domäne in eine beliebige Anzahl von, durch \class{Cuboid2D} Instanzen dargestellten, achsenparallelen Rechtecken mit definierter Auflösung ein. Diese Aufteilung dient der Parallelisierung, da die Gitter dieser einzelnen Quader außerhalb von kommunizierenden Randbereichen vollständig nebenläufig verarbeitet werden können. Entsprechend werden diese Teilbereiche von einer Implementierung der \class{LoadBalancer} Schnittstelle auf die zu Verfügung stehenden Prozessoren aufgeteilt.
 
 Auf Grundlage dieses räumlichen Umrisses wird dann das eigentliche Gitter in einer \class{SuperLattice2D} Instanz abhängig des gewählten Lattice Boltzmann Modells aufgebaut. Die einzelnen Gitterzellen werden dabei von \class{Cell} Klassen abgebildet, welche anhand des spezifischen, durch einen sogenannten Deskriptor \emph{beschriebenen} und von \class{Dynamics} Instanzen durchgeführten, Kollisionsschrittes der lokalen Umsetzung des LBM Modells Sorge tragen.
 
@@ -655,13 +655,13 @@ In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter
 \subsection{Auswahl der Verfeinerungsmethode}
 \label{sec:olbRefinementChoice}
 
-Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Aufteilung der Simulationsdomäne in, durch \class{Cuboid2D} beschriebene, Quader. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die bestehende Architektur, sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung, scheint ein solcher Ansatz sinnvoll.
+Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Dekomposition der Simulationsdomäne in achsenparallele Rechtecke. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die existierende Architektur, sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung, scheint ein solcher Ansatz sinnvoll.
 
 Bei Variation der Auflösung einzelner Quader im Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg, benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden.
 
 Zur Ermöglichung von Parallelisierung berücksichtigt die, der Gitterverwaltung in \class{SuperLattice2D} zugrundeliegende, Aufteilung der Domäne durch \class{CuboidGeometry2D} bereits Übergangsbereiche, deren Funktion mit zusätzlicher Auflösungskopplung in Einklang zu bringen wäre.
 
-Weiter würde das Problemfeld eben dieser Dekomposition um die Restriktion auf Auflösungsübergänge im Verhältnis \(1:2\) erweitert. So müsste ein guter Algorithmus zur Dekomposition der Simulationsdomäne dann die Anforderungen an Parallelisierung, Rechenauslastung, Geometrie und Verfeinerung sinnvoll auflösen und zugleich manuelle Eingriffe erlauben. Diese zusätzliche starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein schwerwiegendes Gegenargument zu diesem ersten Gedanken.
+Weiter würde das Problemfeld eben dieser Dekomposition um die Restriktion auf Auflösungsübergänge im Verhältnis \(1:2\) erweitert. So müsste ein guter Algorithmus zur Aufteilung der Simulationsdomäne dann die Anforderungen an Parallelisierung, Rechenauslastung, Geometrie und Verfeinerung sinnvoll auflösen und zugleich manuelle Eingriffe erlauben. Diese zusätzliche starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein schwerwiegendes Gegenargument zu diesem ersten Gedanken.
 
 \bigskip
 Der tatsächlich umgesetzte Ansatz ergibt sich aus dem Verständnis von Gitterverfeinerung als Kopplung von ansonsten komplett allein stehenden Simulationen. Die Übergangsbereiche wären in diesem Modell mit Randkonditionen vergleichbar, wie sie für Ein- und Ausflüsse verwendet werden. Gitterverfeinerung könnte so weitestgehend von der bestehenden Architektur getrennt ergänzt werden, was insbesondere auch die veränderungsfreie Unterstützung existierender Anwendungen begünstigen würde.
@@ -751,7 +751,7 @@ for (int iT = 0; iT < coarseGrid->getConverter().getLatticeTime(100); ++iT) {
 \label{lst:RefinementUsageExample}
 \end{listing}
 
-Wie in diesem leicht vereinfachten Listing zu sehen, kann Gitterverfeinerung mit dem beschriebenen Framework schon erfreulich kompakt formuliert werden. Tatsächlich fehlt zum Etappenziel der einzeilig aktivierbaren manuell positionierten Gitterverfeinerung nur eine weitere Abstraktion von von \method{prepareGeometry} und \method{prepareLattice}.
+Wie in diesem Listing zu sehen, kann Gitterverfeinerung innerhalb des beschriebenen Frameworks schon erfreulich kompakt formuliert werden. Tatsächlich fehlt zum Etappenziel der einzeilig aktivierbaren manuell positionierten Gitterverfeinerung nur eine weitere Abstraktion von von \method{prepareGeometry} und \method{prepareLattice}.
 
 \bigskip
 Zur umfassenden Beschreibung des Gitterverfeinerungsframework fehlt uns jetzt nur noch die Definition der \class{Coupler2D} Objekte. Da diese die Einzelheiten des Verfeinerungsverfahrens umsetzen, werden sie im Rahmen des folgenden Kapitels zur Implementierung des Verfahrens von Lagrava et al. näher beleuchtet werden.
@@ -1169,15 +1169,18 @@ Dazu sehen wir in Abbildung~\ref{fig:142000nodes} die charakteristischen Messwer
 
 \begin{figure}[H]
 \centering
-\input{img/cylinder2d_high_res_comparsion.tikz}
-\caption{Aerodynamische Koeffizienten in Gittern mit \(\sim 142000\) Knoten}
-\label{fig:142000nodes}
-\end{figure}
-
-\begin{figure}[H]
-\centering
 \input{img/cylinder2d_generously_refined_comparison.tikz}
 \end{figure}
 
 \newpage
 \section{Fazit}
+
+Zusammenfassend hinterlässt die Anwendung Gitterverfeinerung in Lattice Boltzmann Methoden einen vielversprechenden Eindruck mit klaren Fragestellungen für mögliche Wege des Aufbaus auf dieser Arbeit. So hat sich die theoretische Formulierung des Verfahrens von Lagrava et al. als praktisch gut umsetzbar erwiesen und die zugehörigen Ergebnisse in \citetitle{lagrava12}~\cite{lagrava12} konnten reproduziert werden.
+
+Die existierenden Strukturen der LBM Bibliothek OpenLB ließen sich gut mit einer lokalen Verfeinerung des Gitters vereinbaren und der gewählte Implementierungsansatz der Betrachtung von verfeinernden Gittern als weitestgehend eigenständige Simulationen mit besonderen Randkonditionen in den Übergangsbereichen bewährte sich sowohl in der initialen Umsetzung des Verfahrens als auch in der Verwendung der resultierenden Schnittstelle zur Entwicklung der Evaluationsbeispiele.
+
+Die im Rahmen dieser Beispiele betrachtete Zylinderumströmung bestätigte das Verfahren im Vergleich von verfeinerten und uniformen Simulationen als gewinnbringend einsetzbar -- aerodynamische Kennzahlen mit guter Übereinstimmung zu hochwertigen Vergleichsdaten \cite{SchaeferTurek96} konnten durch gezielte Verfeinerung mit einer deutlich reduzierten Anzahl von Gitterknoten erzielt werden. Dies ist insbesondere auch im Hinblick darauf beachtlich, dass ein mit äquivalenter Anzahl von Gitterknoten uniform aufgelöstes Gitter signifikant schlechtere und zur Divergenz neigende Ergebnisse lieferte. In diesem Kontext offenbarte sich der Einsatz von Gitterverfeinerung zur gezielten Vermeidung von Divergenz im Ausflussbereich als zusätzliches Anwendungsgebiet.
+
+Problematischer erwies sich das Verfahren in der Anwendung auf eine einfache und analytisch lösbare Poiseuilleströmung. Im Verlauf der Untersuchung dieser grundlegenden Strömungssituation kristallisierte sich das in \cite{lagrava12} unbeachtet gelassene Zusammenspiel von Randkonditionen und Übergangsbereichen durch Verschlechterung des Fehlers um eine Größenordnung als kritischer und weiterer theoretischer Untersuchung bedürfender Aspekt heraus. Auch bei gezielter Vermeidung von Randbedingungen in Auflösungsübergängen konnte ein negativer Einfluss von Gitterverfeinerung auf die Reproduktion der analytischen Lösung festgestellt werden. Es wurde somit klar, dass Gitterverfeinerung in dem hier untersuchten Rahmen keinesfalls unvorsichtig und in der Abwesenheit konkreter Zwänge angewendet werden sollte. Die zusätzliche Komplexität und Fehlerquelle einer lokalen Verfeinerung sollte in sinnvollen Anwendungen eben dieser durch Vorteile wie bessere Geometriediskretisierung oder Zwänge wie beschränkte Rechenressourcen aufgewogen oder geringstenfalls begründet werden.
+
+Im Kontext der sinnvollen Anwendung von Gitterverfeinerung sowie der konkreten Strukturierung des heterogenen Gitters erwies sich das in \citetitle{lagrava15}~\cite{lagrava15} entwickelte Gitterverfeinerungskriterium als sehr gutes Maß zur Bewertung der lokalen Simulationsqualität. Nicht nur konnten in ihrer Anzahl beschränkte Knotenfreiheitsgrade mittels dieses Kriteriums formal fundiert problembezogen verteilt werden, sondern auch problematische und zur Divergenz neigende Bereiche der Simulation ließen sich frühzeitig erkennen und vermeiden.

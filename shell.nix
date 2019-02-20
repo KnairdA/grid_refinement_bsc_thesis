@@ -9,6 +9,7 @@ stdenv.mkDerivation rec {
       inherit (texlive) scheme-small collection-langgerman latexmk
       amsmath
       cm-super
+      siunitx
       enumitem
       minted fvextra ifplatform framed
       bibtex biblatex logreq xstring

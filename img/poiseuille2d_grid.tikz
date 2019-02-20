@@ -1,11 +1,13 @@
 \begin{tikzpicture}
 \begin{axis}[
 	scale only axis,
-	height=0.95*\textwidth/4,
-	width=0.95*\textwidth,
+	height=\textwidth)/4,
+	width=\textwidth,
 	axis equal,
 	xmin=0, xmax=4,
 	ymin=0, ymax=1,
+	x tick label style={/pgf/number format/.cd, use comma},
+	y tick label style={/pgf/number format/.cd, use comma},
 	scatter/classes={
 		1={color=blue!50!white},
 		2={color=gray!70!black},

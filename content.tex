@@ -850,9 +850,8 @@ Mit \(u_\text{max}:=1\) vereinfacht sich damit die analytische Lösung der \(x\)
 Das Geschwindigkeitsprofil des Poiseuille-Flusses ist also parabelförmig.
 \end{Definition}
 
-Wir wollen in einem \(1 \times 4\) Längeneinheiten bemessenden Rohr einen Poiseuille-Fluss simulieren. Als Auflösung einer Längeneinheit sei dabei \(N=10\) gewählt, was in der Gitterdiskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird.
-
-In Abbildung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen. Wand- und Einflusszellen werden nach dieser Vorlage mit lokalen Geschwindigkeitsrandbedingungen umgesetzt. Während für den Einfluss dabei das Geschwindigkeitsprofil der analytischen Poiseuille-Lösung vorausgesetzt wird, erhält der Ausfluss eine Druckrandbedingung. Die noch verbleibenden gewöhnlichen Fluidzellen erfahren, abgesehen von den üblichen Kollisions- und Strömungsschritten, keine besondere Behandlung.
+Wir wollen in einem \(1 \times 4\) Meter bemessenden Rohr einen Poiseuille-Fluss simulieren. Als Auflösung einer Längeneinheit sei dabei \(N=10\) gewählt, was in der Diskretisierung durch \(11 \times 21\) grobe und \(21 \times 43\) feine Knoten abgebildet wird.
+In Abbildung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zusammen mit den zugewiesenen Materialzahlen. Wand- und Einflusszellen werden nach dieser Vorlage mit lokalen Geschwindigkeitsrandbedingungen umgesetzt. Während für den Einfluss dabei das Geschwindigkeitsprofil der analytischen Poiseuille-Lösung vorausgesetzt wird, erhält der Ausfluss eine Druckrandbedingung.
 
 \begin{figure}[H]
 \begin{adjustbox}{center}
@@ -862,7 +861,7 @@ In Abbildung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zu
 \label{fig:PoiseuilleGridSetup}
 \end{figure}
 
-Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \(1\mathrm{e}{-5}\), gefallen ist.
+Neben diesen knotenspezifischen Eigenschaften sei \(u=\num[round-mode=off]{0.01}\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \num{1e-5}, gefallen ist.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -872,7 +871,7 @@ Neben diesen knotenspezifischen Eigenschaften sei \(u=0.01\) die charateristisch
 \label{fig:PoiseuilleVelocityGrid}
 \end{figure}
 
-Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterübergang subjektiv ideal bestritten hat. Es treten also keine ungewöhnlichen Artefakte im Geschwindigkeitsbild auf und dieses setzt sich nach dem Übergang in, bis auf die neuen Zwischenwerte, unveränderter Weise fort. Tatsächlich ist bei Interpolation der Knotenzwischenbereiche zur Bildung einer geschlossenen Fläche kein Gitterübergang erkennbar.
+Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterübergang subjektiv ideal bestritten hat. Es treten also keine ungewöhnlichen Artefakte im Geschwindigkeitsbild auf und dieses setzt sich nach dem Übergang in, bis auf die neuen Zwischenwerte, unveränderter Weise fort. Tatsächlich ist bei Bildung einer geschlossenen Fläche durch Interpolation der Zwischenbereiche kein Gitterübergang erkennbar.
 
 \newpage
 \subsubsection{Vergleich mit der analytischen Lösung}
@@ -1143,14 +1142,14 @@ Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die
 & Uniform & Verfeinert & Referenzintervall \cite{SchaeferTurek96} \\
 \hline
 \hline
-\(\widehat{c_w}\) & 3.28433 & 3.21927 & \([3.22,\ 3.24]\) \\
-\(|\widehat{c_w}-3.23|\) & 0.05433 & 0.01073 & [0, 0.01] \\
+\(\widehat{c_w}\) & \num{3.28433} & \num{3.21927} & \([\num{3.22},\ \num{3.24}]\) \\
+\(|\widehat{c_w}-\num{3.23}|\) & \num{0.05433} & \num{0.01073} & [\num{0}, \num{0.01}] \\
 \hline
-\(\widehat{c_a}\) & 1.07046 & 1.10359 & \([0.99,\ 1.01]\) \\
-\(|\widehat{c_a}-1.0|\) & 0.07046 & 0.10359 & [0, 0.01]  \\
+\(\widehat{c_a}\) & \num{1.07046} & \num{1.10359} & \([\num{0.99},\ \num{1.01}]\) \\
+\(|\widehat{c_a}-1.0|\) & \num{0.07046} & \num{0.10359} & [\num{0}, \num{0.01}]  \\
 \hline
-\(\Delta P\) & 2.5793 & 2.44285 & \([2.46,\ 2.5]\)  \\
-\(|\Delta P-2.48|\) & 0.0993 & 0.03715 & [0, 0.02] \\
+\(\Delta P\) & \num{2.5793} & \num{2.44285} & \([\num{2.46},\ \num{2.5}]\)  \\
+\(|\Delta P-2.48|\) & \num{0.0993} & \num{0.03715} & [\num{0}, \num{0.02}] \\
 \hline
 \hline
 Knotenanzahl & 145314 & 13454 & \\
@@ -1173,6 +1172,11 @@ Dazu sehen wir in Abbildung~\ref{fig:142000nodes} die charakteristischen Messwer
 \input{img/cylinder2d_high_res_comparsion.tikz}
 \caption{Aerodynamische Koeffizienten in Gittern mit \(\sim 142000\) Knoten}
 \label{fig:142000nodes}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\input{img/cylinder2d_generously_refined_comparison.tikz}
 \end{figure}
 
 \newpage

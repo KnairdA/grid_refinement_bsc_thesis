@@ -9,7 +9,9 @@
 	xlabel=Horizontale Kanalposition,
 	ylabel=Druck,
 	y unit=N/m^2,
-	x unit=m
+	x unit=m,
+	x tick label style={/pgf/number format/.cd, use comma},
+	y tick label style={/pgf/number format/.cd, use comma}
 ]
 
 \addplot table[

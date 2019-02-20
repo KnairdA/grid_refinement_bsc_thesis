@@ -7,6 +7,7 @@ set output 'tmp/'.plotname.'.png'
 load 'common/moreland.pal'
 
 set datafile separator ','
+set decimalsign ','
 
 set size 1,1
 set margin 0,0,0,0

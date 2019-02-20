@@ -17,7 +17,9 @@
 	xlabel=\(y\)-Position,
 	xtick={0,0.25,0.5,0.75,1},
 	title=Geschwindigkeitsprofil,
-	every axis plot/.append style={thick}
+	every axis plot/.append style={thick},
+	x tick label style={/pgf/number format/.cd, use comma},
+	y tick label style={/pgf/number format/.cd, use comma}
 ]
 
 \addplot[
@@ -70,6 +72,7 @@
 	xshift=7cm,
 	scaled y ticks=false,
 	y tick label style={/pgf/number format/sci},
+	x tick label style={/pgf/number format/.cd, use comma},
 	ylabel=Fehler,
 	xlabel=\(y\)-Position,
 	yticklabel pos=right,

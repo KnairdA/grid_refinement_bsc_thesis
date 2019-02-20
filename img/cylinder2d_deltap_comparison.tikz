@@ -15,7 +15,8 @@
 	xlabel={Simulierte physikalische Zeit},
 	ylabel={Druckdifferenz},
 	x unit=s,
-	y unit=N/m^2
+	y unit=N/m^2,
+	y tick label style={/pgf/number format/.cd, use comma}
 ]
 
 \addplot[
@@ -35,7 +36,7 @@
 \addlegendentry {Problembezogen verfeinertes \(N=5\) Gitter};
 
 \addplot[color=black]{2.48};
-\addlegendentry {Gemittelte Referenzlösung \(\Delta P := 2.48\)};
+\addlegendentry {Gemittelte Referenzlösung \(\Delta P := \num{2.48}\)};
 
 \end{axis}
 \end{tikzpicture}

@@ -43,14 +43,14 @@
 & \begin{tikzpicture}
 \draw (0,0) rectangle (4,1) node[pos=.5] {\(11 \times 41\)};
 \end{tikzpicture}
-& 1.88337e-3 & 3.11534e-3 \\
+& \num{1.88337e-3} & \num{3.11534e-3} \\
 \hline \\[-1.75ex]
 
 \texttt{uN20}
 & \begin{tikzpicture}
 \draw (0,0) rectangle (4,1) node[pos=.5] {\(21 \times 81\)};
 \end{tikzpicture}
-& 1.16253e-3 & 2.27404e-3 \\
+& \num{1.16253e-3} & \num{2.27404e-3} \\
 \hline \\[-1.75ex]
 
 \texttt{vN10A}
@@ -58,7 +58,7 @@
 \draw (0,0) rectangle (2,1) node[pos=.5] {\(11 \times 21\)};
 \draw (2,0) rectangle (4,1) node[pos=.5] {\(21 \times 43\)};
 \end{tikzpicture}
-& 1.015925e-2 & 2.396855e-2 \\
+& \num{1.015925e-2} & \num{2.396855e-2} \\
 \hline \\[-1.75ex]
 
 \texttt{vN10B}
@@ -67,5 +67,5 @@
 \draw (0,0) rectangle (4,1);
 \draw (2,0.1) rectangle (3.9,0.9) node[pos=.5] {\(17 \times 41\)};
 \end{tikzpicture}
-& 1.90948e-3 & 3.25338e-3 \\
+& \num{1.90948e-3} & \num{3.25338e-3} \\
 \end{tabular}

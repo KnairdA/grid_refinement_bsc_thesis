@@ -1184,3 +1184,22 @@ Die im Rahmen dieser Beispiele betrachtete Zylinderumströmung bestätigte das V
 Problematischer erwies sich das Verfahren in der Anwendung auf eine einfache und analytisch lösbare Poiseuilleströmung. Im Verlauf der Untersuchung dieser grundlegenden Strömungssituation kristallisierte sich das in \cite{lagrava12} unbeachtet gelassene Zusammenspiel von Randkonditionen und Übergangsbereichen durch Verschlechterung des Fehlers um eine Größenordnung als kritischer und weiterer theoretischer Untersuchung bedürfender Aspekt heraus. Auch bei gezielter Vermeidung von Randbedingungen in Auflösungsübergängen konnte ein negativer Einfluss von Gitterverfeinerung auf die Reproduktion der analytischen Lösung festgestellt werden. Es wurde somit klar, dass Gitterverfeinerung in dem hier untersuchten Rahmen keinesfalls unvorsichtig und in der Abwesenheit konkreter Zwänge angewendet werden sollte. Die zusätzliche Komplexität und Fehlerquelle einer lokalen Verfeinerung sollte in sinnvollen Anwendungen eben dieser durch Vorteile wie bessere Geometriediskretisierung oder Zwänge wie beschränkte Rechenressourcen aufgewogen oder geringstenfalls begründet werden.
 
 Im Kontext der sinnvollen Anwendung von Gitterverfeinerung sowie der konkreten Strukturierung des heterogenen Gitters erwies sich das in \citetitle{lagrava15}~\cite{lagrava15} entwickelte Gitterverfeinerungskriterium als sehr gutes Maß zur Bewertung der lokalen Simulationsqualität. Nicht nur konnten in ihrer Anzahl beschränkte Knotenfreiheitsgrade mittels dieses Kriteriums formal fundiert problembezogen verteilt werden, sondern auch problematische und zur Divergenz neigende Bereiche der Simulation ließen sich frühzeitig erkennen und vermeiden.
+
+\bigskip
+\noindent
+Abschließend ergeben sich somit die folgenden theoretischen Fragestellungen zur weiteren Verfolgung in absteigenden Dringlichkeit:
+\begin{enumerate}
+	\item Wie müssen Randkonditionen in Übergangsbereichen behandelt werden?
+	\item Wie lässt sich die Rechenlast zur parallelen Ausführung der verfeinernden Gitter besser verteilen?
+	\item Wie verhält sich das betrachtete Verfahren bei Übertragung auf dreidimensionale Lattice Boltzmann Methoden?
+	\item Was gilt es bei Variation der Verfeinerung im Verlauf der Simulation zu beachten?
+\end{enumerate}
+
+\noindent
+Bezüglich der Weiterentwicklung des nun in OpenLB existierenden Gitterverfeinerungsframework bieten sich darüber hinaus Ansatzpunkte in Form der Fragen:
+\begin{enumerate}
+	\item Welche Möglichkeiten gibt es zur weiteren Abstraktion des Simulationsaufbaus?
+	\item Wie lassen sich die existierenden Konzepte aus der Optimierung und Mehrphasenkopplung sinnvoll mit den neuen Möglichkeiten zur Gitterverfeinerung verbinden?
+	\item Kann die Verfeinerungsschnittstelle unabhängig der konkreten Verfahrens direkt auf drei Dimensionen übertragen werden?
+\end{enumerate}
+Diese Auswahl von Möglichkeiten für anknüpfende Arbeiten beschließe an dieser Stelle unsere Betrachtung von gitterverfeinerten Lattice Boltzmann Methoden in OpenLB. Die angestrebten Ziele der theoretischen Ausarbeitung, flexiblen praktischen Umsetzung und experimentellen Evaluation wurden erreicht und Gitterverfeinerung verspricht den Funktionskatalog der freien Lattice Boltzmann Bibliothek OpenLB um ein nützliches und ausbaufähiges Werkzeug erweitert zu haben.

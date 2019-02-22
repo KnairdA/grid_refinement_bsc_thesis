@@ -1136,7 +1136,7 @@ Das diesen Resultaten zugrundeliegende Gitter orientiert sich in der Anzahl sein
 Als weiteren Vergleich betrachten wir deshalb die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_a}\) eines uniform mit \(N=40\), d.h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Gitters.
 Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die, mit nur etwa einem Zehntel der Knoten gewonnenen, Ergebnisse der verfeinerten Simulation:
 
-\begin{figure}[h]
+\begin{table}[h]
 \centering
 \sisetup{round-precision=4}
 \begin{tabular}{l l l l l}
@@ -1153,10 +1153,12 @@ Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die
 \(|\Delta P-\num[round-mode=off]{2.48}|\) & \num{0.0993} & \num{0.03715} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.02}] \\
 \hline
 \hline
+\(N=\) & \num{40} & \num{5} (max: \num{40}) & \\
 Knotenanzahl & \num{145314} & \num{13454} & \\
 \end{tabular}
 \caption{Vergleichswerte zweier maximal \(N=40\) aufgelöster Gitter}
-\end{figure}
+\label{tab:cylinder2dComparison}
+\end{table}
 
 \noindent
 Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient und Druckdifferenz sogar kleiner als der des uniformen Gitters mit ungleich mehr Knoten.
@@ -1165,8 +1167,7 @@ Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient
 
 Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
 Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf der ganzen Simulationsdomäne der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
-
-Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} die gemessenen aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen varierten \(N=20\) Gitters.
+Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} und zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparison} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen varierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
 
 \begin{figure}[H]
 \centering
@@ -1175,7 +1176,7 @@ Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} die gemessenen
 \label{fig:cylinder2dHighResComparison}
 \end{figure}
 
-\begin{figure}[h]
+\begin{table}[h]
 \centering
 \sisetup{round-precision=4}
 \begin{tabular}{l l l l l l}
@@ -1192,10 +1193,19 @@ Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} die gemessenen
 \(|\Delta P-\num[round-mode=off]{2.48}|\) & \num{0.02671} & \num{0.03646} & \num{0.01589} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.02}] \\
 \hline
 \hline
+\(N=\) & \num{80} & \num{48} & \num{20} (max: \num{160}) & \\
 Knotenanzahl & \num{576758} & \num{207862} & \num{208031} & \\
 \end{tabular}
 \caption{Aerodynamische Kennzahlen höher aufgelöster Zylinderumströmungen}
-\end{figure}
+\label{tab:cylinder2dHighResComparison}
+\end{table}
+
+Das geeignet verfeinerte Gitter liefert demnach in allen drei Messwerten den kleinsten Fehler und schlägt somit im Vergleich mit dem uniformen \(N=80\) Gitter erneut eine deutlich mehr Knoten verwendende Simulation. Da alle drei getesteten Gitter gute Übereinstimmung zu den Referenzwerten von Schäfer und Turek aufweisen fällt der Vorteil der Gitterverfeinerung jedoch geringer aus, als noch im Vergleich von Tabelle~\ref{tab:cylinder2dComparison}.
+
+\bigskip
+Rückblickend hat die Evaluation unseres Gitterverfeinerungsverfahrens anhand der Zylinderumströmung ihre Vorteil spendende Verwendbarkeit eindrücklich demonstriert. Während bei der Betrachtung der einfachen Poiseuilleströmung Sorgen bezüglich der Ergebnisgenauigkeit verfeinerter Gitter aufgeworfen wurden, konnten diese in der zurückliegenden Betrachtung einer komplexeren und so einen Verfeinerungsbedarf besser begründenden Strömungssituation weitestgehend beigelegt werden. Während die aufgeworfene Frage nach der korrekten Behandlung von Randbedingungen im Übergangsbereich noch offen ist, konnten wir unter Vermeidung dieser unklaren Situation ein sinnvolles, durch ein formales Kriterium informiertes, lokal verfeinertes Gitter beschreiben.
+
+Verfeinerte Simulationen der Zylinderumströmung konnten auf diese Weise im Vergleich ihrer aerodynamischen Kennzahlen mit belastungsfähigen Referenzwerten \cite{SchaeferTurek96} durchweg gegen ungleich größere Knotengrade aufweisende uniforme Gitter bestehen.
 
 \newpage
 \section{Fazit}

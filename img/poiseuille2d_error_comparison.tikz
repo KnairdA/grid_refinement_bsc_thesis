@@ -1,7 +1,7 @@
 \begin{tikzpicture}
 \begin{axis}[
 	scale only axis,
-	height=8cm,
+	height=7.5cm,
 	width=0.6*\textwidth,
 	symbolic x coords={\texttt{uN10},\texttt{uN20},\texttt{vN10A},\texttt{vN10B}},
 	xtick=data,

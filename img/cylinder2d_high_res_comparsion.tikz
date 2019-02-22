@@ -1,7 +1,7 @@
 \begin{tikzpicture}
 \pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_grid_n20_re100_drag_lift_deltap.csv}\refined
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n48_re100_drag_lift_deltap.csv}\unrefined
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n80_re100_drag_lift_deltap.csv}\uniform
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n48_re100_drag_lift_deltap.csv}\uniformMiddle
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n80_re100_drag_lift_deltap.csv}\uniformHigh
 
 \begin{axis}[
 	scale only axis,
@@ -19,9 +19,9 @@
 
 \addplot[color=black]{3.23};
 \addlegendentry {Gemittelte Referenzlösung \(c_\text{Dmax} := \num{3.23}\)};
-\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=drag] {\refined};
-\addplot[color=red!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\unrefined};
-\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\uniform};
+\addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=drag] {\uniformHigh};
+\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\uniformMiddle};
+\addplot[color=green!70!black,thick] table [x expr=8*\thisrow{time}, y=drag] {\refined};
 
 \end{axis}
 
@@ -42,9 +42,9 @@
 
 \addplot[color=black]{1.0};
 \addlegendentry {Gemittelte Referenzlösung \(c_\text{Lmax} := 1\)};
-\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=lift] {\refined};
-\addplot[color=red!50!white,thin] table [x expr=\thisrow{time}, y=lift] {\unrefined};
-\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=lift] {\uniform};
+\addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=lift] {\uniformHigh};
+\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=lift] {\uniformMiddle};
+\addplot[color=green!70!black,thick] table [x expr=8*\thisrow{time}, y=lift] {\refined};
 
 \end{axis}
 
@@ -68,12 +68,12 @@
 
 \addplot[color=black]{2.48};
 \addlegendentry {Gemittelte Referenzlösung \(\Delta P := \num{2.48}\)};
-\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=deltap] {\refined};
-\addlegendentry {Verfeinertes \(N=20\) Gitter mit \(\sim 208000\) Knoten};
-\addplot[color=red!50!white,thin] table [x expr=\thisrow{time}, y=deltap] {\unrefined};
-\addlegendentry {Uniformes \(N=48\) Gitter mit \(\sim 208000\) Knoten};
-\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=deltap] {\uniform};
+\addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=deltap] {\uniformHigh};
 \addlegendentry {Uniformes \(N=80\) Gitter mit \(\sim 577000\) Knoten};
+\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=deltap] {\uniformMiddle};
+\addlegendentry {Uniformes \(N=48\) Gitter mit \(\sim 208000\) Knoten};
+\addplot[color=green!70!black,thick] table [x expr=8*\thisrow{time}, y=deltap] {\refined};
+\addlegendentry {Verfeinertes \(N=20\) Gitter mit \(\sim 208000\) Knoten};
 
 \end{axis}
 

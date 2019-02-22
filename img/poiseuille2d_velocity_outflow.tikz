@@ -7,7 +7,7 @@
 
 \begin{axis}[
 	scale only axis,
-	height=8cm,
+	height=9.8cm,
 	width=0.4*\textwidth,
 	mark size=3,
 	legend cell align=left,
@@ -64,7 +64,7 @@
 
 \begin{axis}[
 	scale only axis,
-	height=8cm,
+	height=9.8cm,
 	width=0.4*\textwidth,
 	mark size=3,
 	grid=both,

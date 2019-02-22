@@ -1112,19 +1112,19 @@ Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das 
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_drag_comparison.tikz}
-\caption{Vergleich des Strömungswiderstandskoeffizients mit \cite[Tabelle~4]{SchaeferTurek96}}
+\caption{Zeitlicher Verlauf des Strömungswiderstandskoeffizients}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_lift_comparison.tikz}
-\caption{Vergleich des Auftriebskoeffizients mit \cite[Tabelle~4]{SchaeferTurek96}}
+\caption{Zeitlicher Verlauf des Auftriebskoeffizients}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_deltap_comparison.tikz}
-\caption{Vergleich der Druckdifferenz mit \cite[Tabelle~4]{SchaeferTurek96}}
+\caption{Zeitlicher Verlauf der Druckdifferenz}
 \end{figure}
 
 \newpage
@@ -1138,21 +1138,22 @@ Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die
 
 \begin{figure}[h]
 \centering
+\sisetup{round-precision=4}
 \begin{tabular}{l l l l l}
 & Uniform & Verfeinert & Referenzintervall \cite{SchaeferTurek96} \\
 \hline
 \hline
-\(\widehat{c_w}\) & \num{3.28433} & \num{3.21927} & \([\num{3.22},\ \num{3.24}]\) \\
-\(|\widehat{c_w}-\num{3.23}|\) & \num{0.05433} & \num{0.01073} & [\num{0}, \num{0.01}] \\
+\(\widehat{c_w}\) & \num{3.28433} & \num{3.21927} & \([\num[round-mode=off]{3.22},\ \num[round-mode=off]{3.24}]\) \\
+\(|\widehat{c_w}-\num[round-mode=off]{3.23}|\) & \num{0.05433} & \num{0.01073} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}] \\
 \hline
-\(\widehat{c_a}\) & \num{1.07046} & \num{1.10359} & \([\num{0.99},\ \num{1.01}]\) \\
-\(|\widehat{c_a}-1.0|\) & \num{0.07046} & \num{0.10359} & [\num{0}, \num{0.01}]  \\
+\(\widehat{c_a}\) & \num{1.07046} & \num{1.10359} & \([\num[round-mode=off]{0.99},\ \num[round-mode=off]{1.01}]\) \\
+\(|\widehat{c_a}-\num[round-mode=off]{1.0}|\) & \num{0.07046} & \num{0.10359} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}]  \\
 \hline
-\(\Delta P\) & \num{2.5793} & \num{2.44285} & \([\num{2.46},\ \num{2.5}]\)  \\
-\(|\Delta P-2.48|\) & \num{0.0993} & \num{0.03715} & [\num{0}, \num{0.02}] \\
+\(\Delta P\) & \num{2.5793} & \num{2.44285} & \([\num[round-mode=off]{2.46},\ \num[round-mode=off]{2.5}]\)  \\
+\(|\Delta P-\num[round-mode=off]{2.48}|\) & \num{0.0993} & \num{0.03715} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.02}] \\
 \hline
 \hline
-Knotenanzahl & 145314 & 13454 & \\
+Knotenanzahl & \num{145314} & \num{13454} & \\
 \end{tabular}
 \caption{Vergleichswerte zweier maximal \(N=40\) aufgelöster Gitter}
 \end{figure}
@@ -1165,13 +1166,35 @@ Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient
 Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
 Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf der ganzen Simulationsdomäne der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
 
-Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} die charakteristischen Messwerte des uniformen \(N=40\) Gitters sowie eines problembezogen varierten Gitters mit gleicher Knotenanzahl.
+Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} die gemessenen aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen varierten \(N=20\) Gitters.
 
 \begin{figure}[H]
 \centering
 \input{img/cylinder2d_high_res_comparsion.tikz}
-\caption{Aerodynamische Kennzahlen höher aufgelöster Zylinderumströmungen}
+\caption{Zeitlicher Verlauf der Messwerte höher aufgelöster Gitter}
 \label{fig:cylinder2dHighResComparison}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\sisetup{round-precision=4}
+\begin{tabular}{l l l l l l}
+& Uniform & Uniform & Verfeinert & Referenzintervall \cite{SchaeferTurek96} \\
+\hline
+\hline
+\(\widehat{c_w}\) & \num{3.24441} & \num{3.24897} & \num{3.19928} & \([\num[round-mode=off]{3.22},\ \num[round-mode=off]{3.24}]\) \\
+\(|\widehat{c_w}-\num[round-mode=off]{3.23}|\) & \num{0.01441} & \num{0.01897} & \num{0.01073} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}] \\
+\hline
+\(\widehat{c_a}\) & \num{1.01377} & \num{1.02121} & \num{0.995577} & \([\num[round-mode=off]{0.99},\ \num[round-mode=off]{1.01}]\) \\
+\(|\widehat{c_a}-\num[round-mode=off]{1.0}|\) & \num{0.01377} & \num{0.02121} & \num{0.004423} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}]  \\
+\hline
+\(\Delta P\) & \num{2.50671} & \num{2.44354} & \num{2.46411} & \([\num[round-mode=off]{2.46},\ \num[round-mode=off]{2.5}]\)  \\
+\(|\Delta P-\num[round-mode=off]{2.48}|\) & \num{0.02671} & \num{0.03646} & \num{0.01589} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.02}] \\
+\hline
+\hline
+Knotenanzahl & \num{576758} & \num{207862} & \num{208031} & \\
+\end{tabular}
+\caption{Aerodynamische Kennzahlen höher aufgelöster Zylinderumströmungen}
 \end{figure}
 
 \newpage

@@ -861,7 +861,7 @@ In Abbildung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zu
 \label{fig:PoiseuilleGridSetup}
 \end{figure}
 
-Neben diesen knotenspezifischen Eigenschaften sei \(u=\num[round-mode=off]{0.01}\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \num{1e-5}, gefallen ist.
+Neben diesen knotenspezifischen Eigenschaften sei \(u=\num{0.01}\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \num{1e-5}, gefallen ist.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -1165,11 +1165,13 @@ Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient
 Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
 Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf der ganzen Simulationsdomäne der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
 
-Dazu sehen wir in Abbildung~\ref{fig:142000nodes} die charakteristischen Messwerte des uniformen \(N=40\) Gitters sowie eines problembezogen varierten Gitters mit gleicher Knotenanzahl.
+Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} die charakteristischen Messwerte des uniformen \(N=40\) Gitters sowie eines problembezogen varierten Gitters mit gleicher Knotenanzahl.
 
 \begin{figure}[H]
 \centering
-\input{img/cylinder2d_generously_refined_comparison.tikz}
+\input{img/cylinder2d_high_res_comparsion.tikz}
+\caption{Aerodynamische Kennzahlen höher aufgelöster Zylinderumströmungen}
+\label{fig:cylinder2dHighResComparison}
 \end{figure}
 
 \newpage
@@ -1183,11 +1185,11 @@ Die im Rahmen dieser Beispiele betrachtete Zylinderumströmung bestätigte das V
 
 Problematischer erwies sich das Verfahren in der Anwendung auf eine einfache und analytisch lösbare Poiseuilleströmung. Im Verlauf der Untersuchung dieser grundlegenden Strömungssituation kristallisierte sich das in \cite{lagrava12} unbeachtet gelassene Zusammenspiel von Randkonditionen und Übergangsbereichen durch Verschlechterung des Fehlers um eine Größenordnung als kritischer und weiterer theoretischer Untersuchung bedürfender Aspekt heraus. Auch bei gezielter Vermeidung von Randbedingungen in Auflösungsübergängen konnte ein negativer Einfluss von Gitterverfeinerung auf die Reproduktion der analytischen Lösung festgestellt werden. Es wurde somit klar, dass Gitterverfeinerung in dem hier untersuchten Rahmen keinesfalls unvorsichtig und in der Abwesenheit konkreter Zwänge angewendet werden sollte. Die zusätzliche Komplexität und Fehlerquelle einer lokalen Verfeinerung sollte in sinnvollen Anwendungen eben dieser durch Vorteile wie bessere Geometriediskretisierung oder Zwänge wie beschränkte Rechenressourcen aufgewogen oder geringstenfalls begründet werden.
 
-Im Kontext der sinnvollen Anwendung von Gitterverfeinerung sowie der konkreten Strukturierung des heterogenen Gitters erwies sich das in \citetitle{lagrava15}~\cite{lagrava15} entwickelte Gitterverfeinerungskriterium als sehr gutes Maß zur Bewertung der lokalen Simulationsqualität. Nicht nur konnten in ihrer Anzahl beschränkte Knotenfreiheitsgrade mittels dieses Kriteriums formal fundiert problembezogen verteilt werden, sondern auch problematische und zur Divergenz neigende Bereiche der Simulation ließen sich frühzeitig erkennen und vermeiden.
+Im Kontext der sinnvollen Anwendung von Gitterverfeinerung sowie der konkreten Strukturierung des heterogenen Gitters erwies sich das in \citetitle{lagrava15}~\cite{lagrava15} entwickelte Gitterverfeinerungskriterium als sehr gutes Maß zur Bewertung der lokalen Simulationsqualität. Nicht nur konnten in ihrer Anzahl beschränkte Knotenfreiheitsgrade mittels dieses Kriteriums formal fundiert problembezogen umverteilt werden, sondern auch problematische und zur Divergenz neigende Bereiche der Simulation ließen sich frühzeitig erkennen und vermeiden.
 
 \bigskip
 \noindent
-Abschließend ergeben sich somit die folgenden theoretischen Fragestellungen zur weiteren Verfolgung in absteigenden Dringlichkeit:
+Abschließend ergeben sich somit die folgenden theoretischen Fragestellungen zur weiteren Verfolgung in absteigender Dringlichkeit:
 \begin{enumerate}
 	\item Wie müssen Randkonditionen in Übergangsbereichen behandelt werden?
 	\item Wie lässt sich die Rechenlast zur parallelen Ausführung der verfeinernden Gitter besser verteilen?

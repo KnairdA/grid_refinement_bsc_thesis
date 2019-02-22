@@ -1,79 +1,80 @@
 \begin{tikzpicture}
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_refinement_n40_re100_drag_lift_deltap.csv}\refined
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n40_re100_drag_lift_deltap.csv}\uniformHigh
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n80_re100_drag_lift_deltap.csv}\uniformVeryHigh
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n160_re100_drag_lift_deltap.csv}\uniformVeryVeryHigh
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_grid_n20_re100_drag_lift_deltap.csv}\refined
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n48_re100_drag_lift_deltap.csv}\unrefined
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n80_re100_drag_lift_deltap.csv}\uniform
 
 \begin{axis}[
 	scale only axis,
-	height=5cm,
+	height=6cm,
 	width=0.9*\textwidth,
 	legend cell align=left,
 	legend pos=south east,
 	grid=both,
 	domain=0:16,
-	xmin=0, xmax=16,
+	xmin=6, xmax=16,
 	ylabel={Widerstandskoeffizient},
-	ylabel absolute, every axis y label/.append style={yshift=0.4cm}
+	ylabel absolute, every axis y label/.append style={yshift=0.4cm},
+	y tick label style={/pgf/number format/.cd, use comma}
 ]
 
-\addplot[thick,color=black]{3.23};
-\addlegendentry {\(\widehat{c_w} := \num[round-mode=off]{3.23}\)};
-\addplot[color=blue!50!white,thin ] table [x expr=\thisrow{time}, y=drag] {\uniformVeryVeryHigh};
-\addplot[color=red!50!white,thin  ] table [x expr=\thisrow{time}, y=drag] {\uniformVeryHigh};
+\addplot[color=black]{3.23};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Dmax} := \num{3.23}\)};
 \addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=drag] {\refined};
+\addplot[color=red!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\unrefined};
+\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\uniform};
 
 \end{axis}
 
 \begin{axis}[
 	scale only axis,
-	yshift=-6cm,
-	height=5cm,
-	width=0.9*\textwidth,
-	legend cell align=left,
-	legend pos=south west,
-	grid=both,
-	domain=0:16,
-	xmin=0, xmax=16,
-	ylabel={Auftriebskoeffizient},
-	ylabel absolute, every axis y label/.append style={yshift=0.4cm}
-]
-
-\addplot[thick,color=black]{1.0};
-\addlegendentry {\(\widehat{c_a} := 1\)};
-\addplot[color=blue!50!white,thin ] table [x expr=\thisrow{time}, y=lift] {\uniformVeryVeryHigh};
-\addplot[color=red!50!white,thin  ] table [x expr=\thisrow{time}, y=lift] {\uniformVeryHigh};
-\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=lift] {\refined};
-
-\end{axis}
-
-\begin{axis}[
-	scale only axis,
-	yshift=-12cm,
-	height=5cm,
+	yshift=-7cm,
+	height=6cm,
 	width=0.9*\textwidth,
 	legend cell align=left,
 	legend pos=south east,
 	grid=both,
 	domain=0:16,
-	xmin=0, xmax=16,
+	xmin=6, xmax=16,
+	ylabel={Auftriebskoeffizient},
+	ylabel absolute, every axis y label/.append style={yshift=0.4cm},
+	y tick label style={/pgf/number format/.cd, use comma}
+]
+
+\addplot[color=black]{1.0};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Lmax} := 1\)};
+\addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=lift] {\refined};
+\addplot[color=red!50!white,thin] table [x expr=\thisrow{time}, y=lift] {\unrefined};
+\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=lift] {\uniform};
+
+\end{axis}
+
+\begin{axis}[
+	scale only axis,
+	yshift=-14cm,
+	height=6cm,
+	width=0.9*\textwidth,
+	legend cell align=left,
+	legend pos=south east,
+	grid=both,
+	domain=0:16,
+	xmin=6, xmax=16,
 	xlabel={Simulierte physikalische Zeit},
 	ylabel={Druckdifferenz},
 	x unit=s,
 	y unit=N/m^2,
-	ylabel absolute, every axis y label/.append style={yshift=0.4cm}
+	ylabel absolute, every axis y label/.append style={yshift=0.4cm},
+	y tick label style={/pgf/number format/.cd, use comma}
 ]
 
-\addplot[thick,color=black]{2.48};
-\addlegendentry {\(\Delta P := \num[round-mode=off]{2.48}\)};
-\addplot[color=blue!50!white,thin  ] table [x expr=\thisrow{time}, y=deltap] {\uniformVeryVeryHigh};
-\addlegendentry {Uniformes \(N=160\) Gitter mit \(\sim 2300000\) Knoten};
-\addplot[color=red!50!white,thin   ] table [x expr=\thisrow{time}, y=deltap] {\uniformVeryHigh};
-\addlegendentry {Uniformes \(N=80\) Gitter mit \(\sim 577000\) Knoten};
+\addplot[color=black]{2.48};
+\addlegendentry {Gemittelte Referenzlösung \(\Delta P := \num{2.48}\)};
 \addplot[color=green!70!black,thin] table [x expr=8*\thisrow{time}, y=deltap] {\refined};
-\addlegendentry {Verfeinertes \(N=40\) Gitter mit \(\sim 790000\) Knoten};
+\addlegendentry {Verfeinertes \(N=20\) Gitter mit \(\sim 208000\) Knoten};
+\addplot[color=red!50!white,thin] table [x expr=\thisrow{time}, y=deltap] {\unrefined};
+\addlegendentry {Uniformes \(N=48\) Gitter mit \(\sim 208000\) Knoten};
+\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=deltap] {\uniform};
+\addlegendentry {Uniformes \(N=80\) Gitter mit \(\sim 577000\) Knoten};
 
 \end{axis}
 
 \end{tikzpicture}
-

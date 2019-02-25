@@ -1179,28 +1179,31 @@ Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} und zugehörig
 \begin{table}[h]
 \centering
 \sisetup{round-precision=4}
-\begin{tabular}{l l l l l l}
-& Uniform & Uniform & Verfeinert & Referenzintervall \cite{SchaeferTurek96} \\
+
+\begin{tabular}{l l l l l l l}
+& Uniform & Uniform & Uniform & Verfeinert & Referenzintervall \cite{SchaeferTurek96} \\
 \hline
 \hline
-\(\widehat{c_w}\) & \num{3.24441} & \num{3.24897} & \num{3.19928} & \([\num[round-mode=off]{3.22},\ \num[round-mode=off]{3.24}]\) \\
-\(|\widehat{c_w}-\num[round-mode=off]{3.23}|\) & \num{0.01441} & \num{0.01897} & \num{0.01073} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}] \\
+\(\widehat{c_w}\) & \num{3.23526} & \num{3.24441} & \num{3.24897} & \num{3.19928} & \([\num[round-mode=off]{3.22},\ \num[round-mode=off]{3.24}]\) \\
+\(|\widehat{c_w}-\num[round-mode=off]{3.23}|\) & \num{0.00526} & \num{0.01441} & \num{0.01897} & \num{0.03072} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}] \\
 \hline
-\(\widehat{c_a}\) & \num{1.01377} & \num{1.02121} & \num{0.995577} & \([\num[round-mode=off]{0.99},\ \num[round-mode=off]{1.01}]\) \\
-\(|\widehat{c_a}-\num[round-mode=off]{1.0}|\) & \num{0.01377} & \num{0.02121} & \num{0.004423} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}]  \\
+\(\widehat{c_a}\) & \num{1.00194} & \num{1.01377} & \num{1.02121} & \num{0.995577} & \([\num[round-mode=off]{0.99},\ \num[round-mode=off]{1.01}]\) \\
+\(|\widehat{c_a}-\num[round-mode=off]{1.0}|\) & \num{0.00194} & \num{0.01377} & \num{0.02121} & \num{0.004423} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}]  \\
 \hline
-\(\Delta P\) & \num{2.50671} & \num{2.44354} & \num{2.46411} & \([\num[round-mode=off]{2.46},\ \num[round-mode=off]{2.5}]\)  \\
-\(|\Delta P-\num[round-mode=off]{2.48}|\) & \num{0.02671} & \num{0.03646} & \num{0.01589} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.02}] \\
+\(\Delta P\) & \num{2.49969} & \num{2.50671} & \num{2.44354} & \num{2.46411} & \([\num[round-mode=off]{2.46},\ \num[round-mode=off]{2.5}]\)  \\
+\(|\Delta P-\num[round-mode=off]{2.48}|\) & \num{0.01969} & \num{0.02671} & \num{0.03646} & \num{0.01589} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.02}] \\
 \hline
 \hline
-\(N=\) & \num{80} & \num{48} & \num{20} (max: \num{160}) & \\
-Knotenanzahl & \num{576758} & \num{207862} & \num{208031} & \\
+\(N=\) & \num{160} & \num{80} & \num{48} & \num{20} (max: \num{160}) & \\
+Knotenanzahl & \num{2298014} & \num{576758} & \num{207862} & \num{208031} & \\
 \end{tabular}
 \caption{Aerodynamische Kennzahlen höher aufgelöster Zylinderumströmungen}
 \label{tab:cylinder2dHighResComparison}
 \end{table}
 
-Das geeignet verfeinerte Gitter liefert demnach in allen drei Messwerten den kleinsten Fehler und schlägt somit im Vergleich mit dem uniformen \(N=80\) Gitter erneut eine deutlich mehr Knoten verwendende Simulation. Da alle drei getesteten Gitter gute Übereinstimmung zu den Referenzwerten von Schäfer und Turek aufweisen fällt der Vorteil der Gitterverfeinerung jedoch geringer aus, als noch im Vergleich von Tabelle~\ref{tab:cylinder2dComparison}.
+Das geeignet verfeinerte Gitter liefert demnach in zwei von drei Messwerten einen kleineren Fehler als ein äquivalent aufgelöstes \(N=48\) Gitter und besteht im Vergleich mit dem uniformen \(N=80\) Gitter erneut gegenüber einer deutlich mehr Knoten nutzenden Simulation. Selbst gegenüber eines mehr als zehnmal so viele Knoten aufwendenden uniformen \(N=160\) Gitter erhalten wir mit der uniformen Variante noch einen leicht kleineren Fehler in der Druckdifferenz.
+
+Da alle vier getesteten Gitter gute Übereinstimmung zu den Referenzdaten von Schäfer und Turek aufweisen, fällt der Vorteil der Gitterverfeinerung im Allgemeinen jedoch geringer aus, als noch im Vergleich der niedrig aufgelösten Gitter aus Abbildung~\ref{fig:CylinderOptimizedGridComparison} und Tabelle~\ref{tab:cylinder2dComparison}. Darüber hinaus liegt die Knotenanzahl des betrachteten \(N=160\) Gitters weit oberhalb der maximalen referenzstiftenden Knotenzahlen \cite[Tabelle~4]{SchaeferTurek96}, so dass wir hier an die Grenzen der Aussagekraft von Fehlern bezüglich dieser Werte stoßen.
 
 \bigskip
 Rückblickend hat die Evaluation unseres Gitterverfeinerungsverfahrens anhand der Zylinderumströmung ihre Vorteil spendende Verwendbarkeit eindrücklich demonstriert. Während bei der Betrachtung der einfachen Poiseuilleströmung Sorgen bezüglich der Ergebnisgenauigkeit verfeinerter Gitter aufgeworfen wurden, konnten diese in der zurückliegenden Betrachtung einer komplexeren und so einen Verfeinerungsbedarf besser begründenden Strömungssituation weitestgehend beigelegt werden. Während die aufgeworfene Frage nach der korrekten Behandlung von Randbedingungen im Übergangsbereich noch offen ist, konnten wir unter Vermeidung dieser unklaren Situation ein sinnvolles, durch ein formales Kriterium informiertes, lokal verfeinertes Gitter beschreiben.

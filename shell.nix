@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
     };
   in [
     gnumake
-    texlive-custom
+    texlive-custom biber
     python3Packages.pygments
     gnuplot
     ghostscript

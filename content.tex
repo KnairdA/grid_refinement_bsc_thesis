@@ -9,7 +9,7 @@ Experimente zur Bestimmung des Verhaltens von Strömungen -- z.B. in Wind- und W
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.35]{img/static/nose.png}
-\caption{Strömung in der komplexen Geometrie der menschlichen Nase}
+\caption{Strömung in der komplexen Geometrie der menschlichen Nase \cite{olbNose}}
 \end{figure}
 
 So trifft es sich, dass der Wunsch nach theoretischer Lösung komplexer und nur schwer analytisch zugänglicher Strömungsprobleme mit der Entwicklung von immer leistungsfähigeren Rechenmaschinen nicht nur einherging sondern auch eine der Triebfedern in deren initialen Entwicklung war. Moderne numerische Verfahren zur Simulation von Strömungen versprechen eine zunehmende Reduzierung benötigter realer Experimente und sind heute gängiges Werkzeug in Forschung und Maschinenbau.
@@ -115,7 +115,7 @@ Die Werte von \(u = u(x,t)\) und \(\rho = \rho(x,t)\) in Ort \(x\) zu Zeit \(t\)
 \end{align*}
 \end{Definition}
 
-Für D2Q9 ergeben sich nach \cite[Gl.~3.60 bzw. Tab.~3.3]{krueger17} die Gewichte:
+Für D2Q9 ergeben sich nach \cite[Gl.~3.60 bzw. Tabelle~3.3]{krueger17} die Gewichte:
 \[w_0 = \frac{4}{9}, \ w_{2,4,6,8} = \frac{1}{9}, \ w_{1,3,5,7} = \frac{1}{36}\]
 
 Weiter folgt zusammen mit der Bedingung \(\sum_{i=1}^{q-1} w_i (\xi_i)_a (\xi_i)_b = c_s^2 \delta_{a,b}\) aus \cite[Gl.~3.60]{krueger17} die Schallgeschwindigkeit \(c_s = \sqrt{1/3}\) des Lattice. Konditionen zur Bestimmung dieser gitterspezifischen Konstanten sind hierbei die Erhaltung von Impuls und Masse sowie die Forderung von \emph{Rotationsisotropie}.
@@ -524,7 +524,7 @@ Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nach
 \label{fig:InterpolationDetail}
 \end{figure}
 
-Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden. Wir berechnen dazu mit dem Schema der dividierten Differenzen die Faktoren der Newtonschen Interpolationsformel \cite[IV.3~(3.10)]{amann_escher} auf den in Abbildung~\ref{fig:InterpolationDetail} dargestellten Stützpunkten \((-3,\sipolarg{-3})\), \((-1,\sipolarg{-1})\), \((1,\sipolarg{1})\) und \((3,\sipolarg{3})\):
+Bessere Näherungen können unter Einsatz weiterer Stützknoten erzielt werden. Wir berechnen dazu mit dem Schema der dividierten Differenzen die Faktoren der Newtonschen Interpolationsformel \cite[IV.3~(3.10)]{AmannEscher} auf den in Abbildung~\ref{fig:InterpolationDetail} dargestellten Stützpunkten \((-3,\sipolarg{-3})\), \((-1,\sipolarg{-1})\), \((1,\sipolarg{1})\) und \((3,\sipolarg{3})\):
 \begin{align*}
 \sipolarg{x} :&= \sipolarg{-3} \\
 &+ \frac{1}{2}(\sipolarg{-1}-\sipolarg{-3})(x+3)\\
@@ -650,7 +650,7 @@ Im Allgemeinen ergibt sich aus diesen Komponenten folgende übliche Struktur von
 	\item Starten der Simulationsschleife zum Aufruf von \method{SuperLattice2D::collideAndStream}
 \end{enumerate}
 
-In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter durch kanonisch benannte Funktionen wie \method{getResults} und \method{error} die Ergebnisse zur Analyse in Dateien geschrieben, Fehlernormen berechnet und Konvergenzkriterien bestimmt.
+In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter durch kanonisch benannte Funktionen wie \method{getResults} und \method{error} die Ergebnisse zur Analyse in Dateien~\cite{vtkGuide10} geschrieben, Fehlernormen berechnet und Konvergenzkriterien bestimmt.
 
 \subsection{Auswahl der Verfeinerungsmethode}
 \label{sec:olbRefinementChoice}
@@ -861,7 +861,7 @@ In Abbildung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zu
 \label{fig:PoiseuilleGridSetup}
 \end{figure}
 
-Neben diesen knotenspezifischen Eigenschaften sei \(u=\num{0.01}\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir bei geeigneter Aufbereitung in ParaView~\cite{paraview05} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} ersichtliche Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \num{1e-5}, gefallen ist.
+Neben diesen knotenspezifischen Eigenschaften sei \(u=\num{0.01}\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir nach geeigneter Aufbereitung der \class{VTK}-Ausgabe \cite[Kap.~19.3]{vtkGuide10} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} dargestellte Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \num{1e-5}, gefallen ist.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}

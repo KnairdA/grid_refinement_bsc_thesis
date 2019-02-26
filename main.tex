@@ -32,7 +32,11 @@
 	pdfpagemode=UseOutlines,
 }
 
-\usepackage[backend=bibtex,style=numeric,maxbibnames=10,sorting=none]{biblatex}
+\usepackage[
+	backend=biber,
+	style=numeric,
+	sorting=nyt
+]{biblatex}
 \DefineBibliographyStrings{ngerman}{andothers={et\ \addabbrvspace al\adddot}}
 \addbibresource{quellen.bib}
 
@@ -102,6 +106,7 @@ Karlsruher Institut für Technologie
 \newpage
 \addcontentsline{toc}{section}{Abbildungsverzeichnis}
 \listoffigures
+\listoftables
 
 \newpage
 \addcontentsline{toc}{section}{Literatur}

@@ -8,7 +8,10 @@
 \usepackage{latexsym}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{enumitem}
+\usepackage{abstract}
+
 \usepackage[outputdir=build]{minted}
+
 
 \usepackage{siunitx}
 \sisetup{
@@ -35,6 +38,7 @@
 \usepackage[
 	backend=biber,
 	style=numeric,
+	maxbibnames=10,
 	sorting=nyt
 ]{biblatex}
 \DefineBibliographyStrings{ngerman}{andothers={et\ \addabbrvspace al\adddot}}
@@ -72,7 +76,6 @@
 
 \pagestyle{empty}
 \begin{titlepage}
-
 \includegraphics[scale=0.45]{img/static/kit-logo.jpg}
 \vspace*{2cm}
 
@@ -93,14 +96,36 @@ Betreuung: Dr. Mathias J. Krause \\[1cm]
 Fakultät für Mathematik \\[1cm]
 Karlsruher Institut für Technologie
 \end{center}
-
 \end{titlepage}
+
+\blankpage
+
+\begin{abstract}
+Dank moderner paralleler Hochleistungsrechner können immer mehr praktische Strömungsprobleme
+in numerischen Simulationen gelöst werden. Die Lattice Boltzmann Methode ist ein Ansatz zur
+Simulation inkompressibler Strömungen, welcher u. a. durch seine gute Skalierbarkeit auf eben diesen
+parallelen Hochleistungsrechnern zunehmend an Bedeutung gewinnt.
+
+Trotz anhaltendem Wachstum der für numerische Simulationen zur Verfügung stehenden
+Rechenleistung können viele praktische Strömungsprobleme weiterhin nur unter Einschränkungen in
+akzeptabler Zeit und Genauigkeit gelöst werden. Ein Ansatz, diesem Konflikt zu begegnen, ist die
+lokale Verfeinerung der zugrunde liegenden Gitter.
+
+OpenLB ist eine in C++ geschriebene freie Bibliothek zur Implementierung von LBM basierenden
+Strömungssimulationen. Aktuell bietet OpenLB noch keine Unterstützung für Gitterverfeinerung.
+
+Ziel dieser Arbeit ist es, diese Einschränkung aufzuheben und OpenLB um eine flexible Schnittstelle zur Implementierung und Nutzung von Gitterverfeinerungsverfahren zu ergänzen. Zu diesen Zweck werden anhand einer zweidimensionalen Lattice Boltzmann Methode verschiedene Ansätze zur Verfeinerung von Gittern diskutiert. Darauf aufbauend wird ein konkretes Verfahren detailliert ausformuliert und im Rahmen der Entwicklung eines generischen Gitterverfeinerungsframeworks umgesetzt. Der übergeordneten Frage nach dem tatsächlichen Nutzen und möglicher Probleme von gitterverfeinerten Lattice Boltzmann Methoden wird durch die Evaluation von Anwendungsbeispielen Rechnung getragen. In diesem Kontext findet weiterhin eine Diskussion der formal begründeten anwendungsbezogenen Wahl von zu verfeinernden Gebieten statt.
+\end{abstract}
+\newpage
+
+\blankpage
 
 \tableofcontents
 \newpage
 
 \pagestyle{headings}
 
+\setcounter{page}{1}
 \input{content.tex}
 
 \newpage
@@ -111,12 +136,13 @@ Karlsruher Institut für Technologie
 \newpage
 \addcontentsline{toc}{section}{Literatur}
 \printbibliography
-
 \newpage
+
+\blankpage
 \thispagestyle{empty}
 \vspace*{8cm}
 \section*{Erkl\"arung}
-Ich  versichere  wahrheitsgem\"a\ss,  die  Arbeit selbstst\"andig verfasst,  alle  benutzten  Hilfsmittel  vollst\"andig  und  genau  angegeben  und  alles kenntlich  gemacht  zu  haben,  was  aus  Arbeiten  anderer  unver\"andert  oder  mit  Ab\"anderungen entnommen  wurde,  sowie die Satzung  des  KIT  zur  Sicherung guter wissenschaftlicher Praxis in der jeweils g\"ultigen Fassung beachtet zu haben.
+Ich versichere wahrheitsgemäß, die Arbeit selbstständig verfasst, alle benutzten Hilfsmittel vollständig und  genau angegeben und alles kenntlich gemacht zu haben, was aus Arbeiten anderer unverändert oder mit Abänderungen entnommen wurde, sowie die Satzung des KIT zur Sicherung guter wissenschaftlicher Praxis in der jeweils gültigen Fassung beachtet zu haben.
 \\[2ex]
 \noindent
 Karlsruhe, den \today\\[5ex]

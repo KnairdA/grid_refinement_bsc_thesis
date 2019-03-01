@@ -1,7 +1,7 @@
 \begin{tikzpicture}[
 	scale=1.5,
-	dot/.style={circle,fill=black,inner sep=2pt},
-	center/.style={circle,fill=green!50!black,inner sep=3pt},
+	dot/.style={circle,draw=black,inner sep=3pt},
+	center/.style={circle,fill=black,inner sep=4pt},
 	arrow/.style={thick,->,>=stealth}
 ]
 

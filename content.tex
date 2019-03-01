@@ -1074,14 +1074,38 @@ Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d
 \newpage
 Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils maximal 13500 Zellen. Der kleine Unterschied in der Knotenanzahl ist dabei der Einschränkung auf quaderförmige Gitter geschuldet, welche eine exakte Fixierung der Knotenanzahl erschwert.
 
-Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretisierung des Zylinders durch Konzentration der verfügbaren Gitterknoten in dessen Umfeld. Auch liegt dem Ausfluss des verfeinerten Gitters die Divergenz ferner als dem Ausfluss des uniformen Gitters, an welchem sich schon Artefakte abzeichnen. Eine formalere Analyse der Qualität dieses optimierten Gitters erwartet uns im nachfolgenden Unterkapitel.
+Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretisierung des Zylinders durch Konzentration der verfügbaren Gitterknoten in dessen Umfeld. Auch liegt dem Ausfluss des verfeinerten Gitters die Divergenz ferner als dem Ausfluss des uniformen Gitters, an welchem sich schon Artefakte abzeichnen. Eine formalere Analyse der Qualität dieses optimierten Gitters erwartet uns in Kapitel~\ref{kap:cylinder2dCoefficients}.
+
+\subsubsection{Parallelisierung}
+
+Bevor wir dazu kommen, wollen wir, aufbauend auf den bezüglich der Knotenanzahl vergleichbaren Gittern in Abbildung~\ref{fig:CylinderOptimizedGridComparison}, einen sehr kurzen Blick auf die Effizienz der parallelen Ausführung von verfeinerten Gittern riskieren. OpenLB implementiert hierzu mit OpenMPI~\cite{OpenMPI} und OpenMP~\cite{OpenMP} zwei gängige Konzepte zur Kommunikation zwischen parallel arbeitenden Prozessen.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l l l l l l}
+& Nicht parallel & OpenMPI & & OpenMP & \\
+Prozessanzahl & 1 & 2 & 4 & 2 & 4 \\
+\hline
+\hline
+Uniform & \num{36.461}\si{\second} & \num{19.380}\si{\second} & \num{10.774}\si{\second} & \num{23.242}\si{\second} & \num{14.315}\si{\second} \\
+\hline
+Verfeinert & \num{29.896}\si{\second} & \num{54.794}\si{\second} & \num{73.974}\si{\second} & \num{24.251}\si{\second} & \num{18.384}\si{\second} \\
+\hline
+\hline
+\end{tabular}
+\caption{Vergleich der parallelen Ausführung auf einem Shared Memory System}
+\end{table}
+
+Überraschenderweise steht es ohne die Beantwortung der Frage nach Minimierung des Kommunikationsaufwands in der Gitterkopplung noch schlechter um den Einfluss von Gitterverfeinerung auf die Ausführungszeit als erwartet. Da die einzelnen Gitter in der OpenMPI-Variante ohne Rücksicht auf deren Lokalität den vorhandenen Prozessoren zugeordnet werden, müssen die zur Kopplung notwendigen Informationen schlimmstenfalls in jedem Zeitschritt zwischen allen Prozessen kommuniziert werden. Solange das durch Verfeinerungsbeziehungen entstehende Bedürfnis nach Kommunikationsnähe von ansonsten unabhängigen Gitter von der Lastverteilung nicht beachtet wird, ist die OpenMPI-basierende Parallelverarbeitung nicht sinnvoll einsetzbar.
+
+Bessere Ergebnisse können dagegen mit OpenMP und der Einschränkung auf Shared Memory Systeme erzielt werden. Der zusätzliche unoptimierte Kommunikationsaufwand der Gitterverfeinerung dominiert hier nicht mehr die eigentliche Simulationszeit und führt zu sinnvoller Anwendbarkeit auf Systemen mit gemeinsam genutztem Speicher.
 
 \bigskip
 
-Bevor wir dazu kommen, bemerken wir, dass sich mit dieser flexibleren Verteilung der Knotenfreiheitsgrade hier auch ein, bis jetzt lediglich in der Einführung erwähnter, Vorteil von Gitterverfeinerung illustriert: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.
+Die Grundproblematik der effizienten Parallelisierung von verfeinerten Gittern tritt auch in den Ausführungen von Lagrava et al.~\cite[Kap.~4.1, letzter Abschnitt]{Lagrava12} insofern in Erscheinung, dass deren Vergleich der benötigten Rechenzeit sich auf einen Prozessor und somit Shared Memory Systemen beschränkt.
 
 \newpage
-\subsubsection{Vergleich von Widerstands- und Auftriebskoeffizienten}
+\subsubsection{Vergleich von Widerstands- und Auftriebskoeffizienten}\label{kap:cylinder2dCoefficients}
 
 Bis hier haben wir die den Einfluss von Gitterverfeinerung auf die Zylinderumströmung entweder subjektiv, durch Vergleich der Strömungsbilder, oder grob, durch einfachen Vergleich der für eine divergenzfreie Simulation benötigten Knotenanzahl, bewertet. Wie eingangs erwähnt, existiert für die vorliegende Strömungssituation keine analytische Lösung, weshalb wir uns für eine formal belastbarere Bewertung auf vertrauenswürdige aber ebenfalls simulierte Referenzwerte stützen wollen.
 

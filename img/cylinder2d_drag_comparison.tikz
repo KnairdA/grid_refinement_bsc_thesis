@@ -34,7 +34,7 @@
 \addlegendentry {Problembezogen verfeinertes \(N=5\) Gitter};
 
 \addplot[color=black]{3.23};
-\addlegendentry {Gemittelte Referenzlösung \(c_\text{Dmax} := \num{3.23}\)};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Wmax} := \num{3.23}\)};
 
 \end{axis}
 \end{tikzpicture}

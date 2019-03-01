@@ -18,7 +18,7 @@
 ]
 
 \addplot[color=black]{3.23};
-\addlegendentry {Gemittelte Referenzlösung \(c_\text{Dmax} := \num{3.23}\)};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Wmax} := \num{3.23}\)};
 \addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=drag] {\uniformHigh};
 \addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\uniformMiddle};
 \addplot[color=green!70!black,thick] table [x expr=8*\thisrow{time}, y=drag] {\refined};

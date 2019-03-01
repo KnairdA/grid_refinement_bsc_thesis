@@ -55,7 +55,7 @@ welcher die Partikelverteilung mit Rate \(\tau\) gegen eine Equilibriumsverteilu
 Wenden wir den BGK Operator auf die Boltzmann-Gleichung ohne äußere Kräfte an, erhalten wir die BGK Approximation:
 
 \begin{Definition}[BGK Approximation]
-Sei \(\tau \in \R_{\geq 0}\) eine Relaxionszeit und \(f^\text{eq}\) die von der Maxwell-Boltzmann-Verteilung gegebene Equilibriumsverteilung.
+Sei \(\tau \in \R_{\geq 0}\) eine Relaxationszeit und \(f^\text{eq}\) die von der Maxwell-Boltzmann-Verteilung gegebene Equilibriumsverteilung.
 \[ (\partial_t + \xi \cdot \nabla_x) f = -\frac{1}{\tau} (f(x,\xi,t) - f^\text{eq}(x,\xi,t)) \]
 \end{Definition}
 
@@ -70,7 +70,7 @@ Analog zur o.B.d.A. erfolgten Wahl von \(\Delta t = 1\) setzen wir auch hier \(\
 
 Zu betonen ist an dieser Stelle die Wichtigkeit einer klaren Unterscheidung zwischen Simulationsdomäne und dem durch diese zu modellierenden physikalischen System für die konkrete Interpretation des Simulationsergebnisses \cite[Kap.~7]{Krueger17}.
 
-Für die verbleibende Herleitung der LBM können wir diese Interpretation, d. h. die Unterscheidung zwischen physikalischen- und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxionszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird hier nicht weiter eingeschränkt.
+Für die verbleibende Herleitung der LBM können wir diese Interpretation, d. h. die Unterscheidung zwischen physikalischen- und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxationszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird hier nicht weiter eingeschränkt.
 
 \bigskip
 
@@ -216,7 +216,7 @@ Diese Darstellung können wir unter Verwendung von Definition~\ref{def:ChapmanEn
 \newpage
 \subsection{Herangehensweisen an Gitterverfeinerung}
 
-Grundsätzlich existieren mit der Multi-Grid bzw. Multi-Domain Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in Lattice Boltzmann Methoden \cite[Kap.~3.1]{Lagrava12}. Im Westenlichen unterscheiden die Ansätze sich in der Struktur der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
+Grundsätzlich existieren mit der Multi-Grid und Multi-Domain Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in Lattice Boltzmann Methoden \cite[Kap.~3.1]{Lagrava12}. Im Wesentlichen unterscheiden die Ansätze sich in den Ausmaßen der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
 
 \subsubsection{Multi-Grid Ansatz}
 
@@ -245,7 +245,7 @@ Vorteil gegenüber des Multi-Grid Ansatzes ist hier der weiter reduzierte Speich
 
 \subsubsection{Koinzidierende und versetzte Gitter}
 
-Neben der Unterscheidung zwischen Multi-Grid und Multi-Domain Ansätzen kann auch die Positionierung des groben im Bezug auf das feine Gitter varieren. Gitterkonstellationen, in denen grobe Knoten soweit möglich mit feinen Knoten übereinstimmen -- wie auch in den beiden vorherigen Abbildung zu sehen -- werden als koinzidierend bezeichnet:
+Neben der Unterscheidung zwischen Multi-Grid und Multi-Domain Ansätzen kann auch die Positionierung des groben im Bezug auf das feine Gitter variieren. Gitterkonstellationen, in denen grobe Knoten soweit möglich mit feinen Knoten übereinstimmen -- wie auch in den beiden vorherigen Abbildung zu sehen -- werden als koinzidierend bezeichnet:
 
 \begin{figure}[h]
 \centering
@@ -267,7 +267,7 @@ Lösen wir uns von dieser Einschränkung und positionieren das feine Gitter abse
 \newpage
 \section{Verfeinerungsmethode nach Lagrava et al.}\label{kap:Lagrava}
 
-Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{Lagrava12}~\cite{Lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Stuktur dieses Verfahrens, mit potenziell austauschbaren Restriktions- und Interpolationsverfahren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
+Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{Lagrava12}~\cite{Lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Struktur dieses Verfahrens, mit potenziell austauschbaren Restriktions- und Interpolationsoperatoren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
 
 \subsection{Übersicht}
 
@@ -281,7 +281,7 @@ Das Verfahren basiert auf dem Multi-Domain Ansatz \cite[Kap.~3.1]{Lagrava12} mit
 \end{figure}
 
 \noindent
-In diesen Übergangsbereichen, welche eine Breite von mindestens einer Einheit des gröberen Zellabstands haben, liegt die Hauptarbeit des Verfeinerungsverfahrens.
+In diesen Übergangsbereichen, welche eine Breite von mindestens einer groben Gitterweite haben müssen, liegt die Hauptarbeit des Verfeinerungsverfahrens.
 
 \bigskip
 Während der Übergang vom feinen zum groben Gitter sich im Wesentlichen auf eine skalierte und gefilterte Restriktion der Verteilungen beschränkt, gestaltet sich der Übergang vom groben zum feinen Gitter aufwendiger, da feine Knoten, für deren Position kein grober Knoten existiert, aus den übrigen Daten interpoliert werden müssen.
@@ -356,7 +356,7 @@ Die Übertragungsrichtungen in \(\U_{g \to f}\) und \(\U_{f \to g}\) ergeben sic
 Mit diesem Argument lässt sich auch die Notwendigkeit eines Übergangsbereiches \(\U_g \cup \U_f\) der Mindestbreite \(\delta x_g\) erklären: Gäbe es diesen nicht, so fehlten an der Grenze zwischen grobem und feinem Gitter Verteilungsfunktionen in beide Richtungen zugleich.
 
 \bigskip
-Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während, im Kontext der LBM an sich, weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxionszeit.
+Anders als noch in Definition~\ref{def:SpatialDiscretizationLBM} betrachten wir die Gitter jetzt also nicht mehr unabhängig des darzustellenden physikalischen Modells, sondern unterscheiden anhand der physikalischen Auflösung \(\delta x\). Während, im Kontext der LBM an sich, weiterhin für beide Gitter \(\Delta x = 1\) gesetzt wird, führt die Relation von \(\delta x_g\) und \(\delta x_f\) im kommenden Kapitel~\ref{kap:Skalierung} u.a. zu einer Relation zwischen grober und feiner Relaxationszeit.
 
 Eine stringente Behandlung von Gitterkopplung in diesem Modell benötigt Abbildungen der physikalisch eingebetteten Knoten aus \(\G\) und \(\F\) in die zugehörigen \emph{implementierenden} Gitter mit uniformer Auflösung \(\Delta x = 1\). Diese stellen gerade die Definitionsmengen der groben bzw. feinen Verteilungsfunktionen dar.
 
@@ -386,8 +386,7 @@ Zusammenfassend wird die Aufgabe der im kommenden Kapitel zu erarbeitenden Skali
 
 \newpage
 \subsection{Komponenten der Gitterkopplung}
-\subsubsection{Skalierung}
-\label{kap:Skalierung}
+\subsubsection{Skalierung}\label{kap:Skalierung}
 
 Während die Skalierung räumlicher Größen durch die Festlegung des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
 
@@ -411,7 +410,7 @@ Für die Autoren des hier erörterten Gitterverfeinerungsverfahrens überwog dab
 
 Aus der Wahl von konvektiver Skalierung ergibt sich zunächst:
 \[\frac{\delta t_g}{\delta x_g} = \frac{\delta t_f}{\delta x_f} \land \delta x_f = \frac{\delta x_g}{2} \implies \delta t_f = \frac{\delta t_g}{2} \numberthis\label{eq:gridTime}\]
-Auf dem feinen Gitter müssen also doppelt so viele Zeitschritte wie auf dem groben Gitter durchgeführt werden. Geschwindigkeit, Druck und Dichte sind stetig im Gitterübergang. Dies gilt nicht für die kinetische Viskosität \(\nu = c_s^2 \tau\), was wir bei der Herleitung der feinen Relaxionszeit \(\tau_f\) aus \(\tau_g\) beachten müssen.
+Auf dem feinen Gitter müssen also doppelt so viele Zeitschritte wie auf dem groben Gitter durchgeführt werden. Geschwindigkeit, Druck und Dichte sind stetig im Gitterübergang. Dies gilt nicht für die kinetische Viskosität \(\nu = c_s^2 \tau\), was wir bei der Herleitung der feinen Relaxationszeit \(\tau_f\) aus \(\tau_g\) beachten müssen.
 
 \begin{Definition}[Physikalische Reynolds-Zahl]
 \label{def:PhysicalReynoldsNumber}
@@ -424,7 +423,7 @@ Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters.
 Seien \(U_\# := \delta t_\# / \delta x_\# \cdot U\) die charakteristische Geschwindigkeit, \(L_\# := 1 / \delta x_\# \cdot L\) die charakteristische Länge und \(\nu_\# := c_s^2 \tau_\#\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_\# := \frac{U_\# L_\#}{\nu_\#} = \frac{\delta t_\# U L}{(\delta x_\#)^2 \nu_\#} \]
 \end{Definition}
 
-Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit von Reynolds-Zahl und Gitterauflösung. Diese Gleichsetzung ist sinnvoll, da die Reynolds-Zahl gerade die Vergleichbarkeit von Strömungen verschiedener Modellgrößen ermöglicht. Durch Einsetzen von Definition~\ref{def:LatticeReynoldsNumber} erhalten wir eine Verknüpfung der Relaxionszeiten \(\tau_f\) und \(\tau_g\):
+Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit von Reynolds-Zahl und Gitterauflösung. Diese Gleichsetzung ist sinnvoll, da die Reynolds-Zahl gerade die Vergleichbarkeit von Strömungen verschiedener Modellgrößen ermöglicht. Durch Einsetzen von Definition~\ref{def:LatticeReynoldsNumber} erhalten wir eine Verknüpfung der Relaxationszeiten \(\tau_f\) und \(\tau_g\):
 \begin{align*}
 \text{Re}_g = \text{Re}_f &\iff \frac{\delta t_g U L}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f U L}{(\delta x_f)^2 \nu_f} \\
 &\iff \frac{\delta t_g}{(\delta x_g)^2 \nu_g} = \frac{\delta t_f}{(\delta x_f)^2 \nu_f} \\
@@ -433,12 +432,12 @@ Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit von Reyn
 &\iff \tau_f = 2 \tau_g \numberthis\label{eq:gridTau}\\
 \end{align*}
 
-Für die zur expliziten Lösung der diskreten LBM BGK Gleichung in Definition~\ref{def:LBGKeq} verschobenen Relaxionszeiten ergibt sich somit:
+Für die zur expliziten Lösung der diskreten LBM BGK Gleichung in Definition~\ref{def:LBGKeq} verschobenen Relaxationszeiten ergibt sich somit:
 \[\overline{\tau_f} = 2 \overline{\tau_g} - \frac{1}{2} \numberthis\label{eq:gridTauShift}\]
 
 Die Equilibriumsverteilung \(f_i^\text{eq}\) ergibt sich nach Definition~\ref{def:fieq} aus Geschwindigkeit \(u\) und Dichte \(\rho\). Sie sind also explizit unabhängig der Gitterauflösung und, wie erwähnt, stetig im Gitterübergang. Diese Aussage gilt nicht für die Nicht-Equilibriumsverteilung \(f_i^\text{neq}\), da diese nach (\ref{eq:approxFneq}) von dem Geschwindigkeitsgradienten \(\nabla u\) abhängt.
 
-Bezeichnen nun \(f_{f,i}^\text{neq}\) und \(f_{g,i}^\text{neq}\) die gitterspezifischen Nicht-Equilibriumanteile und \(\mathrm{S}_f\) sowie \(\mathrm{S}_g\) die entsprechenden Verzerrungstensoren. Zur Skalierung von \(f_{f,i}^\text{neq}\) suchen wir ein \(\alpha \in \R\) s.d. gilt: \[f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneqReq}\]
+Bezeichnen nun \(f_{f,i}^\text{neq}\) und \(f_{g,i}^\text{neq}\) die gitterspezifischen Nicht-Equilibriumanteile und \(\mathrm{S}_f\) sowie \(\mathrm{S}_g\) die entsprechenden Verzerrungstensoren. Zur Skalierung von \(f_{f,i}^\text{neq}\) suchen wir ein \(\alpha \in \R\) s. d. gilt: \[f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneqReq}\]
 Mit Hilfe von (\ref{eq:approxFneq}) lässt sich diese Relation nach \(\alpha\) auflösen:
 \begin{align*}
 f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} &\iff -\frac{w_i \rho \overline{\tau_f}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_f = -\alpha \left( \frac{w_i \rho \overline{\tau_g}}{c_s^2} \mathrm{Q}_i : \mathrm{S}_g \right) \\
@@ -446,7 +445,7 @@ f_{f,i}^\text{neq} = \alpha f_{g,i}^\text{neq} &\iff -\frac{w_i \rho \overline{\
 &\iff \overline{\tau_f} \delta t_f \mathrm{Q}_i : \mathrm{S} = \alpha \overline{\tau_g} \delta t_g \mathrm{Q}_i : \mathrm{S} \\
 &\iff \alpha = \frac{\delta t_f}{\delta t_g} \frac{\overline{\tau_f}}{\overline{\tau_g}}\\
 \end{align*}
-Einsetzen der Relationen (\ref{eq:gridTime}) und (\ref{eq:gridTauShift}) reduziert den Skalierungsfaktor auf einen nur von der groben Relaxionszeit abhängigen Ausdruck:
+Einsetzen der Relationen (\ref{eq:gridTime}) und (\ref{eq:gridTauShift}) reduziert den Skalierungsfaktor auf einen nur von der groben Relaxationszeit abhängigen Ausdruck:
 \begin{align*}
 \alpha &= \frac{\delta t_f}{\delta t_g} \frac{\overline{\tau_f}}{\overline{\tau_g}} \\
 &= \frac{1}{2} \frac{2\overline{\tau_g} - \frac{1}{2}}{\overline{\tau_g}} \\
@@ -455,7 +454,7 @@ Einsetzen der Relationen (\ref{eq:gridTime}) und (\ref{eq:gridTauShift}) reduzie
 Schließlich erhalten wir so die folgende Relation der Nicht-Equilibriumsverteilungen:
 \[f_{f,i}^\text{neq} = \left( 1-\frac{1}{4\overline{\tau_g}} \right) f_{g,i}^\text{neq} \numberthis\label{eq:scaleFneq}\]
 
-Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zeit, der Relaxionszeit sowie der Nicht-Equilibriumsverteilung zwischen den Gittern \(\F\) und \(\G\) hergeleitet.
+Insgesamt haben wir hiermit die Skalierung der Diskretisierungen in Raum und Zeit, der Relaxationszeit sowie der Nicht-Equilibriumsverteilung zwischen den Gittern \(\F\) und \(\G\) hergeleitet.
 
 \bigskip
 
@@ -465,7 +464,7 @@ f_{g,i}(x_{f \to g}) &= f_i^\text{eq}(\rho(x_{f \to g}), u(x_{f \to g})) + \left
 f_{f,i}(x_{g \to f}) &= f_i^\text{eq}(\rho(x_{g \to f}), u(x_{g \to f})) + \left(1-\frac{1}{4\overline{\tau_g}}\right) f_{g,i}^\text{neq}(x_{g \to f}) \label{eq:basicG2F}
 \end{align}
 
-Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten potenziell komplizierter, als eine bloße Skalierung, wie wir im nächsten Kapitel zeigen werden.
+Die zusammengesetzten Verteilungsfunktionen von Übergangsknoten des einen Gitters lassen sich also durch Skalierung des Nicht-Equilibriumanteils der Verteilungsfunktionen des jeweils anderen Gitters rekonstruieren. Leider reicht dies noch nicht zur vollständigen Beschreibung eines Gitterverfeinerungsverfahrens, da nicht für alle feinen Gitterknoten im Übergangsbereich passende grobe Gitterknoten existieren -- vgl. dazu Abbildung~\ref{fig:OverlapZone}. Auch der Übergang von fein nach grob gestaltet sich trotz passenden feinen Knoten potenziell komplizierter als eine bloße Skalierung, wie wir im nächsten Kapitel sehen werden.
 
 \newpage
 \subsubsection{Restriktion}
@@ -514,9 +513,9 @@ Bekannte Stützwerte von \(\ipolarg{\star}{x}\) befinden sich also relativ zum g
 
 Um die kommenden Ausführungen auf das Wesentliche -- namentlich das Verfahren unabhängig der konkret zu interpolierenden Funktion -- zu konzentrieren, sei definiert:
 \[\sipolarg{h} := \ipolarg{\star}{x_{g \to f}^f + h \, \delta x_f \, v} \text{ für Zielfunktion } \star \in \{\rho_g, u_g, f_{g,i}^\text{neq}\}\]
-In dieser Formulierung suchen wir also eine möglichst gute Interpolation des Wertes in \(\sipolarg{0}\) anhand der Stützstellen \(\sipolarg{h}\) für kleine \(h \in \Z \setminus 2\Z\). Ein naheliegender Ansatz hierfür ist das arithmetische Mittel der beiden engsten Nachbarn:
+In dieser Formulierung suchen wir also eine möglichst gute Interpolation des Wertes in \(\sipolarg{0}\) anhand der Stützstellen \(\sipolarg{h}\) für kleine \(h \in \Z \setminus 2\Z\). Ein nahe liegender Ansatz hierfür ist das arithmetische Mittel der beiden engsten Nachbarn:
 \[\ipolarg{\star}{x_{g \to f}^f} = \sipolarg{0} = \frac{\sipolarg{-1} + \sipolarg{1}}{2} \numberthis\label{eq:ipol2ord}\]
-Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nachbarn auch an den Ecken des Übergangsbereiches existieren (vgl. Abbildung~\ref{fig:InterpolationEdgeCase}) und daher keine Sonderbehandlung erforderlich wird.
+Vorteil eines solch einfachen Verfahrens wäre, dass die benötigten groben Nachbarn auch an den Ecken des Übergangsbereiches existieren (vgl. Abbildung~\ref{fig:InterpolationEdgeCase}) und daher keine Sonderbehandlung erforderlich würde.
 \begin{figure}[h]
 \centering
 \input{img/interpolation_detail.tikz}
@@ -560,7 +559,7 @@ Auch in dieser Situation ist nur der Wert in \(0\) zur Näherung von \(\ipolarg{
 Passend zur Anzahl der Stützstellen präsentiert sich dieses Verfahren nach erneutem Einsetzen der Taylor-Entwicklung (\ref{eq:sipolTaylorOrder4}) als eine Interpolationsformel dritter Ordnung:
 \[\frac{3}{8}\sipolarg{-1} + \frac{3}{4}\sipolarg{1} - \frac{1}{8}\sipolarg{3} \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^3)\]
 
-Trotz Behandlung dieses Sondernfalls werden die höheren Approximationsordnungen gegenüber (\ref{eq:ipol2ord}) weiterhin und unumgänglich durch zusätzliche Stützstellen erkauft, welche bei parallelisierten LBM-Umsetzungen kommuniziert werden müssen. Es gilt also, zwischen Güte der Interpolation und Anzahl sowie Position der Stützstellen abzuwiegen.
+Trotz Behandlung dieses Sonderfalls werden die höheren Approximationsordnungen gegenüber (\ref{eq:ipol2ord}) weiterhin und unumgänglich durch zusätzliche Stützstellen erkauft, welche bei parallelisierten LBM-Umsetzungen kommuniziert werden müssen. Es gilt also, zwischen Güte der Interpolation und Anzahl sowie Position der Stützstellen abzuwiegen.
 
 \newpage
 \subsection{Algorithmus}\label{kap:Algorithmus}
@@ -599,7 +598,7 @@ Der Interpolationsoperator vierter Ordnung (\ref{eq:ipol4ord}) löst sich dabei 
 + &\frac{1}{16}(\star(x_{g \to f}^f-3\delta x_f v, t+\delta t_f) + \star(x_{g \to f}^f+3\delta x_f v, t+\delta t_f))
 \end{align*}
 
-\item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+\delta t_g\):] Dieser zweite Rekonstruktionsschritt auf dem feinen Gitter gestaltet sich einfacher, da die benötigten groben Verteilungen in \(\U_{g \to f}\) zur Zeitpunkt \(t+\delta t_g\) bereits durch den initialen Simulationschritt auf dem groben Gitter bekannt sind. Entsprechend können die Kopplungsformeln (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) direkt zur Vervollständigung von \(\F\) angewandt werden.
+\item[Vervollständigung von \(\F\) zu Zeitpunkt \(t+\delta t_g\):] Dieser zweite Rekonstruktionsschritt auf dem feinen Gitter gestaltet sich einfacher, da die benötigten groben Verteilungen in \(\U_{g \to f}\) zur Zeitpunkt \(t+\delta t_g\) bereits durch den initialen Simulationsschritt auf dem groben Gitter bekannt sind. Entsprechend können die Kopplungsformeln (\ref{eq:expandedDirectG2F}) und (\ref{eq:expandedInterpolG2F}) direkt zur Vervollständigung von \(\F\) angewandt werden.
 
 \item[Vervollständigung von \(\G\) zu Zeitpunkt \(t+\delta t_g\):] Nach zweimaliger Vervollständigung des feinen Gitters verbleibt zur Wiederherstellung der Schleifeninvariante der Abschluss des eingehenden Kollisions- und Strömungsschritts auf dem groben Gitter durch Restriktion der aus Richtung des feinen Gitters eingehenden Verteilungsfunktionen. Hierzu erlaubt die, durch die zuvorkommenden Schritte garantierte, Vollständigkeit des feinen Gitters zu Zeitpunkt \(t+\delta t_g\), die direkte Anwendung der Kopplungsformel (\ref{eq:restrictedF2G}) mit Restriktionsoperator (\ref{eq:neqAvgRestrictionF2G}) auf die Knoten in \(\U_{f \to g}\).
 \begin{align*}
@@ -622,7 +621,7 @@ Nach Durchführung der drei Vervollständigungsschritte haben wir die Invariante
 OpenLB~\cite{olb12} ist ein umfangreiches frei verfügbares C++ Framework zur Implementierung von LBM basierenden Simulationen. Schwerpunkte sind dabei eine große Flexibilität in Hinblick auf die unterstützten Lattice Boltzmann Modelle sowie weitreichende Modularisierung zur einfachen Umsetzung neuer Anwendungen bei gleichzeitiger Eignung für hochperformante Berechnungen durch Skalierbarkeit auf parallele Großrechner.
 
 \bigskip
-Eine LBM Bibliothek mit idealer Unterstützung für Gitterverfeinerung würde es erlauben, dass zu lösende physikalische Problem zunächst ohne Rücksicht auf die konkrete Zusammensetzung des Gitters zu modellieren. Entstünde dann im Konflikt zwischen Rechenressourcen und angestrebter Ergebnisqualität ein Bedarf für Gitterverfeinerung, sollte diese a posteriori ohne weitere Anpassungen hinzugeschalten werden können. In einer solchen Umgebung wäre es dann sogar denkbar, die Entscheidung über Position und Ausmaß der Verfeinerung an ein automatisches Kriterium \cite{Lagrava15} zu übertragen.
+Eine LBM Bibliothek mit idealer Unterstützung für Gitterverfeinerung würde es erlauben, dass zu lösende physikalische Problem zunächst ohne Rücksicht auf die konkrete Zusammensetzung des Gitters zu modellieren. Entstünde dann im Konflikt zwischen Rechenressourcen und angestrebter Ergebnisqualität ein Bedarf für Gitterverfeinerung, sollte diese a posteriori ohne weitere Anpassungen hinzugeschaltet werden können. In einer solchen Umgebung wäre es dann sogar denkbar, die Entscheidung über Position und Ausmaß der Verfeinerung an ein automatisches Kriterium \cite{Lagrava15} zu übertragen.
 
 Diese Vision ist selbstredend von großem Anspruch und weit außerhalb der Grenzen dieser Arbeit. Ein erster Schritt muss jedoch die Ergänzung von OpenLB um grundlegende Unterstützung für manuelle Gitterverfeinerung sein -- d. h. Position, Größe und Auflösung des zu verfeinernden Bereichs müssen durch den Nutzer vorgegeben werden können.
 
@@ -635,7 +634,7 @@ Auf Grundlage dieses räumlichen Umrisses wird dann das eigentliche Gitter in ei
 Diese \class{Dynamics} beschreiben dabei zusammen mit zellübergreifenden Postprozessoren nicht nur das einfache Strömungsverhalten, sondern modellieren auch die zahlreichen Randkonditionen, welche die Abbildung komplexer Geometrien in LBM erst ermöglichen.
 Zur einfacheren Zuordnung dieser zellspezifischen Klassen verwendet OpenLB sogenannte Materialzahlen, welche von einer \class{SuperGeometry2D} Instanz verwaltet werden.
 
-Parallel zu diesen Strukturen kapselt und berechnet die \class{UnitConverter} Klasse etwaig benötigte Konstanten zur Konvertierung zwischen physikalischen Einheiten und den, diese modellierenden, Lattice-Einheiten sowie Relaxionszeiten und Fluidkonstanten wie die Reynolds-Nummer.
+Parallel zu diesen Strukturen kapselt und berechnet die \class{UnitConverter} Klasse etwaig benötigte Konstanten zur Konvertierung zwischen physikalischen Einheiten und den, diese modellierenden, Lattice-Einheiten sowie Relaxationszeiten und Fluidkonstanten wie die Reynolds-Nummer.
 
 \bigskip
 Im Allgemeinen ergibt sich aus diesen Komponenten folgende übliche Struktur von OpenLB-basierenden Anwendungen \cite[Kap.~2.1]{olb12userguide}:
@@ -659,7 +658,7 @@ Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutz
 
 Bei Variation der Auflösung einzelner Quader im Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg, benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden.
 
-Zur Ermöglichung von Parallelisierung berücksichtigt die, der Gitterverwaltung in \class{SuperLattice2D} zugrundeliegende, Aufteilung der Domäne durch \class{CuboidGeometry2D} bereits Übergangsbereiche, deren Funktion mit zusätzlicher Auflösungskopplung in Einklang zu bringen wäre.
+Zur Ermöglichung von Parallelisierung berücksichtigt die, der Gitterverwaltung in \class{SuperLattice2D} zugrunde liegende, Aufteilung der Domäne durch \class{CuboidGeometry2D} bereits Übergangsbereiche, deren Funktion mit zusätzlicher Auflösungskopplung in Einklang zu bringen wäre.
 
 Weiter würde das Problemfeld eben dieser Dekomposition um die Restriktion auf Auflösungsübergänge im Verhältnis \(1:2\) erweitert. So müsste ein guter Algorithmus zur Aufteilung der Simulationsdomäne die Anforderungen an Parallelisierung, Verteilung der Rechenressourcen, Geometrie und Verfeinerung sinnvoll auflösen und zugleich manuelle Eingriffe erlauben. Diese zusätzliche starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein starkes Gegenargument zu diesem ersten Gedanken.
 
@@ -678,7 +677,7 @@ Nachdem nun das grobe Umfeld eines Gitterverfeinerungsframeworks feststeht, gilt
 
 Wie im vorangehenden Kapitel erläutert, soll das Framework zur Gitterverfeinerung nicht tief in vorhandene Strukturen integriert, sondern viel mehr über diesen stehend angesiedelt werden. Eine erste Hürde zu diesem Ziel ist die, größtenteils aus zwangfreien Konventionen bestehende, Struktur von OpenLB Anwendungen. So sind zwar die einzelnen Komponenten der Simulation wie \class{CuboidGeometry2D} und \class{SuperLattice2D} vorgegeben, deren Konstruktion und Verknüpfung erfolgt jedoch größtenteils manuell.
 
-Für sich ist diese Herangehensweise des flexiblen Zusammensetzens von Modulen durchaus erhaltenswert und bildet eine der Stärken von OpenLB. Zur übergreifenden und für den Nutzer möglichst bequemen Einbindung von Gitterverfeinerung -- wir erinnern uns: das Ziel ist es, Gitter erst im Nachhinein mit einem einzigen Funktionsaufruf zu verfeinern -- muss jedoch zumindest die Konstruktion des auflösungseigenen \class{SuperLattice2D} mit dem dazugehörigen Umfeld aus \class{UnitConverter}, \class{LoadBalancer}, \class{CuboidGeometry2D} und \class{SuperGeometry2D} soweit wie möglich gekapselt werden.
+Für sich ist diese Herangehensweise des flexiblen Zusammensetzens von Modulen durchaus erhaltenswert und bildet eine der Stärken von OpenLB. Zur übergreifenden und für den Nutzer möglichst bequemen Einbindung von Gitterverfeinerung -- wir erinnern uns: Das Ziel ist es, Gitter erst im Nachhinein mit einem einzigen Funktionsaufruf zu verfeinern -- muss jedoch zumindest die Konstruktion des auflösungseigenen \class{SuperLattice2D} mit dem dazugehörigen Umfeld aus \class{UnitConverter}, \class{LoadBalancer}, \class{CuboidGeometry2D} und \class{SuperGeometry2D} soweit wie möglich gekapselt werden.
 
 \bigskip
 Entsprechend besteht das Framework aus zwei Komponenten: Einer \class{Grid2D} Klasse, die in einem Konstruktoraufruf ein \class{SuperLattice2D} zusammen mit dem benötigten Umfeld instanziiert und einer \class{Coupler2D} Klasse zur Abbildung der Übergänge zwischen mehreren \class{Grid2D} Instanzen. Die Gitterklasse stellt dabei eine Methode \method{Grid2D::refine} bereit, die anhand einer Parametrisierung der zu verfeinernden Domäne ein neues \method{Grid2D} konstruiert und über entsprechende \class{Coupler2D} Objekte mit sich selbst verknüpft. Funktionen wie \method{prepareGeometry} und \method{prepareLattice} können in diesem Umfeld dann durch entsprechende \emph{Getter} mit \class{Grid2D} zusammenarbeiten. Arbeiten diese Funktionen bereits auf Grundlage von analytischen Indikatoren, d. h. unabhängig der Auflösung, können sie sogar ohne Anpassung für alle Gitterauflösungen verwendet werden.
@@ -702,7 +701,7 @@ RefiningGrid2D<T,DESCRIPTOR>::RefiningGrid2D(
 \label{lst:RefiningGrid}
 \end{listing}
 
-Die Konstruktion von \class{Grid2D} erfolgt anhand einer indikatorgegebenen Beschreibung der Simulationsdomäne sowie der gewünschten Auflösung zusammen mit der Relaxionszeit und der modellierenden Reynolds-Nummer:
+Die Konstruktion von \class{Grid2D} erfolgt anhand einer indikatorgegebenen Beschreibung der Simulationsdomäne sowie der gewünschten Auflösung zusammen mit der Relaxationszeit und der modellierenden Reynolds-Nummer:
 \begin{minted}{cpp}
 Grid2D(FunctorPtr<IndicatorF2D<T>>&& domainF, int resolution, T tau, int re);
 \end{minted}
@@ -716,7 +715,7 @@ Während sich die Realisierung dieser Signatur als einfache Konstruktion der erl
 
 Wie in Kapitel~\ref{kap:Algorithmus} dargelegt, müssen zur Gitterkopplung nach jedem Kollisions- und Strömungsschritt verschiedene Arbeiten durchführt werden. So ist die Ausführung von Kollisions- und Strömungsschritten auf dem feinen Gitter zusammen mit der jeweiligen Vor- und Nacharbeit strikt an die Nacharbeit von Kollisions- und Strömungsschritten auf dem groben Gitter gebunden.
 
-Wurde das grobe Gitter um einen Zeitschritt weiterentwickelt, muss der Zustand des feinen Gitters ebenfalls um entsprechend zwei feine Zeitschritte weiterentwickelt werden, damit die groben Verteilungsfunktionen vervollständigt werden können. Es liegt somit nahe, die Aufrufe von \method{SuperLattice2D::collideAndStream} in einer Methode \method{Grid2D::collideAndStream} zu kapseln, um auf diese Weise die Aufrufe von \class{Coupler2D} an den korrekten Stellen durchzuführen.
+Wurde das grobe Gitter um einen Zeitschritt weiterentwickelt, muss der Zustand des feinen Gitters ebenfalls um entsprechend zwei feine Zeitschritte evolviert werden, damit die groben Verteilungsfunktionen vervollständigt werden können. Es liegt somit nahe, die Aufrufe von \method{SuperLattice2D::collideAndStream} in einer \method{Grid2D::collideAndStream} Methode zu kapseln, um auf diese Weise die Aufrufe von \class{Coupler2D} an den korrekten Stellen durchzuführen.
 
 Konkret erhalten wir in Listing~\ref{lst:GridCollideAndStream} bei gesammelter Verwaltung der von \method{Grid2D::refine} erstellten feinen Gitter und den zugehörigen Kopplern eine, der Algorithmenübersicht in Abbildung~\ref{fig:AlgorithmBirdsEye} nicht unähnliche, Implementierung von \method{Grid2D::collideAndStream}.
 Zu bemerken ist, dass die Konstellation aus dieser Methode zusammen mit \method{Grid2D::refine} durch Selbstaufruf bereits die freie Schachtelung von Verfeinerungsbereichen erlaubt.
@@ -751,7 +750,7 @@ for (int iT = 0; iT < coarseGrid->getConverter().getLatticeTime(100); ++iT) {
 \label{lst:RefinementUsageExample}
 \end{listing}
 
-Wie in diesem Listing zu sehen, kann Gitterverfeinerung innerhalb des beschriebenen Frameworks schon erfreulich kompakt formuliert werden. Tatsächlich fehlt zum Etappenziel der einzeilig aktivierbaren manuell positionierten Gitterverfeinerung nur eine weitere Abstraktion von von \method{prepareGeometry} und \method{prepareLattice}.
+Wie in diesem Listing zu sehen, kann Gitterverfeinerung innerhalb des beschriebenen Frameworks schon erfreulich kompakt formuliert werden. Tatsächlich fehlt zum Etappenziel der einzeilig aktivierbaren manuell positionierten Gitterverfeinerung lediglich eine weitere Abstraktion von von \method{prepareGeometry} und \method{prepareLattice}.
 
 \bigskip
 Zur umfassenden Beschreibung des Gitterverfeinerungsframework fehlt uns jetzt nur noch die Definition der \class{Coupler2D} Objekte. Da diese die Einzelheiten des Verfeinerungsverfahrens umsetzen, werden sie im Rahmen des folgenden Kapitels zur Implementierung des Verfahrens von Lagrava et al. näher beleuchtet werden.
@@ -785,7 +784,7 @@ Wie in Listing~\ref{lst:FineCoupler2D} zu sehen, benötigt das Setzen der feinen
 \label{lst:FineCoupler2D_couple_extract}
 \end{listing}
 
-Zur Beleuchtung des Herzstücks der feinen Kopplung sehen wir in Listing~\ref{lst:FineCoupler2D_couple_extract} einen Ausschnitt der Kopplungsfunktion für Knoten \(x_{g \to f}^f \in \F\) mit räumlicher Interpolation der benötigten groben Werte. Zusammen mit der zugehörigen Interpolationsfunktion in Listing~\ref{lst:ipol4ord} lässt sich dabei sehen, wie sich das Verfeinerungsvefahren durch Verwenden von OpenLB Modulen wie den \class{lbHelpers} und der \class{Vector} Datenstruktur sehr nah an seiner mathematischen Formulierung umsetzen lässt.
+Zur Beleuchtung des Herzstücks der feinen Kopplung sehen wir in Listing~\ref{lst:FineCoupler2D_couple_extract} einen Ausschnitt der Kopplungsfunktion für Knoten \(x_{g \to f}^f \in \F\) mit räumlicher Interpolation der benötigten groben Werte. Zusammen mit der zugehörigen Interpolationsfunktion in Listing~\ref{lst:ipol4ord} lässt sich dabei sehen, wie sich das Verfeinerungsverfahren durch Verwenden von OpenLB Modulen wie den \class{lbHelpers} und der \class{Vector} Datenstruktur sehr nah an seiner mathematischen Formulierung umsetzen lässt.
 
 \begin{listing}[H]
 \begin{minted}{cpp}
@@ -823,7 +822,7 @@ Entsprechend beschränken wir uns je nach Beispiel auf die Betrachtung einer Aus
 	\item Vergleich von lokal verfeinerten und uniformen Gittern mit gleicher Knotenanzahl
 \end{enumerate}
 
-Das hochwertigste Kriterium ist dabei der Fehlervergleich zur analytischen Lösung bei Beschränkung der Gesamtknotenanzahl. Existiert die dazu notwenige formalisierte Lösung nicht, sind auch Vergleiche mit Referenzwerten aus realen Experimenten oder gesicherten Simulationen denkbar. Die subjektive Qualitätsbewertung hingegen erlaubt nur die Bewertung von Extremfällen wie im Strömungsbild erkennbaren Übergängen zwischen Gittern oder möglicher Divergenzvermeidung durch gezielte Verfeinerung.
+Das hochwertigste Kriterium ist dabei der Fehlervergleich zur analytischen Lösung bei Beschränkung der Gesamtknotenanzahl. Existiert die dazu notwendige formalisierte Lösung nicht, sind auch Vergleiche mit Referenzwerten aus realen Experimenten oder gesicherten Simulationen denkbar. Die subjektive Qualitätsbewertung hingegen erlaubt nur die Bewertung von Extremfällen wie im Strömungsbild erkennbaren Übergängen zwischen Gittern oder möglicher Divergenzvermeidung durch gezielte Verfeinerung.
 
 \newpage
 \subsection{Rohrströmung}
@@ -861,7 +860,7 @@ In Abbildung~\ref{fig:PoiseuilleGridSetup} sehen wir das resultierende Gitter zu
 \label{fig:PoiseuilleGridSetup}
 \end{figure}
 
-Neben diesen knotenspezifischen Eigenschaften sei \(u=\num{0.01}\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxionszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir nach geeigneter Aufbereitung der \class{VTK}-Ausgabe \cite[Kap.~19.3]{vtkGuide10} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} dargestellte Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \num{1e-5}, gefallen ist.
+Neben diesen knotenspezifischen Eigenschaften sei \(u=\num{0.01}\) die charateristische Geschwindigkeit in Lattice-Einheiten und \(\text{Re}=10\) die modellierte Reynolds-Zahl. Erstellen wir unsere grobe \class{Grid2D} Instanz mit diesen, die Relaxationszeit \(\tau\) fixierenden, Werten und führen die Simulation bis zur Konvergenz aus, erblicken wir nach geeigneter Aufbereitung der \class{VTK}-Ausgabe \cite[Kap.~19.3]{vtkGuide10} schließlich das in Abbildung~\ref{fig:PoiseuilleVelocityGrid} dargestellte Strömungsbild. Konvergenz bedeutet in diesem Kontext, dass die durchschnittliche Energie des feinen Gitters unter einen Residuumswert, hier \num{1e-5}, gefallen ist.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -924,12 +923,12 @@ Legen wir jedoch erneut ein randlos halbseitig verfeinertes Gitter wie beim Verg
 
 \bigskip
 
-Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es treten also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild auf. Der beobachtete negative Einfluss von Randbedingungen im Übergangsbereich der Gitter sollte hier aber nicht unerwiedert bleiben -- bis die korrekte Behandlung solcher Randbedingungen nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden, denn nur dessen Skalierung wird in Kapitel~\ref{kap:Lagrava} und der zugrundeliegendem Arbeit \cite{Lagrava12} behandelt.
+Fassen wir die Ergebnisse der zurückliegenden ersten Analyse des Gitterverfeinerungsverfahrens unter dem Eindruck der beschränkten Aussagekraft bezogen auf die Wahl der Rohrströmung zusammen, bestätigt sich das Verfahren als grundsätzlich anwendbar. Es treten also sowohl bei subjektiver Betrachtung als auch bei Vergleich der analytischen Lösung keine extremen Fehler im Strömungsbild auf. Der beobachtete negative Einfluss von Randbedingungen im Übergangsbereich der Gitter sollte hier aber nicht unerwidert bleiben -- bis die korrekte Behandlung solcher Randbedingungen nicht geklärt ist, sollten Gitterübergänge nur im offenen Fluid platziert werden, denn nur dessen Skalierung wird in Kapitel~\ref{kap:Lagrava} und der zugrundeliegendem Arbeit \cite{Lagrava12} behandelt.
 
 \newpage
 \subsection{Umströmter Zylinder}
 
-Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömungsbeispiel welches entsprechend in der Menge der OpenLB Beispielanwendungen enthalten ist. Grundsätzlich ähnelt es dem Aufbau der Rohrströmung -- simuliert wird die von zwei Wänden begrenzte Strömung zwischen Ein- und Ausfluss ergänzt um ein zylindrisches Hindernis im Eingangsbereich.
+Bei dem \emph{umströmten Zylinder} handelt es sich um ein verbreitetes Strömungsbeispiel, welches entsprechend in der Menge der OpenLB Beispielanwendungen enthalten ist. Grundsätzlich ähnelt es dem Aufbau der Rohrströmung -- simuliert wird die von zwei Wänden begrenzte Strömung zwischen Ein- und Ausfluss ergänzt um ein zylindrisches Hindernis im Eingangsbereich.
 
 \begin{figure}[h]
 \centering
@@ -948,7 +947,7 @@ Während für diese Strömungssituation noch keine analytische Lösung gefunden 
 \label{fig:UniformCylinderVelocity16s}
 \end{figure}
 
-Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und dimensionalisieren diesen wiederum als \(D := 0.1m\), was zugleich der charakteristischen Länge entspreche. Auflösungsangaben beziehen sich im Folgenden also auf den Durchmesser des Zylinders in groben Gitterweiten. Hinblickend auf die Vorgaben zum instationären Testfall \cite[Kapitel~2.2b]{SchaeferTurek96} sei \(\text{Re}:=100\) die Reynolds-Zahl und für den Einfluss sei ein Poiseuille-Geschwindigkeitsprofil angelegt. Wände und Ausflüsse werden analog zur hindernisfreien Rohrströmung durch lokale Geschwindigkeits- bzw. Druckrandbedingungen konstruiert, während der Zylinder den Fluss durch Bounce-Back hindere. Eine Relaxionszeit \(\overline\tau_g := 0.51\) des gröbsten Gitters vervollständigt unser Modell.
+Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und dimensionalisieren diesen wiederum als \(D := 0.1m\), was zugleich der charakteristischen Länge entspreche. Auflösungsangaben beziehen sich im Folgenden also auf den Durchmesser des Zylinders in groben Gitterweiten. Hinblickend auf die Vorgaben zum instationären Testfall \cite[Kapitel~2.2b]{SchaeferTurek96} sei \(\text{Re}:=100\) die Reynolds-Zahl und für den Einfluss sei ein Poiseuille-Geschwindigkeitsprofil angelegt. Wände und Ausflüsse werden analog zur hindernisfreien Rohrströmung durch lokale Geschwindigkeits- bzw. Druckrandbedingungen konstruiert, während der Zylinder den Fluss durch Bounce-Back hindere. Eine Relaxationszeit \(\overline\tau_g := 0.51\) des gröbsten Gitters vervollständigt unser Modell.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -984,7 +983,7 @@ An dieser Stelle wollen wir die Gelegenheit nutzen, uns näher mit der Wahl der 
 \begin{Definition}[Knudsen-Zahl]
 Sei \(\lambda\) die mittlere freie Weglänge, \(L\) die charakteristische Länge des Systems. Die Knudsen-Zahl \(\text{Kn}\) ist definiert als:
 \[ \text{Kn} := \frac{\lambda}{L} \quad \left(\overset{\text{\cite[Kap.~1.4.2]{Haenel04}}}{=} \frac{\text{Ma}}{\text{Re}} \frac{\rho^2 c_s \lambda}{\nu} \quad \overset{\text{\cite[Gl.~(7.22)]{Krueger17}}}{\simeq} \frac{\text{Ma}}{\text{Re}}\right) \]
-Diese Knudsen-Zahl ist eine dimensionlose Kennzahl der Strömungslehre. Ihr Wert beschreibt, ob ein Gas als strömungsmechanisches Kontinuum nach Navier-Stokes oder als Bewegung einzelner Teilchen betrachtet werden kann \cite[S.~14]{Krueger17}:
+Diese Knudsen-Zahl ist eine dimensionslose Kennzahl der Strömungslehre. Ihr Wert beschreibt, ob ein Gas als strömungsmechanisches Kontinuum nach Navier-Stokes oder als Bewegung einzelner Teilchen betrachtet werden kann \cite[S.~14]{Krueger17}:
 \begin{description}
 \item[\(\text{Kn} \ll 1\)] Strömungsmechanisches Kontinuum nach Navier-Stokes
 \item[\(\text{Kn} \gtrsim 1\)] Betrachtung einzelner Teilchen
@@ -1173,7 +1172,7 @@ Knotenanzahl & \num{145314} & \num{13454} & \\
 \end{table}
 
 \newpage
-Das diesen Resultaten zugrundeliegende Gitter orientiert sich in der Anzahl seiner Zellen an einem uniform aufgelösten Gitter, welches knapp an der Grenze zur Divergenz im Ausflussgebiet arbeitet. Die im Vergleich dazu sehr guten Ergebnisse des optimierten Gitters sind also nicht zu überraschend.
+Das diesen Resultaten zugrunde liegende Gitter orientiert sich in der Anzahl seiner Zellen an einem uniform aufgelösten Gitter, welches knapp an der Grenze zur Divergenz im Ausflussgebiet arbeitet. Die im Vergleich dazu sehr guten Ergebnisse des optimierten Gitters sind also nicht zu überraschend.
 Als weiteren Vergleich betrachten wir deshalb in Tabelle~\ref{tab:cylinder2dComparison} die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_a}\) einer uniform mit \(N=40\), d. h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Simulation.
 
 Auch im Vergleich mit diesem \num{145314} Knoten umfassenden Gitter bewähren sich die, mit nur etwa einem Zehntel der Knoten gewonnenen, Ergebnisse der verfeinerten Simulation.
@@ -1183,7 +1182,7 @@ Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient
 
 Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
 Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf der ganzen Simulationsdomäne der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
-Dazu sehen wir in Abbildungen~\ref{fig:cylinder2dHighResDragComparison} und \ref{fig:cylinder2dHighResLiftDeltapComparison} sowie zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparison} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen varierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
+Dazu sehen wir in Abbildungen~\ref{fig:cylinder2dHighResDragComparison} und \ref{fig:cylinder2dHighResLiftDeltapComparison} sowie zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparison} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen variierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
 
 \bigskip
 

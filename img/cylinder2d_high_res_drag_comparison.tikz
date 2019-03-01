@@ -1,0 +1,33 @@
+\begin{tikzpicture}
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_grid_n20_re100_drag_lift_deltap.csv}\refined
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n48_re100_drag_lift_deltap.csv}\uniformMiddle
+\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n80_re100_drag_lift_deltap.csv}\uniformHigh
+
+\begin{axis}[
+	scale only axis,
+	height=7.5cm,
+	width=0.9*\textwidth,
+	legend cell align=left,
+	legend pos=south east,
+	grid=both,
+	domain=0:16,
+	xmin=6, xmax=16,
+	xlabel={Simulierte physikalische Zeit},
+	x unit=s,
+	ylabel={Widerstandskoeffizient},
+	ylabel absolute, every axis y label/.append style={yshift=0.4cm},
+	y tick label style={/pgf/number format/.cd, use comma}
+]
+
+\addplot[color=black]{3.23};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Wmax} := \num{3.23}\)};
+\addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=drag] {\uniformHigh};
+\addlegendentry {Uniformes \(N=80\) Gitter mit \(\sim 577000\) Knoten};
+\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\uniformMiddle};
+\addlegendentry {Uniformes \(N=48\) Gitter mit \(\sim 208000\) Knoten};
+\addplot[color=green!70!black,thick] table [x expr=8*\thisrow{time}, y=drag] {\refined};
+\addlegendentry {Verfeinertes \(N=20\) Gitter mit \(\sim 208000\) Knoten};
+
+\end{axis}
+
+\end{tikzpicture}

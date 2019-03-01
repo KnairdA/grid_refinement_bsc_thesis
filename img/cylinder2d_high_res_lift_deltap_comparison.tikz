@@ -5,30 +5,7 @@
 
 \begin{axis}[
 	scale only axis,
-	height=6cm,
-	width=0.9*\textwidth,
-	legend cell align=left,
-	legend pos=south east,
-	grid=both,
-	domain=0:16,
-	xmin=6, xmax=16,
-	ylabel={Widerstandskoeffizient},
-	ylabel absolute, every axis y label/.append style={yshift=0.4cm},
-	y tick label style={/pgf/number format/.cd, use comma}
-]
-
-\addplot[color=black]{3.23};
-\addlegendentry {Gemittelte Referenzlösung \(c_\text{Wmax} := \num{3.23}\)};
-\addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=drag] {\uniformHigh};
-\addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=drag] {\uniformMiddle};
-\addplot[color=green!70!black,thick] table [x expr=8*\thisrow{time}, y=drag] {\refined};
-
-\end{axis}
-
-\begin{axis}[
-	scale only axis,
-	yshift=-7cm,
-	height=6cm,
+	height=7.5cm,
 	width=0.9*\textwidth,
 	legend cell align=left,
 	legend pos=south east,
@@ -50,8 +27,8 @@
 
 \begin{axis}[
 	scale only axis,
-	yshift=-14cm,
-	height=6cm,
+	yshift=-8.5cm,
+	height=7.5cm,
 	width=0.9*\textwidth,
 	legend cell align=left,
 	legend pos=south east,

@@ -5,7 +5,40 @@
 
 \begin{axis}[
 	scale only axis,
-	height=8cm,
+	height=7.5cm,
+	width=0.9*\textwidth,
+	legend cell align=left,
+	legend pos=south east,
+	grid=both,
+	domain=0:16,
+	xmin=0, xmax=16,
+	ylabel={Widerstandskoeffizient},
+	ylabel absolute, every axis y label/.append style={yshift=0.2cm}
+]
+
+\addplot[
+	color=blue!50!white,
+	very thin
+] table [
+	x expr=\thisrow{time}, y=drag
+] {\uniform};
+
+\addplot[
+	color=green!70!black,
+	thick
+] table [
+	x expr=8*\thisrow{time}, y=drag
+] {\refined};
+
+\addplot[color=black]{3.23};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Wmax} := \num{3.23}\)};
+
+\end{axis}
+
+\begin{axis}[
+	scale only axis,
+	height=7.5cm,
+	yshift=-8.75cm,
 	width=0.9*\textwidth,
 	legend cell align=left,
 	legend pos=south west,
@@ -14,6 +47,7 @@
 	xmin=0, xmax=16,
 	xlabel={Simulierte physikalische Zeit},
 	ylabel={Auftriebskoeffizient},
+	ylabel absolute, every axis y label/.append style={yshift=0.2cm},
 	x unit=s
 ]
 
@@ -37,5 +71,5 @@
 \addlegendentry {Gemittelte Referenzlösung \(c_\text{Lmax} := 1\)};
 
 \end{axis}
-\end{tikzpicture}
 
+\end{tikzpicture}

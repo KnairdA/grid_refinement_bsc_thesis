@@ -5,7 +5,7 @@
 
 \begin{axis}[
 	scale only axis,
-	height=8cm,
+	height=7.5cm,
 	width=0.9*\textwidth,
 	legend cell align=left,
 	legend pos=south east,
@@ -16,7 +16,8 @@
 	ylabel={Druckdifferenz},
 	x unit=s,
 	y unit=N/m^2,
-	y tick label style={/pgf/number format/.cd, use comma}
+	y tick label style={/pgf/number format/.cd, use comma},
+	ylabel absolute, every axis y label/.append style={yshift=0.2cm},
 ]
 
 \addplot[

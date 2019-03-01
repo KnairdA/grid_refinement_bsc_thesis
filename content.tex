@@ -1080,6 +1080,7 @@ Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretis
 
 Bevor wir dazu kommen, bemerken wir, dass sich mit dieser flexibleren Verteilung der Knotenfreiheitsgrade hier auch ein, bis jetzt lediglich in der Einführung erwähnter, Vorteil von Gitterverfeinerung illustriert: Selbst wenn ein Verfeinerungsverfahren bezogen auf den Fehler im Vergleich mit analytischen Lösungen keine Verbesserungen oder sogar leichte Einbußen produziert, kann es doch potenziell eingesetzt werden, um Probleme zu behandeln, welche anderweitig nicht oder nur mit deutlich höherem Speicher- und Rechenaufwand zugänglich wären.
 
+\newpage
 \subsubsection{Vergleich von Widerstands- und Auftriebskoeffizienten}
 
 Bis hier haben wir die den Einfluss von Gitterverfeinerung auf die Zylinderumströmung entweder subjektiv, durch Vergleich der Strömungsbilder, oder grob, durch einfachen Vergleich der für eine divergenzfreie Simulation benötigten Knotenanzahl, bewertet. Wie eingangs erwähnt, existiert für die vorliegende Strömungssituation keine analytische Lösung, weshalb wir uns für eine formal belastbarere Bewertung auf vertrauenswürdige aber ebenfalls simulierte Referenzwerte stützen wollen.
@@ -1094,7 +1095,6 @@ F_a &= - \int_S \left( \rho_c \nu \frac{\partial v_t}{\partial n} n_0 + P n_1 \r
 \end{align*}
 \end{Definition}
 
-\newpage
 \begin{Definition}[Strömungswiderstands- und Auftriebskoeffizient]
 Sei \(D\) der Zylinderdurchmesser, \(\overline{U}\) die durchschnittliche Fluidgeschwindigkeit und \(\rho_c\) die charakteristische Dichte. Dann sind die Widerstands- und Auftriebskoeffizienten gegeben als~\cite[Kap.~2.2]{SchaeferTurek96}:
 \begin{align*}
@@ -1105,20 +1105,15 @@ c_a &= \frac{2F_a}{\rho_c \overline{U}^2 D} && \text{Auftriebskoeffizient}
 
 Vergleichen wollen wir diese Koeffizienten nun im Rahmen des unstetigen Testfalls \cite[2.2b]{SchaeferTurek96} mit Reynolds-Zahl \(\text{Re}=100\), maximaler Einflussgeschwindigkeit \(U = 1.5 \,\text{m}/\text{s}\) und charakteristischer Dichte \(\rho_c = 1.0 \,\text{kg}/\text{m}^3\). Dieses Ziel hatten wir dabei schon zu Beginn dieses Kapitels im Blick, so dass die OpenLB-basierende Modellierung der Zylinderumströmung inklusive des optimierten Gitters in Abbildung~\ref{fig:CylinderOptimizedGridComparison} direkt verwendet werden kann. Für die Berechnung der Koeffizienten stellt OpenLB dabei in Form des \class{SuperLatticePhysDrag2D} Funktors bereits ein passendes \emph{Messinstrument} bereit.
 
-\bigskip
-
+\newpage
 Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das uniform mit \(N=12\) aufgelöste Gitter berechneten Charakteristiken zusammen mit den Resultaten des problembewusst verfeinerten \(N=5\) Gitters mit näherungsweise gleicher Anzahl Freiheitsgraden. Der anzustrebende formale Referenzwert ist dabei jeweils das Mittel der oberen und unteren Grenzwerte \cite[Tabelle~4]{SchaeferTurek96}.
 
-\begin{figure}[H]
-\centering
-\input{img/cylinder2d_drag_comparison.tikz}
-\caption{Zeitlicher Verlauf des Strömungswiderstandskoeffizients}
-\end{figure}
+\bigskip
 
 \begin{figure}[H]
 \centering
-\input{img/cylinder2d_lift_comparison.tikz}
-\caption{Zeitlicher Verlauf des Auftriebskoeffizients}
+\input{img/cylinder2d_drag_lift_comparison.tikz}
+\caption{Zeitlicher Verlauf des Strömungswiderstands- und Auftriebskoeffizienten}
 \end{figure}
 
 \begin{figure}[H]
@@ -1127,16 +1122,9 @@ Die folgenden Abbildungen zeichnen demnach den zeitlichen Verlauf der durch das 
 \caption{Zeitlicher Verlauf der Druckdifferenz}
 \end{figure}
 
-\newpage
 Klar zu erkennen ist, dass die Simulation auf dem verfeinerten Gitter über alle drei Kriterien sowohl die Referenzwerte besser trifft als auch unabhängig davon eine bessere Qualität bezogen auf Fluktuation und Konsistenz in der periodischen Strömungsphase aufweist. Da diese Ergebnisse bei näherungsweise beibehaltener Anzahl von Gitterknoten erzielt wurden -- tatsächlich verwendet das verfeinerte Gitter sogar 46 Knoten weniger als das uniform aufgelöste -- ist somit auch bei formaler Betrachtung der positive Nutzen von Gitterverfeinerung zur Simulation der Zylinderumströmung klar demonstriert. Wir erhalten bei leicht geringerer Anzahl von Knoten und damit näherungsweise gleichem Speicherbedarf ein deutlich besseres Simulationsergebnis.
 
-\bigskip
-
-Das diesen Resultaten zugrundeliegende Gitter orientiert sich in der Anzahl seiner Zellen an einem uniform aufgelösten Gitter, welches knapp an der Grenze zur Divergenz im Ausflussgebiet arbeitet. Die im Vergleich dazu sehr guten Ergebnisse des optimierten Gitters sind also nicht zu überraschend.
-Als weiteren Vergleich betrachten wir deshalb die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_a}\) eines uniform mit \(N=40\), d. h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Gitters.
-Auch im Vergleich mit diesem 145314 Knoten umfassenden Gitter bewähren sich die, mit nur etwa einem Zehntel der Knoten gewonnenen, Ergebnisse der verfeinerten Simulation:
-
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \sisetup{round-precision=4}
 \begin{tabular}{l l l l l}
@@ -1160,23 +1148,38 @@ Knotenanzahl & \num{145314} & \num{13454} & \\
 \label{tab:cylinder2dComparison}
 \end{table}
 
-\noindent
+\newpage
+Das diesen Resultaten zugrundeliegende Gitter orientiert sich in der Anzahl seiner Zellen an einem uniform aufgelösten Gitter, welches knapp an der Grenze zur Divergenz im Ausflussgebiet arbeitet. Die im Vergleich dazu sehr guten Ergebnisse des optimierten Gitters sind also nicht zu überraschend.
+Als weiteren Vergleich betrachten wir deshalb in Tabelle~\ref{tab:cylinder2dComparison} die entscheidenden maximalen Widerstands- und Auftriebskoeffizienten \(\widehat{c_w}\) bzw. \(\widehat{c_a}\) einer uniform mit \(N=40\), d. h. der maximalen lokalen Auflösung unseres problembewusst verfeinerten Gitters entsprechend, aufgelösten Simulation.
+
+Auch im Vergleich mit diesem \num{145314} Knoten umfassenden Gitter bewähren sich die, mit nur etwa einem Zehntel der Knoten gewonnenen, Ergebnisse der verfeinerten Simulation.
 Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient und Druckdifferenz sogar kleiner als der des uniformen Gitters mit ungleich mehr Knoten.
 
 \bigskip
 
 Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
 Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf der ganzen Simulationsdomäne der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
-Dazu sehen wir in Abbildung~\ref{fig:cylinder2dHighResComparison} und zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparison} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen varierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
+Dazu sehen wir in Abbildungen~\ref{fig:cylinder2dHighResDragComparison} und \ref{fig:cylinder2dHighResLiftDeltapComparison} sowie zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparison} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen varierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
+
+\bigskip
 
 \begin{figure}[H]
 \centering
-\input{img/cylinder2d_high_res_comparsion.tikz}
-\caption{Zeitlicher Verlauf der Messwerte höher aufgelöster Gitter}
-\label{fig:cylinder2dHighResComparison}
+\input{img/cylinder2d_high_res_drag_comparison.tikz}
+\caption{Strömungswiderstandskoeffizient in feineren Simulationen}
+\label{fig:cylinder2dHighResDragComparison}
 \end{figure}
 
-\begin{table}[h]
+\begin{figure}[H]
+\centering
+\input{img/cylinder2d_high_res_lift_deltap_comparison.tikz}
+\caption{Auftriebskoeffizient und Druckdifferenz in feineren Simulationen}
+\label{fig:cylinder2dHighResLiftDeltapComparison}
+\end{figure}
+
+Das geeignet verfeinerte Gitter liefert demnach in zwei von drei Messwerten einen kleineren Fehler als ein äquivalent aufgelöstes \(N=48\) Gitter und besteht im Vergleich mit dem uniformen \(N=80\) Gitter erneut gegenüber einer signifikant mehr Knoten nutzenden Simulation. Selbst gegenüber eines mehr als zehnmal so viele Knoten aufwendenden uniformen \(N=160\) Gitter erhalten wir mit der verfeinerten Variante noch einen leicht kleineren Fehler in der Druckdifferenz.
+
+\begin{table}[H]
 \centering
 \sisetup{round-precision=4}
 
@@ -1201,7 +1204,6 @@ Knotenanzahl & \num{2298014} & \num{576758} & \num{207862} & \num{208031} & \\
 \label{tab:cylinder2dHighResComparison}
 \end{table}
 
-Das geeignet verfeinerte Gitter liefert demnach in zwei von drei Messwerten einen kleineren Fehler als ein äquivalent aufgelöstes \(N=48\) Gitter und besteht im Vergleich mit dem uniformen \(N=80\) Gitter erneut gegenüber einer deutlich mehr Knoten nutzenden Simulation. Selbst gegenüber eines mehr als zehnmal so viele Knoten aufwendenden uniformen \(N=160\) Gitter erhalten wir mit der uniformen Variante noch einen leicht kleineren Fehler in der Druckdifferenz.
 
 Da alle vier getesteten Gitter gute Übereinstimmung zu den Referenzdaten von Schäfer und Turek aufweisen, fällt der Vorteil der Gitterverfeinerung im Allgemeinen jedoch geringer aus, als noch im Vergleich der niedrig aufgelösten Gitter aus Abbildung~\ref{fig:CylinderOptimizedGridComparison} und Tabelle~\ref{tab:cylinder2dComparison}. Darüber hinaus liegt die Knotenanzahl des betrachteten \(N=160\) Gitters weit oberhalb der maximalen referenzstiftenden Knotenzahlen \cite[Tabelle~4]{SchaeferTurek96}, so dass wir hier an die Grenzen der Aussagekraft von Fehlern bezüglich dieser Werte stoßen.
 

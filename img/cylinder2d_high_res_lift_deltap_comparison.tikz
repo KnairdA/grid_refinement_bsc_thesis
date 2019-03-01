@@ -18,7 +18,7 @@
 ]
 
 \addplot[color=black]{1.0};
-\addlegendentry {Gemittelte Referenzlösung \(c_\text{Lmax} := 1\)};
+\addlegendentry {Gemittelte Referenzlösung \(c_\text{Amax} := 1\)};
 \addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=lift] {\uniformHigh};
 \addplot[color=blue!50!white,thin] table [x expr=\thisrow{time}, y=lift] {\uniformMiddle};
 \addplot[color=green!70!black,thick] table [x expr=8*\thisrow{time}, y=lift] {\refined};

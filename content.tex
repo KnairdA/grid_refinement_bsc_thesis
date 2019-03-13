@@ -59,7 +59,7 @@ Sei \(\tau \in \R_{\geq 0}\) eine Relaxationszeit und \(f^\text{eq}\) die von de
 \[ (\partial_t + \xi \cdot \nabla_x) f = -\frac{1}{\tau} (f(x,\xi,t) - f^\text{eq}(x,\xi,t)) .\]
 \end{Definition}
 
-Analog zur Boltzmann-Gleichung ist auch bei deren BGK Approximation der beschriebene Ort \(x \in \R^2\) im Allgemeinen frei gewählt. Da unser Ziel jedoch gerade die Diskretisierung der Simulationsdomäne in einem Gitter ist, wollen wir \(x\) einschränken:
+Analog zur Boltzmann-Gleichung ist auch bei deren Approximation in der BGK-Boltzmann-Gleichung der beschriebene Ort \(x \in \R^2\) im Allgemeinen frei gewählt. Da unser Ziel jedoch gerade die Diskretisierung der Simulationsdomäne in einem Gitter ist, wollen wir \(x\) einschränken:
 
 \begin{Definition}[Ortsdiskretisierung]
 \label{def:SpatialDiscretizationLBM}
@@ -74,7 +74,7 @@ Für die verbleibende Herleitung der LBM können wir diese Interpretation, d. h.
 
 \bigskip
 
-Wir bemerken nun, dass die BGK Approximation nicht nur für beliebige Orte, sondern auch für beliebige Geschwindigkeiten \(\xi \in \R^2\) definiert ist. Da wir die LBM auf einem endlichen Rechner umsetzen wollen, müssen wir auch die Menge der betrachteten Geschwindigkeiten auf eine endliche Menge diskretisieren.
+Wir bemerken nun, dass die BGK Approximation nicht nur für beliebige Orte, sondern auch für beliebige Geschwindigkeiten \(\xi \in \R^2\) definiert ist. Da wir die LBM auf einem Computer umsetzen wollen, müssen wir die Menge der betrachteten Geschwindigkeiten auf eine endliche Menge diskretisieren.
 
 Eine übliche Menge diskreter Geschwindigkeiten in 2D ist \emph{D2Q9} wobei \emph{D2} die Anzahl der Dimensionen und \emph{Q9} die Anzahl der Geschwindigkeiten verschlüsselt.
 
@@ -223,11 +223,15 @@ Diese Darstellung können wir unter Verwendung von Definition~\ref{def:ChapmanEn
 \newpage
 \subsection{Herangehensweisen an Gitterverfeinerung}
 
-Grundsätzlich existieren mit der \emph{Multi-Grid} und \emph{Multi-Domain} Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in LBM \cite[Kap.~3.1]{Lagrava12}. Im Wesentlichen unterscheiden die Ansätze sich in den Ausmaßen der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
+Grundsätzlich existieren mit der \emph{Multi-Grid}
+und \emph{Multi-Domain} Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in LBM \cite[Kap.~3.1]{Lagrava12}. Im Wesentlichen unterscheiden die Ansätze sich in den Ausmaßen der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
 
 \subsubsection{Multi-Grid Ansatz}
 
-Bei Verfahren des Multi-Grid Ansatzes existiert das gröbste Gitter über der gesamten Domäne. Feinere Teilgitter werden über gröberen Gittern platziert und nicht aus deren Verarbeitung ausgeschlossen. Somit existieren über der gesamten \emph{Fläche} feinerer Gitter auch die Knoten gröberer Gitter.
+Bei Verfahren des Multi-Grid Ansatzes
+\cite{Lin00}
+\cite{Toelke02}
+existiert das gröbste Gitter über der gesamten Domäne. Feinere Teilgitter werden über gröberen Gittern platziert und nicht aus deren Verarbeitung ausgeschlossen. Somit existieren über der gesamten \emph{Fläche} feinerer Gitter auch die Knoten gröberer Gitter.
 
 \begin{figure}[h]
 \centering
@@ -239,7 +243,17 @@ Vorteil dieser Herangehensweise ist es, dass feinere Teilgitter im Simulationsve
 
 \subsubsection{Multi-Domain Ansatz}
 
-Kern des Multi-Domain Ansatzes ist es, außerhalb von etwaigen verfahrensbedingten Übergangsbereichen, jede Position in der Simulationsdomäne durch genau ein Teilgitter abzubilden. Konkret werden also bereits durch feinere Gitter abgedeckte Bereiche aus gröberen Teilgittern ausgespart.
+Kern von Multi-Domain Ansätzen
+\cite{Chen06}
+\cite{DupuisChopard03}
+\cite{EitelAmor13}
+\cite{Fakhari16}
+\cite{Filippova98}
+\cite{Lagrava12}
+\cite{Peng06}
+%\cite{Rheinlaender05} % diffusiv
+\cite{Rohde06}
+ist es, außerhalb von etwaigen verfahrensbedingten Übergangsbereichen, jede Position der Simulationsdomäne durch genau ein Teilgitter abzubilden. Konkret werden also bereits durch feinere Gitter abgedeckte Bereiche aus gröberen Teilgittern ausgespart.
 
 \begin{figure}[h]
 \centering
@@ -395,7 +409,7 @@ Zusammenfassend wird die Aufgabe der im kommenden Kapitel zu erarbeitenden Skali
 \subsection{Komponenten der Gitterkopplung}\label{kap:Komponenten}
 \subsubsection{Skalierung}\label{kap:Skalierung}
 
-Während die Skalierung räumlicher Größen durch die Festlegung des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
+Während die Skalierung räumlicher Größen durch die Festlegung des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung \cite[Kap.~7.2.2.1]{Krueger17}. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
 
 \begin{Definition}[Konvektive Skalierung]
 Sei \(\delta t > 0\) die zeitliche und \(\delta x > 0\) die räumliche Diskretisierung. Dann gilt bei konvektiver Skalierung das Verhältnis:
@@ -409,7 +423,7 @@ Sei \(\delta t > 0\) die zeitliche und \(\delta x > 0\) die räumliche Diskretis
 Es besteht hier also eine quadratische Proportionalität. Im Vergleich zu einer konvektiven Skalierung ist die zeitliche Auflösung somit um eine Ordnung feiner.
 \end{Definition}
 
-Es ist klar zu erkennen, dass diffusive Skalierung einen deutlich größeren numerischen Aufwand gegenüber der konvektiven Skalierung nach sich zieht. Vorteil der bei diffusiver Skalierung erhöhten Schrittanzahl pro Zeiteinheit sind kleinere Fehler.
+Es ist klar zu erkennen, dass diffusive Skalierung einen deutlich größeren numerischen Aufwand gegenüber der konvektiven Skalierung nach sich zieht. Vorteil der bei diffusiver Skalierung erhöhten Schrittanzahl pro Zeiteinheit sind kleinere Fehler. Darüber hinaus ist nach \cite[S.~276]{Krueger17} die Konvergenz gegen die inkompressiblen Navier-Stokes Gleichungen nur bei diffusiver Skalierung gegeben.
 
 Für die Autoren des hier erörterten Gitterverfeinerungsverfahrens überwog dabei das Argument der numerischen Effizienz, weshalb auch wir hier nun die konvektive Skalierung betrachten wollen. Die Austauschbarkeit des Skalierungsverfahrens sollte jedoch bei der Implementierung in OpenLB beachtet werden, da dieser Aspekt eine weitere prinzipiell flexible Komponente des Verfahrens darstellt.
 

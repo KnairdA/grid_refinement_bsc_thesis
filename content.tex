@@ -42,11 +42,12 @@ Grundlage und Namensgeber von Simulationen mit Lattice Boltzmann Methoden ist di
 
 \begin{Definition}[Die Boltzmann-Gleichung]
 Sei \(f(x,\xi,t)\) die Verteilungsfunktion der Partikelmasse zu Zeit \(t\) in Ort \(x \in \R^2\) mit Geschwindigkeit \(\xi \in \R^2\), \(\rho\) die Dichte und \(F \in \R^2\) eine etwaige äußere Kraft. Die Boltzmann-Gleichung beschreibt die zeitliche Veränderung der Verteilungsfunktion anhand des totalen Differential \(\Omega(f)\):
-\[ \left( \partial_t + \xi \cdot \partial_x + \frac{F}{\rho} \cdot \partial_\xi \right) f = \Omega(f) \left( = \partial_x f \cdot \frac{dx}{dt} + \partial_\xi f \cdot \frac{d\xi}{dt} + \partial_t f \right) \]
-
-Hierbei handelt es sich um eine Advektionsgleichung wobei der Term \(\partial_t f + \xi \cdot \partial_x f\) die Strömung der Partikelverteilung mit Geschwindigkeit \(\xi\) und \(\frac{F}{\rho} \cdot \partial_\xi f\) einwirkende Kräfte darstellt. Der Term \(\Omega(f)\) beschreibt, entsprechend als Kollisionsoperator bezeichnet, die kollisionsbedingte lokale Neuverteilung von \(f\).
+\[ \Omega(f) = \left( \frac{dt}{dt} \partial_t + \frac{dx}{dt} \partial_x + \frac{d\xi}{dt} \partial_\xi \right) f = \left( \partial_t + \xi \, \partial_x + \frac{F}{\rho} \, \partial_\xi \right) f .\]
 \end{Definition}
 
+Hierbei handelt es sich um eine Advektionsgleichung wobei der Term \(\partial_t f + \xi \, \partial_x f\) die Strömung der Partikelverteilung mit Geschwindigkeit \(\xi\) und \(\frac{F}{\rho} \, \partial_\xi f\) einwirkende Kräfte darstellt. Der Term \(\Omega(f)\) beschreibt, entsprechend als Kollisionsoperator bezeichnet, die kollisionsbedingte lokale Neuverteilung von \(f\).
+
+\bigskip
 Zentrale Anforderung an den Kollisionsoperator ist die Impuls- und Masseerhaltung. Die im Folgenden betrachtete Lattice Boltzmann Methode verwendet die übliche BGK Approximation der Boltzmann-Gleichung ohne äußere Kraft von Bhatnagar, Gross und Krook (siehe \citetitle{Krueger17}~\cite[Kap.~3.5.3]{Krueger17}).
 Grundlegendes Element dieser Approximation ist der BGK Operator
 \[\Omega(f) := -\frac{f-f^\text{eq}}{\tau} \Delta t ,\]
@@ -249,9 +250,8 @@ Kern von Multi-Domain Ansätzen
 \cite{EitelAmor13}
 \cite{Fakhari16}
 \cite{Filippova98}
-\cite{Lagrava12}
+\cite[ausführlich diskutiert in Kap.~\ref{kap:Lagrava}]{Lagrava12}
 \cite{Peng06}
-%\cite{Rheinlaender05} % diffusiv
 \cite{Rohde06}
 ist es, außerhalb von etwaigen verfahrensbedingten Übergangsbereichen, jede Position der Simulationsdomäne durch genau ein Teilgitter abzubilden. Konkret werden also bereits durch feinere Gitter abgedeckte Bereiche aus gröberen Teilgittern ausgespart.
 
@@ -286,7 +286,8 @@ Lösen wir uns von dieser Einschränkung und positionieren das feine Gitter abse
 \end{figure}
 
 \newpage
-\section{Verfeinerungsmethode nach Lagrava et al.}\label{kap:Lagrava}
+\section{Verfeinerungsmethode nach Lagrava et al.}
+\label{kap:Lagrava}
 
 Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird, bieten sich der Multi-Domain Ansatz als Grundlage für Gitterverfeinerung in OpenLB an. Passend zu dieser Wahl sowie der, im Rahmen dieser Arbeit getroffenen, Einschränkung auf zweidimensionale LBM mit BGK-Kollisionsoperator haben Lagrava et al. 2012 in \citetitle{Lagrava12}~\cite{Lagrava12} ein solches Verfeinerungsverfahren entwickelt. Die Struktur dieses Verfahrens, mit potenziell austauschbaren Restriktions- und Interpolationsoperatoren im zentralen Kopplungsschritt, erscheint dabei sogleich auch als Fundament eines Multi-Domain Gitterverfeinerungsframeworks in OpenLB.
 
@@ -423,7 +424,7 @@ Sei \(\delta t > 0\) die zeitliche und \(\delta x > 0\) die räumliche Diskretis
 Es besteht hier also eine quadratische Proportionalität. Im Vergleich zu einer konvektiven Skalierung ist die zeitliche Auflösung somit um eine Ordnung feiner.
 \end{Definition}
 
-Es ist klar zu erkennen, dass diffusive Skalierung einen deutlich größeren numerischen Aufwand gegenüber der konvektiven Skalierung nach sich zieht. Vorteil der bei diffusiver Skalierung erhöhten Schrittanzahl pro Zeiteinheit sind kleinere Fehler. Darüber hinaus ist nach \cite[S.~276]{Krueger17} die Konvergenz gegen die inkompressiblen Navier-Stokes Gleichungen nur bei diffusiver Skalierung gegeben.
+Es ist klar zu erkennen, dass diffusive Skalierung einen deutlich größeren numerischen Aufwand gegenüber der konvektiven Skalierung nach sich zieht. Vorteil der bei diffusiver Skalierung erhöhten Schrittanzahl pro Zeiteinheit sind kleinere Fehler. Darüber hinaus ist nach \cite[S.~276]{Krueger17} die asymptotische Konvergenz gegen die inkompressiblen Navier-Stokes Gleichungen nur bei diffusiver Skalierung gegeben.
 
 Für die Autoren des hier erörterten Gitterverfeinerungsverfahrens überwog dabei das Argument der numerischen Effizienz, weshalb auch wir hier nun die konvektive Skalierung betrachten wollen. Die Austauschbarkeit des Skalierungsverfahrens sollte jedoch bei der Implementierung in OpenLB beachtet werden, da dieser Aspekt eine weitere prinzipiell flexible Komponente des Verfahrens darstellt.
 

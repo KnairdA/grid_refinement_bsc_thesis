@@ -16,18 +16,18 @@ So trifft es sich, dass der Wunsch nach theoretischer Lösung komplexer und nur 
 
 \subsection{Weshalb mit Lattice Boltzmann Methoden?}
 
-Während Finite Elemente Methoden die wohl verbreitetsten Zugänge zur Lösung der strömungsbeschreibenden partiellen Differentialgleichungen und somit der numerischen Strömungsmechanik bilden, erfreut sich auch die Herangehensweise der Lattice Boltzmann Methoden in den letzten Jahrzehnten wachsender Nutzbarkeit und Verbreitung. Im Gegensatz zu anderen Lösungsmethoden werden hier die Navier-Stokes Gleichungen nicht direkt numerisch gelöst. Lösungen ergeben sich vielmehr aus der Simulation des Fluidverhaltens auf \emph{mesoskopischer} Ebene -- d. h. aus der Betrachtung nicht aus Sicht der Kollision einzelner Fluidpartikel und nicht aus Sicht der analytischen Strömungsbeschreibung, sondern aus Sicht der Wahrscheinlichkeit, dass sich das Fluid zu bestimmter Zeit an einem bestimmten Ort mit bestimmter Geschwindigkeit bewegt.
+Während \emph{Finite Elemente Methoden} die wohl verbreitetsten Zugänge zur Lösung der strömungsbeschreibenden partiellen Differentialgleichungen und somit der numerischen Strömungsmechanik bilden, erfreut sich auch die Herangehensweise der \emph{Lattice Boltzmann Methoden} (LBM) in den letzten Jahrzehnten wachsender Nutzbarkeit und Verbreitung. Im Gegensatz zu anderen Lösungsmethoden werden hier die Navier-Stokes Gleichungen nicht direkt numerisch gelöst. Lösungen ergeben sich vielmehr aus der Simulation des Fluidverhaltens auf \emph{mesoskopischer} Ebene -- d. h. aus der Betrachtung nicht aus Sicht der Kollision einzelner Fluidpartikel und nicht aus Sicht der analytischen Strömungsbeschreibung, sondern aus Sicht der Wahrscheinlichkeit, dass sich Fluidatome zu bestimmter Zeit an einem bestimmten Ort mit einer bestimmten mikroskopischen Geschwindigkeit bewegen.
 
 \bigskip
-Ein Vorteil dieses, auf den Arbeiten von Ludwig Eduard Boltzmann im Bereich der statistischen Physik aufbauenden, Ansatzes, ist seine Eignung für komplexe Geometrien mit verschiedensten Randbedingungen \cite{Aidun10}. Weiterhin gewinnt in den letzten Jahren auch die sehr gute Parallelisierbarkeit von Lattice Boltzmann Methoden in Hinblick auf einen technischen Fortschritt an Anziehungskraft, nach welchem die Leistungsfähigkeit von Großrechnern eher aus deren Parallelität als aus individueller Prozessorleistung erwächst.
+Ein Vorteil dieses, auf den Arbeiten von Ludwig Eduard Boltzmann im Bereich der statistischen Physik aufbauenden, Ansatzes, ist seine Eignung für komplexe Geometrien mit verschiedensten Randbedingungen \cite{Aidun10}. Weiterhin gewinnt in den letzten Jahren auch die sehr gute Parallelisierbarkeit von LBM in Hinblick auf einen technischen Fortschritt an Anziehungskraft, nach welchem die Leistungsfähigkeit von Großrechnern eher aus deren Parallelität als aus individueller Prozessorleistung erwächst.
 
 \subsection{Warum Gitterverfeinerung?}
 
-Die einfachsten und zugleich am weitesten verbreiteten Umsetzungen von Simulationen mit Lattice Boltzmann Methoden basieren auf uniformen Gittern, in denen Zellen immer den gleichen Abstand zu ihren Nachbarzellen haben.
+Die einfachsten und zugleich am weitesten verbreiteten Umsetzungen von Simulationen mit LBM basieren auf uniformen Gittern, in denen Zellen immer den gleichen Abstand zu ihren Nachbarzellen haben.
 
-Die Genauigkeit von Lattice Boltzmann basierenden Simulationen hängt maßgeblich von der Auflösung des verwendeten Gitters ab. Bei Außerachtlassung weiterer wichtiger Faktoren wie dem verwendeten Kollisionsterm und Randkonditionen kann im Allgemeinen davon ausgegangen werden, dass eine feinere Auflösung des Gitters zu besseren Ergebnissen führt.
+Die Genauigkeit von Lattice Boltzmann (LB) basierenden Simulationen hängt maßgeblich von der Auflösung des verwendeten Gitters ab. Bei Außerachtlassung weiterer wichtiger Faktoren wie dem verwendeten Kollisionsterm und Randkonditionen kann im Allgemeinen davon ausgegangen werden, dass eine feinere Auflösung des Gitters zu besseren Ergebnissen führt.
 
-In praktischen Beispielen können innerhalb eines Modells große Unterschiede in der Strömungskomplexität existieren. So kann es große Gebiete eines Modells geben, die mit einem vergleichsweise groben Gitter gut simuliert werden können, während in anderen Gebieten -- beispielsweise in komplexen Geometrien und an Rändern -- ein vielfach feineres Gitter zur adäquaten Behandlung benötigt wird. In uniformen Gittern muss jedoch das gesamte Modell unabhängig der lokalen Situation mit der maximal benötigten Auflösung abgebildet werden.
+In praktischen Beispielen können innerhalb eines Modells große Unterschiede in der Strömungskomplexität existieren. So kann es große Gebiete eines Modells geben, die mit einem vergleichsweise groben Gitter gut simuliert werden können, während in anderen Gebieten -- beispielsweise in komplexen Geometrien und an Rändern mit turbulenten Grenzschichten -- ein vielfach feineres Gitter zur adäquaten Behandlung benötigt wird. In uniformen Gittern muss jedoch das gesamte Modell unabhängig der lokalen Situation mit der maximal benötigten Auflösung abgebildet werden.
 
 Da die Anzahl der benötigten Gitterpunkte sich maßgeblich auf den Speicherbedarf und Rechenaufwand auswirkt, ist es wünschenswert, diese zu minimieren. Ein Ansatz, dies zu erreichen, ist die lokale Variation der Gitterauflösung.
 
@@ -49,28 +49,28 @@ Hierbei handelt es sich um eine Advektionsgleichung wobei der Term \(\partial_t 
 
 Zentrale Anforderung an den Kollisionsoperator ist die Impuls- und Masseerhaltung. Die im Folgenden betrachtete Lattice Boltzmann Methode verwendet die übliche BGK Approximation der Boltzmann-Gleichung ohne äußere Kraft von Bhatnagar, Gross und Krook (siehe \citetitle{Krueger17}~\cite[Kap.~3.5.3]{Krueger17}).
 Grundlegendes Element dieser Approximation ist der BGK Operator
-\[\Omega(f) := -\frac{f-f^\text{eq}}{\tau} \Delta t\]
+\[\Omega(f) := -\frac{f-f^\text{eq}}{\tau} \Delta t ,\]
 welcher die Partikelverteilung mit Rate \(\tau\) gegen eine Equilibriumsverteilung \(f^\text{eq}\) relaxiert. Ohne Beschränkung der Allgemeinheit setzen wir dabei  im Folgenden \(\Delta t = 1\).
 
 Wenden wir den BGK Operator auf die Boltzmann-Gleichung ohne äußere Kräfte an, erhalten wir die BGK Approximation:
 
-\begin{Definition}[BGK Approximation]
-Sei \(\tau \in \R_{\geq 0}\) eine Relaxationszeit und \(f^\text{eq}\) die von der Maxwell-Boltzmann-Verteilung gegebene Equilibriumsverteilung.
-\[ (\partial_t + \xi \cdot \nabla_x) f = -\frac{1}{\tau} (f(x,\xi,t) - f^\text{eq}(x,\xi,t)) \]
+\begin{Definition}[BGK-Boltzmann-Gleichung]
+Sei \(\tau \in \R_{\geq 0}\) eine Relaxationszeit und \(f^\text{eq}\) die von der Maxwell-Boltzmann-Verteilung gegebene Equilibriumsverteilung
+\[ (\partial_t + \xi \cdot \nabla_x) f = -\frac{1}{\tau} (f(x,\xi,t) - f^\text{eq}(x,\xi,t)) .\]
 \end{Definition}
 
 Analog zur Boltzmann-Gleichung ist auch bei deren BGK Approximation der beschriebene Ort \(x \in \R^2\) im Allgemeinen frei gewählt. Da unser Ziel jedoch gerade die Diskretisierung der Simulationsdomäne in einem Gitter ist, wollen wir \(x\) einschränken:
 
 \begin{Definition}[Ortsdiskretisierung]
 \label{def:SpatialDiscretizationLBM}
-Sei die örtliche Simulationsdomäne \(D := \R^2\) diskretisiert als kartesisches Gitter mit Zellabstand \(\Delta x \in \R_+\). Dann ist die Einbettung der kartesischen Gitterdomäne \(L := \Z^2\) in \(D\) gegeben als:
-\[d : L \to D, \ l \mapsto \Delta x \cdot l\]
+Sei die örtliche Simulationsdomäne \(D \subseteq \R^2\) diskretisiert als kartesisches Gitter mit Zellabstand \(\Delta x \in \R_+\). Dann ist die Einbettung der kartesischen Gitterdomäne \(L := \Z^2\) in \(D\) gegeben als:
+\[d : L \to D, \ l \mapsto \Delta x \cdot l.\]
 Analog zur o.B.d.A. erfolgten Wahl von \(\Delta t = 1\) setzen wir auch hier \(\Delta x = 1\), sodass wir die Simulations- und Gitterdomäne -- bei Inklusion stetiger Übergänge zwischen Elementen aus \(L\) -- identisch identifizieren können. Der stetige Übergang zwischen zwei orthodonal benachbarten Gitterknoten erfolgt somit auf dem Einheitsintervall. Praktisch können wir also im Folgenden bei Annahme von \(x \in L \subset D\) die explizite Ausführung der Gittereinbettung vernachlässigen.
 \end{Definition}
 
 Zu betonen ist an dieser Stelle die Wichtigkeit einer klaren Unterscheidung zwischen Simulationsdomäne und dem durch diese zu modellierenden physikalischen System für die konkrete Interpretation des Simulationsergebnisses \cite[Kap.~7]{Krueger17}.
 
-Für die verbleibende Herleitung der LBM können wir diese Interpretation, d. h. die Unterscheidung zwischen physikalischen- und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxationszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird hier nicht weiter eingeschränkt.
+Für die verbleibende Herleitung der LBM können wir diese Interpretation, d. h. die Unterscheidung zwischen physikalischen und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxationszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird hier nicht weiter eingeschränkt.
 
 \bigskip
 
@@ -79,7 +79,8 @@ Wir bemerken nun, dass die BGK Approximation nicht nur für beliebige Orte, sond
 Eine übliche Menge diskreter Geschwindigkeiten in 2D ist \emph{D2Q9} wobei \emph{D2} die Anzahl der Dimensionen und \emph{Q9} die Anzahl der Geschwindigkeiten verschlüsselt.
 
 \begin{Definition}[D2Q9 Modell]
-\[ \{\xi_i\}_{i=0}^8 = \left\{ \V{0}{0}, \V{-1}{\phantom{-}1}, \V{-1}{\phantom{-}0}, \V{-1}{-1}, \V{\phantom{-}0}{-1}, \V{\phantom{-}1}{-1}, \V{1}{0}, \V{1}{1}, \V{0}{1} \right\} \]
+\label{def:d2q9}
+\[ \{\xi_i\}_{i=0}^8 = \left\{ \V{0}{0}, \V{-1}{\phantom{-}1}, \V{-1}{\phantom{-}0}, \V{-1}{-1}, \V{\phantom{-}0}{-1}, \V{\phantom{-}1}{-1}, \V{1}{0}, \V{1}{1}, \V{0}{1} \right\}. \]
 \end{Definition}
 
 \begin{figure}
@@ -92,7 +93,7 @@ Mithilfe einer solchen endlichen Menge diskreter Geschwindigkeiten lässt sich d
 
 \begin{Definition}[BGK Geschwindigkeitsdiskretisierung]
 \label{def:disVelBGK}
-Seien \(\xi_i\) Vektoren einer Menge mikroskopischer Geschwindigkeiten wie z.B. D2Q9 und \(f_i(x,t) \equiv f(x,\xi_i,t)\). Dann ist
+Seien \(\xi_i\) Vektoren einer Menge mikroskopischer Geschwindigkeiten wie z.B. D2Q9 und \(f_i(x,t) := f(x,\xi_i,t)\). Dann ist
 \[ (\partial_t + \xi_i \cdot \nabla_x) f_i(x,t) = -\frac{1}{\tau} (f_i(x,t) - f_i^\text{eq}(x,t)) \]
 die Diskretisierung der BGK Approximation entlang der Geschwindigkeiten in diskreten Gitterknoten \(x \in L\). Die Geschwindigkeiten müssen hier dank der Wahl von \(\Delta x = 1\) nicht weiter skaliert werden.
 \end{Definition}
@@ -101,8 +102,8 @@ Hierbei ist die diskrete Equilibriumsverteilung \(f_i^\text{eq}\) wie folgt defi
 
 \begin{Definition}[Diskrete Equilibriumsverteilung]
 \label{def:fieq}
-Seien \(\rho \in \R_{\geq 0}\) die Dichte, \(u \in \R^2\) die Gesamtgeschwindigkeit, \(\xi_i\) die \(i\)-te diskrete Geschwindigkeitskomponente, \(w_i\) das Gewicht jener Komponente bzgl. des Lattice und \(c_s\) die Lattice-Schallgeschwindigkeit.
-\[f_i^\text{eq} = w_i \rho \left( 1 + \frac{u \cdot \xi_i}{c_s^2} + \frac{(u \cdot \xi_i)^2}{2c_s^4} - \frac{u \cdot u}{2c_s^2} \right)\]
+Seien \(\rho \in \R_{\geq 0}\) die Dichte, \(u \in \R^2\) die Gesamtgeschwindigkeit (siehe Def.~\ref{def:Momente}), \(\xi_i\) die \(i\)-te diskrete Geschwindigkeitskomponente (siehe Def.~\ref{def:d2q9}), \(w_i\) das Gewicht (\ref{eq:Weight}) jener Komponente bzgl. des Lattice und \(c_s\) die Lattice-Schallgeschwindigkeit. Dann ist die diskrete Equilibriumsverteilung gegeben als:
+\[f_i^\text{eq} = w_i \rho \left( 1 + \frac{u \cdot \xi_i}{c_s^2} + \frac{(u \cdot \xi_i)^2}{2c_s^4} - \frac{u \cdot u}{2c_s^2} \right).\]
 \end{Definition}
 
 Die Werte von \(u = u(x,t)\) und \(\rho = \rho(x,t)\) in Ort \(x\) zu Zeit \(t\) ergeben sich dabei aus den \emph{Momenten} der Verteilungsfunktion \(f_i\):
@@ -111,12 +112,12 @@ Die Werte von \(u = u(x,t)\) und \(\rho = \rho(x,t)\) in Ort \(x\) zu Zeit \(t\)
 \label{def:Momente}
 \begin{align*}
 \rho(x,t) &= \sum_{i=0}^{q-1} f_i(x,t) \\
-\rho u(x,t) &= \sum_{i=0}^{q-1} \xi_i f_i(x,t)
+\rho u(x,t) &= \sum_{i=0}^{q-1} \xi_i f_i(x,t).
 \end{align*}
 \end{Definition}
 
 Für D2Q9 ergeben sich nach \cite[Gl.~3.60 bzw. Tabelle~3.3]{Krueger17} die Gewichte:
-\[w_0 = \frac{4}{9}, \ w_{2,4,6,8} = \frac{1}{9}, \ w_{1,3,5,7} = \frac{1}{36}\]
+\[w_0 = \frac{4}{9}, \ w_{2,4,6,8} = \frac{1}{9}, \ w_{1,3,5,7} = \frac{1}{36} \numberthis\label{eq:Weight}\]
 
 Weiter folgt zusammen mit der Bedingung \(\sum_{i=1}^{q-1} w_i (\xi_i)_a (\xi_i)_b = c_s^2 \delta_{a,b}\) aus \cite[Gl.~3.60]{Krueger17} die Schallgeschwindigkeit \(c_s = \sqrt{1/3}\) des Lattice. Konditionen zur Bestimmung dieser gitterspezifischen Konstanten sind hierbei die Erhaltung von Impuls und Masse sowie die Forderung von \emph{Rotationsisotropie}.
 
@@ -138,19 +139,19 @@ Zur expliziten Lösung dieser impliziten Gleichung benötigen wir nun nur noch e
 \label{def:LBGKeq}
 Seien \(\overline{f_i}\) und \(\overline\tau\) definiert:
 \begin{align*}
-\overline{f_i} &= f_i + \frac{1}{2\tau}(f_i - f_i^\text{eq}) \\
-\overline\tau &= \tau + \frac{1}{2}
+\overline{f_i} &:= f_i + \frac{1}{2\tau}(f_i - f_i^\text{eq}) \\
+\overline\tau &:= \tau + \frac{1}{2}.
 \end{align*}
 
 Setzen wir diese verschobenen Variablen in das Ergebnis der Trapezregel ein, erhalten \cite[Kap.~A.5 mit \(\Delta t=1\)]{Krueger17} wir die die vollständig diskretisierte LBM BGK Gleichung:
 
-\[\overline{f_i}(x+\xi_i,t+1) = \overline{f_i}(x,t) - \frac{1}{\overline\tau} (\overline{f_i}(x,t) - f_i^\text{eq}(x,t))\]
+\[\overline{f_i}(x+\xi_i,t+1) = \overline{f_i}(x,t) - \frac{1}{\overline\tau} (\overline{f_i}(x,t) - f_i^\text{eq}(x,t)).\]
 \end{Definition}
 
-Bemerkenswert ist an dieser Stelle, dass die Momente der Verteilungen mit \(\overline{f_i}\) analog zu \ref{def:Momente} berechnet werden können:
+Bemerkenswert ist an dieser Stelle, dass die Momente der Verteilungen mit \(\overline{f_i}\) analog zu Definition~\ref{def:Momente} berechnet werden können:
 \begin{align*}
 \sum_{i=0}^{q-1} \overline{f_i} = \sum_{i=0}^{q-1} f_i + \frac{1}{2\tau} \sum_{i=0}^{q-1} (f_i - f_i^\text{eq}) &= \rho \\
-\sum_{i=0}^{q-1} \xi_i \overline{f_i} = \sum_{i=0}^{q-1} \xi_i f_i + \frac{1}{2\tau} \sum_{i=0}^{q-1} (f_i - f_i^\text{eq}) &= \rho u
+\sum_{i=0}^{q-1} \xi_i \overline{f_i} = \sum_{i=0}^{q-1} \xi_i f_i + \frac{1}{2\tau} \sum_{i=0}^{q-1} (f_i - f_i^\text{eq}) &= \rho u.
 \end{align*}
 
 \newpage
@@ -181,17 +182,17 @@ Bemerkenswert ist hierbei, dass der Kollisionsschritt nur lokale Informationen d
 Ziel der beschriebenen Lattice Boltzmann Methode ist die möglichst gute Approximation der schwach-kompressiblen Navier-Stokes Gleichungen auf der Simulationsdomäne.
 
 \begin{Definition}[Schwach-kompressible Navier-Stokes Gleichungen]
-Sei \(\rho\) die Dichte, \(u\) die Geschwindigkeit und \(p\) der Druck zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(\mathrm{S}\) der Verzerrungstensor.
+Sei \(\rho\) die Dichte, \(u\) die Geschwindigkeit und \(p\) der Druck zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(\mathrm{S}\) der Verzerrungstensor. Die Navier-Stokes Gleichungen:
 \begin{align*}
 \partial_t  \rho + \nabla \cdot (\rho u) &= 0 \\
-\partial_t u + (u \cdot \nabla) u &= -\frac{1}{\rho} \nabla p + 2\nu\nabla \cdot (\mathrm{S})
+\partial_t u + (u \cdot \nabla) u &= -\frac{1}{\rho} \nabla p + 2\nu\nabla \cdot (\mathrm{S}).
 \end{align*}
 
 Dabei sind Druck \(p\), kinetische Viskosität \(\nu\) und Verzerrungstensor \(\mathrm{S}\) definiert als:
 \begin{align*}
 p &= c_s^2 \rho \\
 \nu &= c_s^2 \tau \\
-\mathrm{S} &= \frac{1}{2} (\nabla u + (\nabla u)^\top) \numberthis\label{eq:Verzerrungstensor}
+\mathrm{S} &= \frac{1}{2} (\nabla u + (\nabla u)^\top). \numberthis\label{eq:Verzerrungstensor}
 \end{align*}
 \end{Definition}
 
@@ -199,18 +200,18 @@ Nach \cite[Kap.~4.1]{Krueger17} kann die asymptotische Äquivalenz von LBM BGK G
 
 \begin{Definition}[Chapman-Enskog Ansatz]
 \label{def:ChapmanEnskog}
-Der Chapman-Enskog Ansatz besteht in der Annahme, dass die Verteilungsfunktion \(f_i\) als leicht gestörte Equilibriumsverteilung dargestellt werden kann: \[f_i = f_i^\text{eq} + \epsilon f_i^{(1)} + \mathcal{O}(\epsilon^2)\]
+Der Chapman-Enskog Ansatz besteht in der Annahme, dass die Verteilungsfunktion \(f_i\) als leicht gestörte Equilibriumsverteilung dargestellt werden kann: \[f_i = f_i^\text{eq} + \epsilon f_i^{(1)} + \mathcal{O}(\epsilon^2).\]
 Hierbei ist \(\epsilon f_i^{(1)}\) mit \(\epsilon \ll 1\) der Störterm 1. Ordnung. Dieser ist gegeben als:
-\[\epsilon f_i^{(1)} = \frac{w_i}{2 c_s^4} \mathrm{Q}_i : \mathrm{\Pi}^{(1)} \numberthis\label{eq:firstOrderPertubation}\]
+\[\epsilon f_i^{(1)} = \frac{w_i}{2 c_s^4} \mathrm{Q}_i : \mathrm{\Pi}^{(1)}. \numberthis\label{eq:firstOrderPertubation}\]
 Wobei der Geschwindigkeitstensor \(\mathrm{Q}_i\) und das Störmoment \(\mathrm\Pi^{(1)}\) nach \cite[Kap.~4.1.3]{Krueger17} definiert sind als:
 \begin{align*}
 \mathrm{Q}_i &= \xi_i \xi_i - c_s^2 I \numberthis\label{eq:velocityTensor} \\
-\mathrm\Pi^{(1)} &= \sum_{i=0}^{q-1} \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \overline\tau \mathrm{S} \numberthis\label{eq:pertubationMoment}
+\mathrm\Pi^{(1)} &= \sum_{i=0}^{q-1} \xi_i \xi_i \epsilon f_i^{(1)} = -2 c_s^2 \rho \overline\tau \mathrm{S}. \numberthis\label{eq:pertubationMoment}
 \end{align*}
 \end{Definition}
 
 \begin{Definition}[Nicht-Equilibriumsverteilung]
-Die Relaxion der Verteilungsfunktion \(f_i\) gegen die Equilibriumsverteilung \(f_i^\text{eq}\) impliziert eine Dekomposition in Equilibriums- und Nicht-Equilibriumsverteilung: \[f_i := f_i^\text{eq} + f_i^\text{neq}\]
+Die Relaxion der Verteilungsfunktion \(f_i\) gegen die Equilibriumsverteilung \(f_i^\text{eq}\) impliziert eine Dekomposition in Equilibriums- und Nicht-Equilibriumsverteilung: \[f_i := f_i^\text{eq} + f_i^\text{neq}.\]
 \end{Definition}
 
 Unter Vernachlässigung von Störtermen der Ordnung \(\mathcal{O}(\epsilon^2)\) ergibt sich eine Näherung der Nicht-Equilibriumsverteilung:
@@ -222,7 +223,7 @@ Diese Darstellung können wir unter Verwendung von Definition~\ref{def:ChapmanEn
 \newpage
 \subsection{Herangehensweisen an Gitterverfeinerung}
 
-Grundsätzlich existieren mit der Multi-Grid und Multi-Domain Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in Lattice Boltzmann Methoden \cite[Kap.~3.1]{Lagrava12}. Im Wesentlichen unterscheiden die Ansätze sich in den Ausmaßen der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
+Grundsätzlich existieren mit der \emph{Multi-Grid} und \emph{Multi-Domain} Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in LBM \cite[Kap.~3.1]{Lagrava12}. Im Wesentlichen unterscheiden die Ansätze sich in den Ausmaßen der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
 
 \subsubsection{Multi-Grid Ansatz}
 
@@ -315,7 +316,7 @@ Die Annahme von zwei Verfeinerungsstufen ist berechtigt, da mehrfach verfeinerte
 
 \begin{Definition}[Diskretisierung der Simulationsdomänen]
 \label{def:DiskretRefinedGitter}
-Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierungen der Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben.
+Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierungen der Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben
 \begin{align*}
 \G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
 \F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
@@ -391,7 +392,7 @@ u_\#(x) &:= \frac{1}{\rho_\#(x)} \sum_{j=0}^{q-1} \xi_j f_{\#,j}(x)
 Zusammenfassend wird die Aufgabe der im kommenden Kapitel zu erarbeitenden Skalierungs-, Restriktions- und Interpolationsschritte also \emph{nur} darin bestehen, die jeweils fehlenden Verteilungsfunktionen möglichst gut zu rekonstruieren.
 
 \newpage
-\subsection{Komponenten der Gitterkopplung}
+\subsection{Komponenten der Gitterkopplung}\label{kap:Komponenten}
 \subsubsection{Skalierung}\label{kap:Skalierung}
 
 Während die Skalierung räumlicher Größen durch die Festlegung des Verfahrens auf Übergänge im Verhältnis \(1:2\) definiert ist, eröffnen sich für die zeitliche Skalierung zwei Möglichkeiten: Konvektive oder diffusive Skalierung. Unterschied der beiden Ansätze ist dabei das jeweilige Verhältnis zwischen räumlicher und zeitlicher Auflösung.
@@ -420,13 +421,13 @@ Auf dem feinen Gitter müssen also doppelt so viele Zeitschritte wie auf dem gro
 
 \begin{Definition}[Physikalische Reynolds-Zahl]
 \label{def:PhysicalReynoldsNumber}
-Seien \(U\) die charakteristische Geschwindigkeit, \(L\) die charakteristische Länge und \(\nu\) die kinetische Viskosität in physikalischen Einheiten. Dann ist die Reynolds-Zahl definiert als: \[\text{Re} := \frac{U L}{\nu}\]
+Seien \(U\) die charakteristische Geschwindigkeit, \(L\) die charakteristische Länge und \(\nu\) die kinetische Viskosität in physikalischen Einheiten. Dann ist die Reynolds-Zahl definiert als: \[\text{Re} := \frac{U L}{\nu}.\]
 \end{Definition}
 
 \begin{Definition}[Lattice Reynolds-Zahl]
 \label{def:LatticeReynoldsNumber}
 Sei \(\# \in \{f, g\}\) Symbol des feinen oder groben Gitters.
-Seien \(U_\# := \delta t_\# / \delta x_\# \cdot U\) die charakteristische Geschwindigkeit, \(L_\# := 1 / \delta x_\# \cdot L\) die charakteristische Länge und \(\nu_\# := c_s^2 \tau_\#\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_\# := \frac{U_\# L_\#}{\nu_\#} = \frac{\delta t_\# U L}{(\delta x_\#)^2 \nu_\#} \]
+Seien \(U_\# := \delta t_\# / \delta x_\# \cdot U\) die charakteristische Geschwindigkeit, \(L_\# := 1 / \delta x_\# \cdot L\) die charakteristische Länge und \(\nu_\# := c_s^2 \tau_\#\) die kinetische Viskosität in Lattice-Einheiten. Dann ist die \emph{Lattice} Reynolds-Zahl des feinen bzw. groben Gitters definiert als: \[ \text{Re}_\# := \frac{U_\# L_\#}{\nu_\#} = \frac{\delta t_\# U L}{(\delta x_\#)^2 \nu_\#}. \]
 \end{Definition}
 
 Wir erzwingen nun mit \(\text{Re}_g = \text{Re}_f\) die Unabhängigkeit von Reynolds-Zahl und Gitterauflösung. Diese Gleichsetzung ist sinnvoll, da die Reynolds-Zahl gerade die Vergleichbarkeit von Strömungen verschiedener Modellgrößen ermöglicht. Durch Einsetzen von Definition~\ref{def:LatticeReynoldsNumber} erhalten wir eine Verknüpfung der Relaxationszeiten \(\tau_f\) und \(\tau_g\):
@@ -571,12 +572,12 @@ Auch in dieser Situation ist nur der Wert in \(0\) zur Näherung von \(\ipolarg{
 Passend zur Anzahl der Stützstellen präsentiert sich dieses Verfahren nach erneutem Einsetzen der Taylor-Entwicklung (\ref{eq:sipolTaylorOrder4}) als eine Interpolationsformel dritter Ordnung:
 \[\frac{3}{8}\sipolarg{-1} + \frac{3}{4}\sipolarg{1} - \frac{1}{8}\sipolarg{3} \stackrel{(\ref{eq:sipolTaylorOrder4})}{=} \sipolarg{0} + \mathcal{O}(h^3)\]
 
-Trotz Behandlung dieses Sonderfalls werden die höheren Approximationsordnungen gegenüber (\ref{eq:ipol2ord}) weiterhin und unumgänglich durch zusätzliche Stützstellen erkauft, welche bei parallelisierten LBM-Umsetzungen kommuniziert werden müssen. Es gilt also, zwischen Güte der Interpolation und Anzahl sowie Position der Stützstellen abzuwiegen.
+Trotz Behandlung dieses Sonderfalls werden die höheren Approximationsordnungen gegenüber (\ref{eq:ipol2ord}) weiterhin und unumgänglich durch zusätzliche Stützstellen \emph{erkauft}, welche bei parallelisierten LBM-Umsetzungen kommuniziert werden müssen. Es gilt also, zwischen Güte der Interpolation und Anzahl sowie Position der Stützstellen abzuwiegen.
 
 \newpage
 \subsection{Algorithmus}\label{kap:Algorithmus}
 
-In der zurückliegenden Sektion haben wir, aufbauend auf der Skalierung von Verteilungsfunktionen zwischen Gitterauflösungen, die Restriktion von fein nach grob sowie die Interpolation von grob zu fein nachvollzogen. Die somit erfassten wesentlichen Grundlagen des Verfeinerungsverfahrens gilt es nun in einem \emph{Kopplungsalgorithmus}~\cite[Kap.~3.5]{Lagrava12} zusammenzuführen.
+Im zurückliegenden Kapitel~\ref{kap:Komponenten} haben wir, aufbauend auf der Skalierung von Verteilungsfunktionen zwischen Gitterauflösungen, die Restriktion von fein nach grob sowie die Interpolation von grob zu fein nachvollzogen. Die somit erfassten wesentlichen Grundlagen des Verfeinerungsverfahrens gilt es nun in einem \emph{Kopplungsalgorithmus}~\cite[Kap.~3.5]{Lagrava12} zusammenzuführen.
 
 \bigskip
 
@@ -584,7 +585,7 @@ Entsprechend (\ref{eq:gridTime}) müssen für jeden groben Zeitschritt \(\delta 
 
 \begin{figure}[h]
 \input{img/algorithm_birds_eye.tikz}
-\caption{Verfeinerungsalgorithmus mit Invariante aus der Vogelperspektive}
+\caption{Übersicht des Verfeinerungsalgorithmus mit Invariante}
 \label{fig:AlgorithmBirdsEye}
 \end{figure}
 \noindent
@@ -623,14 +624,10 @@ Zu erwähnen bleibt, dass wir aus Konsistenzgründen alle Kopplungsformeln immer
 \bigskip
 Nach Durchführung der drei Vervollständigungsschritte haben wir die Invariante für \(t+\delta t_g\) wieder hergestellt und können von vorne beginnen. Wir haben damit an dieser Stelle das Verfeinerungsverfahren von Lagrava et al. vollständig nachvollzogen und können mit der Implementierung in OpenLB fortfahren.
 
-% ToDo: Randfälle der Restriktion ausarbeiten, analog zu Interpolation (fehlt im Paper)
-% ToDo: Experimentelle Begründung, warum Kopplungsformel immer auf alle Richtungen angewandt wird
-% ToDo: Bemerkungen zu MPI Unterstützung
-
 \newpage
 \section{Implementierung in OpenLB}
 
-OpenLB~\cite{olb12} ist ein umfangreiches frei verfügbares C++ Framework zur Implementierung von LBM basierenden Simulationen. Schwerpunkte sind dabei eine große Flexibilität in Hinblick auf die unterstützten Lattice Boltzmann Modelle sowie weitreichende Modularisierung zur einfachen Umsetzung neuer Anwendungen bei gleichzeitiger Eignung für hochperformante Berechnungen durch Skalierbarkeit auf parallele Großrechner.
+OpenLB~\cite{olb12} ist ein umfangreiches frei verfügbares C++ Framework zur Implementierung von LBM basierenden Simulationen. Schwerpunkte sind dabei eine große Flexibilität in Hinblick auf die unterstützten LB-Modelle sowie weitreichende Modularisierung zur einfachen Umsetzung neuer Anwendungen bei gleichzeitiger Eignung für hochperformante Berechnungen durch Skalierbarkeit auf parallele Großrechner.
 
 \bigskip
 Eine LBM Bibliothek mit idealer Unterstützung für Gitterverfeinerung würde es erlauben, dass zu lösende physikalische Problem zunächst ohne Rücksicht auf die konkrete Zusammensetzung des Gitters zu modellieren. Entstünde dann im Konflikt zwischen Rechenressourcen und angestrebter Ergebnisqualität ein Bedarf für Gitterverfeinerung, sollte diese a posteriori ohne weitere Anpassungen hinzugeschaltet werden können. In einer solchen Umgebung wäre es dann sogar denkbar, die Entscheidung über Position und Ausmaß der Verfeinerung an ein automatisches Kriterium \cite{Lagrava15} zu übertragen.
@@ -666,7 +663,7 @@ In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter
 \subsection{Auswahl der Verfeinerungsmethode}
 \label{sec:olbRefinementChoice}
 
-Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Dekomposition der Simulationsdomäne in achsenparallele Rechtecke. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die existierende Architektur, sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung, scheint ein solcher Ansatz sinnvoll.
+Ein erster Gedanke zur Integration von Gitterverfeinerung in OpenLB ist die Nutzung der bestehenden Dekomposition des Simulationsgebiets in achsenparallele Rechtecke. Insbesondere aus Sicht des Einfügens von Gitterverfeinerung in die existierende Architektur, sowie der unveränderten Weiterverwendung der \class{LoadBalancer} Algorithmen zur Steuerung der Parallelisierung, scheint ein solcher Ansatz sinnvoll.
 
 Bei Variation der Auflösung einzelner Quader im Rahmen der \class{CuboidGeometry2D} Struktur handelte es sich zwangsweise um einen Multi-Domain Ansatz. Gingen wir diesen Weg, benötigten wir zunächst \class{Cuboid2D} spezifische \class{UnitConverter} Instanzen zur Verwaltung der auflösungsabhängigen Konstanten. Dies müsste dann im Rahmen von \method{prepareLattice} zur Setzung der dann ebenfalls quaderspezifischen \class{Dynamics} und Randkonditionen beachtet werden.
 
@@ -685,7 +682,7 @@ Ein Vorbild für dieses Konzept zur Umsetzung von Gitterverfeinerung existiert i
 Nachdem nun das grobe Umfeld eines Gitterverfeinerungsframeworks feststeht, gilt es, ein geeignetes Verfahren zur Umsetzung in und Nutzung mit eben diesem Framework zu wählen. Das von Lagrava et al. in \citetitle{Lagrava12}~\cite{Lagrava12} beschriebene Verfahren, welches insbesondere auf \cite{DupuisChopard03} und \cite{Filippova98} einen anpassungsfähigen Multi-Domain Gitterverfeinerungsalgorithmus für BGK LBM auf koinzidierenden D2Q9 Gittern aufbaut, erscheint hier als guter Kandidat. Die anfängliche Beschränkung auf zwei Dimensionen passend zur Einschränkung dieser Arbeit sowie die Flexibilität in Hinblick auf die verwendeten Restriktions- und Interpolationsoperatoren bilden hier eine gute Grundlage für eine erste und doch ausbaufähige Umsetzung von Gitterverfeinerung in OpenLB.
 
 \newpage
-\subsection{Struktur des Gitterverfeinerungsframework}
+\subsection{Struktur des Gitterverfeinerungsframeworks}
 
 Wie im vorangehenden Kapitel erläutert, soll das Framework zur Gitterverfeinerung nicht tief in vorhandene Strukturen integriert, sondern viel mehr über diesen stehend angesiedelt werden. Eine erste Hürde zu diesem Ziel ist die, größtenteils aus zwangfreien Konventionen bestehende, Struktur von OpenLB Anwendungen. So sind zwar die einzelnen Komponenten der Simulation wie \class{CuboidGeometry2D} und \class{SuperLattice2D} vorgegeben, deren Konstruktion und Verknüpfung erfolgt jedoch größtenteils manuell.
 

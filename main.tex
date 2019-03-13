@@ -9,6 +9,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{enumitem}
 \usepackage{abstract}
+\usepackage{xpatch}
 
 \usepackage[outputdir=build]{minted}
 
@@ -102,14 +103,15 @@ Karlsruher Institut für Technologie
 
 \begin{abstract}
 Dank moderner paralleler Hochleistungsrechner können immer mehr praktische Strömungsprobleme
-in numerischen Simulationen gelöst werden. Ein Ansatz dazu ist die Lattice Boltzmann Methode, welche u. a. durch ihre gute Skalierbarkeit auf eben diesen Parallelrechnern zunehmend an Bedeutung gewinnt.
+mittels numerischer Simulationen gelöst werden. Ein Ansatz dazu ist die Lattice Boltzmann Methode, welche u. a. durch ihre gute Skalierbarkeit auf eben diesen Parallelrechnern zunehmend an Bedeutung gewinnt.
 
 Trotz anhaltendem Wachstum der verfügbaren Rechenleistung können viele reale Strömungsprobleme weiterhin nur unter Einschränkungen in akzeptabler Zeit und Genauigkeit gelöst werden. Ein Ansatz, diesem Konflikt zu begegnen, ist die lokale Verfeinerung der LBM zugrunde liegenden Gitter.
 
 OpenLB ist eine in C++ geschriebene freie Bibliothek zur Implementierung von LBM basierenden
 Strömungssimulationen. Aktuell bietet OpenLB noch keine Unterstützung für Gitterverfeinerung.
 
-Ziel dieser Arbeit ist es, diese Einschränkung aufzuheben und OpenLB um eine flexible Schnittstelle zur Implementierung und Nutzung von Gitterverfeinerungsverfahren zu ergänzen. Zu diesen Zweck werden anhand einer zweidimensionalen Lattice Boltzmann Methode verschiedene Ansätze zur Verfeinerung von Gittern diskutiert. Darauf aufbauend wird ein konkretes Verfahren detailliert ausformuliert und im Rahmen der Entwicklung eines generischen Gitterverfeinerungsframeworks umgesetzt. Der übergeordneten Fragestellung nach dem tatsächlichen Nutzen und möglichen Problemen von gitterverfeinerten Lattice Boltzmann Methoden wird durch die Evaluation von Anwendungsbeispielen Rechnung getragen. In diesem Kontext findet weiterhin eine Besprechung der formal begründeten anwendungsbezogenen Auswahl von zu verfeinernden Gebieten statt.
+Ziel dieser Arbeit ist es, aus der Behebung dieser Einschränkung heraus ein Gitterverfeinerungsverfahren nachzuvollziehen und dessen Stärken und Schwächen zu evaluieren.
+Zu diesen Zweck werden anhand einer zweidimensionalen Lattice Boltzmann Methode verschiedene Ansätze zur Verfeinerung von Gittern diskutiert. Darauf aufbauend wird ein konkretes Verfahren detailliert ausformuliert und im Rahmen der Entwicklung eines generischen Gitterverfeinerungsframeworks umgesetzt. Der übergeordneten Fragestellung nach dem tatsächlichen Nutzen und möglichen Problemen von gitterverfeinerten Lattice Boltzmann Methoden wird durch die Evaluation von Anwendungsbeispielen Rechnung getragen. In diesem Kontext findet weiterhin eine Besprechung der formal begründeten anwendungsbezogenen Auswahl von zu verfeinernden Gebieten statt.
 \end{abstract}
 \newpage
 

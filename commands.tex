@@ -4,6 +4,10 @@
 \theoremstyle{definition}
 \newtheorem{Definition}{Definition}[section]
 
+\makeatletter
+\AtBeginDocument{\xpatchcmd{\@thm}{\thm@headpunct{.}}{\thm@headpunct{}}{}{}}
+\makeatother
+
 \numberwithin{equation}{section}
 
 \newcommand{\R}{\mathbb{R}} % reelle

@@ -5,7 +5,7 @@
 	width=0.6*\textwidth,
 	symbolic x coords={\texttt{uN10},\texttt{uN20},\texttt{vN10A},\texttt{vN10B}},
 	xtick=data,
-	ylabel=L2-genormter Fehler,
+	ylabel=Relativer L2-genormter Fehler,
 	ymode=log,
 	log origin=infty,
 	y tick label style={/pgf/number format/sci},

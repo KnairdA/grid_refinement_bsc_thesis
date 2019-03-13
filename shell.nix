@@ -10,6 +10,7 @@ stdenv.mkDerivation rec {
       amsmath
       abstract
       cm-super
+      xpatch
       siunitx
       enumitem
       minted fvextra ifplatform framed

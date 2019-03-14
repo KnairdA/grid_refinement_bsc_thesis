@@ -60,16 +60,16 @@ Sei \(\tau \in \R_{\geq 0}\) eine Relaxationszeit und \(f^\text{eq}\) die von de
 \[ (\partial_t + \xi \cdot \nabla_x) f = -\frac{1}{\tau} (f(x,\xi,t) - f^\text{eq}(x,\xi,t)) .\]
 \end{Definition}
 
-Analog zur Boltzmann-Gleichung ist auch bei deren Approximation in der BGK-Boltzmann-Gleichung der beschriebene Ort \(x \in \R^2\) im Allgemeinen frei gewählt. Da unser Ziel jedoch gerade die Diskretisierung der Simulationsdomäne in einem Gitter ist, wollen wir \(x\) einschränken:
+Analog zur Boltzmann-Gleichung ist auch bei deren Approximation in der BGK-Boltzmann-Gleichung der beschriebene Ort \(x \in \R^2\) im Allgemeinen frei gewählt. Da unser Ziel jedoch gerade die Diskretisierung des Simulationsgebiets in einem Gitter ist, wollen wir \(x\) einschränken:
 
 \begin{Definition}[Ortsdiskretisierung]
 \label{def:SpatialDiscretizationLBM}
-Sei die örtliche Simulationsdomäne \(D \subseteq \R^2\) diskretisiert als kartesisches Gitter mit Zellabstand \(\Delta x \in \R_+\). Dann ist die Einbettung der kartesischen Gitterdomäne \(L := \Z^2\) in \(D\) gegeben als:
+Sei das Simulationsgebiet \(D \subseteq \R^2\) diskretisiert als kartesisches Gitter mit Zellabstand \(\Delta x \in \R_+\). Dann ist die Einbettung der kartesischen Gitterdomäne \(L := \Z^2\) in \(D\) gegeben als:
 \[d : L \to D, \ l \mapsto \Delta x \cdot l.\]
 Analog zur o.B.d.A. erfolgten Wahl von \(\Delta t = 1\) setzen wir auch hier \(\Delta x = 1\), sodass wir die Simulations- und Gitterdomäne -- bei Inklusion stetiger Übergänge zwischen Elementen aus \(L\) -- identisch identifizieren können. Der stetige Übergang zwischen zwei orthodonal benachbarten Gitterknoten erfolgt somit auf dem Einheitsintervall. Praktisch können wir also im Folgenden bei Annahme von \(x \in L \subset D\) die explizite Ausführung der Gittereinbettung vernachlässigen.
 \end{Definition}
 
-Zu betonen ist an dieser Stelle die Wichtigkeit einer klaren Unterscheidung zwischen Simulationsdomäne und dem durch diese zu modellierenden physikalischen System für die konkrete Interpretation des Simulationsergebnisses \cite[Kap.~7]{Krueger17}.
+Zu betonen ist an dieser Stelle die Wichtigkeit einer klaren Unterscheidung zwischen Simulationsgebiet und dem durch dieses zu modellierenden physikalischen System für die konkrete Interpretation des Simulationsergebnisses \cite[Kap.~7]{Krueger17}.
 
 Für die verbleibende Herleitung der LBM können wir diese Interpretation, d. h. die Unterscheidung zwischen physikalischen und Lattice-Einheiten, jedoch außer Acht lassen, da sich die modellierten physikalischen Einheiten aus der Wahl der Relaxationszeit und der Skalierung der Lattice-Momente ergeben. Diese Wahl wird hier nicht weiter eingeschränkt.
 
@@ -180,7 +180,7 @@ Bemerkenswert ist hierbei, dass der Kollisionsschritt nur lokale Informationen d
 
 \subsubsection{Chapman-Enskog Analyse}
 
-Ziel der beschriebenen Lattice Boltzmann Methode ist die möglichst gute Approximation der inkompressiblen Navier-Stokes Gleichungen auf der Simulationsdomäne.
+Ziel der beschriebenen Lattice Boltzmann Methode ist die möglichst gute Approximation der inkompressiblen Navier-Stokes Gleichungen auf dem Simulationsgebiet.
 
 \begin{Definition}[Inkompressible Navier-Stokes Gleichungen]
 Sei \(\rho\) die konstante Dichte, \(p\) der Druck und \(u\) die Geschwindigkeit zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(\mathrm{S}\) der Verzerrungstensor. Die inkompressiblen Navier-Stokes Gleichungen sind dann:
@@ -225,7 +225,7 @@ Diese Darstellung können wir unter Verwendung von Definition~\ref{def:ChapmanEn
 \subsection{Herangehensweisen an Gitterverfeinerung}
 
 Grundsätzlich existieren mit der \emph{Multi-Grid}
-und \emph{Multi-Domain} Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in LBM \cite[Kap.~3.1]{Lagrava12}. Im Wesentlichen unterscheiden die Ansätze sich in den Ausmaßen der variabel aufgelösten Teilgitter der Simulationsdomäne. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
+und \emph{Multi-Domain} Herangehenweise zwei verschiedene Ansätze für Gitterverfeinerung in LBM \cite[Kap.~3.1]{Lagrava12}. Im Wesentlichen unterscheiden die Ansätze sich in den Ausmaßen der variabel aufgelösten Teilgitter des Simulationsgebiets. Weitere Unterschiede folgen dann aus dieser grundlegenden Struktur.
 
 \subsubsection{Multi-Grid Ansatz}
 
@@ -240,7 +240,7 @@ existiert das gröbste Gitter über der gesamten Domäne. Feinere Teilgitter wer
 \caption{Teilgitter in der Multi-Grid Herangehensweise}
 \end{figure}
 
-Vorteil dieser Herangehensweise ist es, dass feinere Teilgitter im Simulationsverlauf ohne aufwendige Restrukturierung verschoben werden können, um beispielsweise komplexere Strömungsstrukturen zu \emph{verfolgen}. Nachteil ist, dass das Einsparpotentiale in Speicher- und Rechenbedarf wegen mehrfacher Abdeckung von Teilen der Simulationsdomäne durch überlagerte Gitter nicht voll ausgenutzt werden können.
+Vorteil dieser Herangehensweise ist es, dass feinere Teilgitter im Simulationsverlauf ohne aufwendige Restrukturierung verschoben werden können, um beispielsweise komplexere Strömungsstrukturen zu \emph{verfolgen}. Nachteil ist, dass das Einsparpotentiale in Speicher- und Rechenbedarf wegen mehrfacher Abdeckung von Teilen des Simulationsgebiets durch überlagerte Gitter nicht voll ausgenutzt werden können.
 
 \subsubsection{Multi-Domain Ansatz}
 
@@ -253,7 +253,7 @@ Kern von Multi-Domain Ansätzen
 \cite[ausführlich diskutiert in Kap.~\ref{kap:Lagrava}]{Lagrava12}
 \cite{Peng06}
 \cite{Rohde06}
-ist es, außerhalb von etwaigen verfahrensbedingten Übergangsbereichen, jede Position der Simulationsdomäne durch genau ein Teilgitter abzubilden. Konkret werden also bereits durch feinere Gitter abgedeckte Bereiche aus gröberen Teilgittern ausgespart.
+ist es, außerhalb von etwaigen verfahrensbedingten Übergangsbereichen, jede Position des Simulationsgebiets durch genau ein Teilgitter abzubilden. Konkret werden also bereits durch feinere Gitter abgedeckte Bereiche aus gröberen Teilgittern ausgespart.
 
 \begin{figure}[h]
 \centering
@@ -293,7 +293,7 @@ Wie in Kapitel~\ref{sec:olbRefinementChoice} noch näher begründet werden wird,
 
 \subsection{Übersicht}
 
-Das Verfahren basiert auf dem Multi-Domain Ansatz \cite[Kap.~3.1]{Lagrava12} mit koinzidierenden Gittern. Es werden also die feiner aufgelösten Teilbereiche der Simulationsdomäne so aus dem gröber aufgelösten Gitter ausgeschlossen, dass sie sich nur in Übergangsbereichen überlappen.
+Das Verfahren basiert auf dem Multi-Domain Ansatz \cite[Kap.~3.1]{Lagrava12} mit koinzidierenden Gittern. Es werden also die feiner aufgelösten Teilbereiche des Simulationsgebiets so aus dem gröber aufgelösten Gitter ausgeschlossen, dass sie sich nur in Übergangsbereichen überlappen.
 
 \begin{figure}[h]
 \centering
@@ -313,25 +313,25 @@ Entsprechend liegt der Fokus des von Lagrava et al. entwickelten Algorithmus auf
 \newpage
 \subsection{Gitterdiskretisierung}
 
-\begin{Definition}[Grobe und feine Simulationsdomänen]
+\begin{Definition}[Grobe und feine Simulationsgebiete]
 \label{def:SimDomain}
-Sei \(D \subseteq \R^2\) die physikalische Simulationsdomäne unabhängig der verwendeten Gitterauflösung. Diese Teilmenge von \(\R^2\) sei dabei bereits in Hinblick auf die angestrebte kartesische Diskretisierung gewählt, d. h. als Vereinigung zusammenhängender Rechtecke.
+Sei \(D \subseteq \R^2\) das physikalische Simulationsgebiet unabhängig der verwendeten Gitterauflösung. Diese Teilmenge von \(\R^2\) sei dabei bereits in Hinblick auf die angestrebte kartesische Diskretisierung gewählt, d. h. als Vereinigung zusammenhängender Rechtecke.
 
-Den durch ein grobes Gitter abzubildenden Teilbereich bezeichnen wir mit \(D_g \subset D\). Weiter ist \(D_f \subset D\) mit \(D_f \cap D_g \neq \emptyset\) der zu verfeinernde Teilbereich. O.B.d.A. nehmen wir an, dass \(D_g \cup D_f = D\) gilt, die Simulationsdomäne also in genau zwei Auflösungsstufen aufgeteilt wird.
+Den durch ein grobes Gitter abzubildenden Teilbereich bezeichnen wir mit \(D_g \subset D\). Weiter ist \(D_f \subset D\) mit \(D_f \cap D_g \neq \emptyset\) der zu verfeinernde Teilbereich. O.B.d.A. nehmen wir an, dass \(D_g \cup D_f = D\) gilt, das Simulationsgebiet also in genau zwei Auflösungsstufen aufgeteilt wird.
 \end{Definition}
 
 \begin{figure}[h]
 \centering
 \input{img/simulation_domain.tikz}
-\caption{Schematische Darstellung der Simulationsdomänen der Gitter}
+\caption{Schematische Darstellung der Simulationsgebiete der Gitter}
 \label{fig:SimDomain}
 \end{figure}
 
 Die Annahme von zwei Verfeinerungsstufen ist berechtigt, da mehrfach verfeinerte Gitter sich durch erneute -- rekursive -- Anwendung von Definition~\ref{def:SimDomain} mit \(\tilde{D} := D_f\) modellieren lassen. Auch Verfeinerung eines groben Gitters in mehreren disjunkten Bereichen kann unter dieser Annahme betrachtet werden, da für die Koppelung zwischen Gittern nur Knoten in \(D_f\) relevant sind.
 
-\begin{Definition}[Diskretisierung der Simulationsdomänen]
+\begin{Definition}[Diskretisierung der Simulationsgebiete]
 \label{def:DiskretRefinedGitter}
-Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierungen der Simulationsdomänen \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben
+Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierungen der Simulationsgebiete \(D_g\) bzw. \(D_f\). Diese seien so gewählt, dass sie gerade die konvexen Hüllen ihrer koinzidierenden Diskretisierungsgitter beschreiben
 \begin{align*}
 \G &\subset D_g \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_g \cdot i \} && \text{Gröberes Gitter} \\
 \F &\subset D_f \cap \{ x \in \R^2 | \exists i \in \Z^2 : x = \delta x_f \cdot i \} && \text{Feineres Gitter}
@@ -342,7 +342,7 @@ Wir betrachten kartesische Gitter \(\G\) und \(\F\) als Diskretisierungen der Si
 Zur Entwicklung der Gitterkopplung fordern wir, dass sich \(\G\) und \(\F\) um mindestens eine grobe Gitterweite \(\delta x_g\) überlappen -- vgl. Abbildungen \ref{fig:MultiDomainOverlap} und \ref{fig:OverlapZone}. Die Seitenlängen der konvexen Hüllen \(D_g\) und \(D_f\) sind ganzzahlige Vielfache von \(\delta x_g\) und \(\delta x_f\). Formal sei dabei das Innere der groben Domäne \(D_g\) ohne den Übergangsbereich der Breite \(\delta x_g\) gegeben als:
 \[ D_g^\circ := \{ x \in D_g | \forall y \in \R^2 \setminus D_g : \|x-y\| > \delta x_g \} \]
 Vergleiche hierzu den unschraffierten Bereich der Darstellung von \(D_g\) in Abbildung~\ref{fig:SimDomain}.
-Unter der Annahme, dass \(D_g\) die feine Simulationsdomäne \(D_f\) komplett umschließt, also der komplette Rand des feinen Gitters mit dem groben gekoppelt werden soll, fordern wir dann für den Rand des feinen Gitters:
+Unter der Annahme, dass \(D_g\) das feine Simulationsgebiet \(D_f\) komplett umschließt, also der komplette Rand des feinen Gitters mit dem groben gekoppelt werden soll, fordern wir dann für den Rand des feinen Gitters:
 \[ \partial D_f \stackrel{!}{\subset} \partial D_g^\circ \numberthis\label{eq:FineBorderIntersectCoarseGrid} \]
 Diese Einschränkung garantiert, dass die äußersten Gitterknoten des feinen Gitters sich soweit möglich mit groben Gitterknoten schneiden und nicht etwa zwischen zwei groben \emph{Gitterreihen} liegen.
 
@@ -575,7 +575,7 @@ In Abbildung~\ref{fig:InterpolationEdgeCase} erkennen wir zwei mögliche Randfä
 \end{figure}
 
 \noindent
-So kann es an den Außengrenzen der Simulationsdomäne dazu kommen, dass nur drei der vier benötigten groben Nachbarknoten zur Verfügung stehen, wie in der grün markierten Situation dargestellt.
+So kann es an den Außengrenzen des Simulationsgebietes dazu kommen, dass nur drei der vier benötigten groben Nachbarknoten zur Verfügung stehen, wie in der grün markierten Situation dargestellt.
 Je nach Implementierung der Kommunikation zwischen den Gittern, kann die gleiche Einschränkung auch in Ecken des feinen Gitters -- hier blau markiert -- dazu kommen, dass eine Interpolation auf Grundlage von nur drei Nachbarn benötigt wird. Entsprechend erhalten wir nach Berechnung der dividierten Differenzen ein Interpolationspolynom auf drei Stützstellen:
 \begin{align*}
 \sipolarg{x} :&= \sipolarg{-1} \\
@@ -653,7 +653,7 @@ Diese Vision ist selbstredend von großem Anspruch und weit außerhalb der Grenz
 
 \subsection{Architekturübersicht}
 
-OpenLB verwaltet die Diskretisierung der zu modellierenden Simulationsdomäne in einer \class{CuboidGeometry2D} Instanz. Diese Klasse teilt eine gegebene physikalische Domäne in eine beliebige Anzahl von, durch \class{Cuboid2D} Instanzen dargestellten, achsenparallelen Rechtecken mit definierter Auflösung ein. Diese Aufteilung dient der Parallelisierung, da die Gitter dieser einzelnen Quader außerhalb von kommunizierenden Randbereichen vollständig nebenläufig verarbeitet werden können. Entsprechend werden diese Teilbereiche von einer Implementierung der \class{LoadBalancer} Schnittstelle auf die zu Verfügung stehenden Prozessoren aufgeteilt.
+OpenLB verwaltet die Diskretisierung der zu modellierenden Simulationsgebiete in einer \class{CuboidGeometry2D} Instanz. Diese Klasse teilt ein gegebenes physikalisches Gebiet in eine beliebige Anzahl von, durch \class{Cuboid2D} Instanzen dargestellten, achsenparallelen Rechtecken mit definierter Auflösung ein. Diese Aufteilung dient der Parallelisierung, da die Gitter dieser einzelnen Quader außerhalb von kommunizierenden Randbereichen vollständig nebenläufig verarbeitet werden können. Entsprechend werden diese Teilbereiche von einer Implementierung der \class{LoadBalancer} Schnittstelle auf die zu Verfügung stehenden Prozessoren aufgeteilt.
 
 Auf Grundlage dieses räumlichen Umrisses wird dann das eigentliche Gitter in einer \class{SuperLattice2D} Instanz abhängig des gewählten Lattice Boltzmann Modells aufgebaut. Die einzelnen Gitterzellen werden dabei von \class{Cell} Klassen abgebildet, welche anhand des spezifischen, durch einen sogenannten Deskriptor \emph{beschriebenen} und von \class{Dynamics} Instanzen durchgeführten, Kollisionsschrittes der lokalen Umsetzung des LBM Modells Sorge tragen.
 
@@ -666,7 +666,7 @@ Parallel zu diesen Strukturen kapselt und berechnet die \class{UnitConverter} Kl
 Im Allgemeinen ergibt sich aus diesen Komponenten folgende übliche Struktur von OpenLB-basierenden Anwendungen \cite[Kap.~2.1]{olb12userguide}:
 \begin{enumerate}
 	\item Erstellung des \class{UnitConverter} mit den beabsichtigten Gitterkonstanten
-	\item Beschreibung der Simulationsdomäne durch Konstruktion einer \class{CuboidGeometry2D}
+	\item Beschreibung des Simulationsgebietes durch Konstruktion einer \class{CuboidGeometry2D}
 	\item Bereitstellung eines \class{LoadBalancer} zur Instantierung einer \class{SuperGeometry2D}
 	\item Definition der Materialzahlen in einer \method{prepareGeometry} Methode
 	\item Konstruktion der \class{SuperLattice2D} Instanz aus der \class{SuperGeometry2D}
@@ -686,7 +686,7 @@ Bei Variation der Auflösung einzelner Quader im Rahmen der \class{CuboidGeometr
 
 Zur Ermöglichung von Parallelisierung berücksichtigt die, der Gitterverwaltung in \class{SuperLattice2D} zugrunde liegende, Aufteilung der Domäne durch \class{CuboidGeometry2D} bereits Übergangsbereiche, deren Funktion mit zusätzlicher Auflösungskopplung in Einklang zu bringen wäre.
 
-Weiter würde das Problemfeld eben dieser Dekomposition um die Restriktion auf Auflösungsübergänge im Verhältnis \(1:2\) erweitert. So müsste ein guter Algorithmus zur Aufteilung der Simulationsdomäne die Anforderungen an Parallelisierung, Verteilung der Rechenressourcen, Geometrie und Verfeinerung sinnvoll auflösen und zugleich manuelle Eingriffe erlauben. Diese zusätzliche starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein starkes Gegenargument zu diesem ersten Gedanken.
+Weiter würde das Problemfeld eben dieser Dekomposition um die Restriktion auf Auflösungsübergänge im Verhältnis \(1:2\) erweitert. So müsste ein guter Algorithmus zur Aufteilung des Simulationsgebietes die Anforderungen an Parallelisierung, Verteilung der Rechenressourcen, Geometrie und Verfeinerung sinnvoll auflösen und zugleich manuelle Eingriffe erlauben. Diese zusätzliche starke Einschränkung sowie der dann bei Anpassung der Verfeinerungsstruktur unumgängliche komplette Neuaufbau der Simulation bilden ein starkes Gegenargument zu diesem ersten Gedanken.
 
 \bigskip
 Der tatsächlich umgesetzte Ansatz ergibt sich aus dem Verständnis von Gitterverfeinerung als Kopplung von ansonsten komplett allein stehenden Simulationen. Die Übergangsbereiche wären in diesem Modell mit Randkonditionen vergleichbar, wie sie für Ein- und Ausflüsse verwendet werden. Gitterverfeinerung könnte so weitestgehend von der bestehenden Architektur getrennt ergänzt werden, was insbesondere auch die veränderungsfreie Unterstützung existierender Anwendungen begünstigen würde.
@@ -727,7 +727,7 @@ RefiningGrid2D<T,DESCRIPTOR>::RefiningGrid2D(
 \label{lst:RefiningGrid}
 \end{listing}
 
-Die Konstruktion von \class{Grid2D} erfolgt anhand einer indikatorgegebenen Beschreibung der Simulationsdomäne sowie der gewünschten Auflösung zusammen mit der Relaxationszeit und der modellierenden Reynolds-Nummer:
+Die Konstruktion von \class{Grid2D} erfolgt anhand einer indikatorgegebenen Beschreibung des Simulationsgebiets sowie der gewünschten Auflösung zusammen mit der Relaxationszeit und der modellierenden Reynolds-Nummer:
 \begin{minted}{cpp}
 Grid2D(FunctorPtr<IndicatorF2D<T>>&& domainF, int resolution, T tau, int re);
 \end{minted}
@@ -784,7 +784,7 @@ Zur umfassenden Beschreibung des Gitterverfeinerungsframework fehlt uns jetzt nu
 \newpage
 \subsection{Umsetzung des Verfahrens von Lagrava et al.}
 
-Grundsätzlich implementiert jede Instanz von \class{Coupler2D} die Kopplung zweier Gitter in einer Richtung entlang einer, durch Ursprung und Ausdehnung charakterisierten, Linie innerhalb der physikalischen Simulationsdomäne. Für die Kopplung einer rechteckigen \class{RefiningGrid2D} Instanz werden von \method{Grid2D::refine} in diesem Fall acht Kopplungsobjekte erzeugt -- vier Seiten mit jeweils zwei Kopplern.
+Grundsätzlich implementiert jede Instanz von \class{Coupler2D} die Kopplung zweier Gitter in einer Richtung entlang einer, durch Ursprung und Ausdehnung charakterisierten, Linie innerhalb des physikalischen Simulationsgebiets. Für die Kopplung einer rechteckigen \class{RefiningGrid2D} Instanz werden von \method{Grid2D::refine} in diesem Fall acht Kopplungsobjekte erzeugt -- vier Seiten mit jeweils zwei Kopplern.
 
 \begin{listing}[H]
 \inputminted{cpp}{code/coupler2d.cpp}
@@ -1006,7 +1006,7 @@ Noch weiter kann diese Beobachtung hier jedoch nicht bewertet werden, da nicht k
 
 \subsubsection{Anwendung eines formalen Kriteriums zur Gitterverfeinerung}
 
-An dieser Stelle wollen wir die Gelegenheit nutzen, uns näher mit der Wahl der Verfeinerungsbereiche auseinanderzusetzen. So scheint es auf der einen Seite intuitiv sinnvoll, einen Verfeinerungsbereich in besonders komplexen Regionen einer Simulationsdomäne zu platzieren -- in diesem Fall also um den Zylinder, dessen Geometrie dann u.a. feiner aufgelöst würde. Auf der anderen Seite ist eine solch intuitive Entscheidung aber leicht fehlbar und schwer qualitativ zu beurteilen oder zu optimieren. Entsprechende Gedanken bewogen auch die Autoren unseres Verfeinerungsverfahrens, in \citetitle{Lagrava15}~\cite{Lagrava15} ein auf der Knudsen-Zahl basierendes automatisches Kriterium zur Gitterverfeinerung herzuleiten.
+An dieser Stelle wollen wir die Gelegenheit nutzen, uns näher mit der Wahl der Verfeinerungsbereiche auseinanderzusetzen. So scheint es auf der einen Seite intuitiv sinnvoll, einen Verfeinerungsbereich in besonders komplexen Regionen eines Simulationsgebietes zu platzieren -- in diesem Fall also um den Zylinder, dessen Geometrie dann u. a. feiner aufgelöst würde. Auf der anderen Seite ist eine solch intuitive Entscheidung aber leicht fehlbar und schwer qualitativ zu beurteilen oder zu optimieren. Entsprechende Gedanken bewogen auch die Autoren unseres Verfeinerungsverfahrens, in \citetitle{Lagrava15}~\cite{Lagrava15} ein auf der Knudsen-Zahl basierendes automatisches Kriterium zur Gitterverfeinerung herzuleiten.
 
 \begin{Definition}[Knudsen-Zahl]
 Sei \(\lambda\) die mittlere freie Weglänge, \(L\) die charakteristische Länge des Systems. Die Knudsen-Zahl \(\text{Kn}\) ist definiert als:
@@ -1215,7 +1215,7 @@ Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient
 \bigskip
 
 Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
-Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf der ganzen Simulationsdomäne der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
+Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf dem ganzen Simulationsgebiet der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
 Dazu sehen wir in Abbildungen~\ref{fig:cylinder2dHighResDragComparison} und \ref{fig:cylinder2dHighResLiftDeltapComparison} sowie zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparison} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen variierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
 
 \bigskip

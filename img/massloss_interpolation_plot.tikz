@@ -2,7 +2,7 @@
 \begin{axis}[
 	scale only axis,
 	height=8.75cm,
-	width=0.9*\textwidth,
+	width=0.85*\textwidth,
 	mark size=0,
 	line width=0.5pt,
 	legend pos=south west,

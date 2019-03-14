@@ -28,6 +28,4 @@ set obj 4 fillstyle empty border -1 front lw 1
 set obj 5 rect from 0.55,0.15 to 11.05,3.95
 set obj 5 fillstyle empty border -1 front lw 1
 
-set title "Geeignet dreifach verfeinertes Gitter mit 13454 Knoten"
-
 load 'common/include_fluid.gnuplot'

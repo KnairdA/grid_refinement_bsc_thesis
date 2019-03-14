@@ -146,7 +146,7 @@ Seien \(\overline{f_i}\) und \(\overline\tau\) definiert:
 
 Setzen wir diese verschobenen Variablen in das Ergebnis der Trapezregel ein, erhalten \cite[Kap.~A.5 mit \(\Delta t=1\)]{Krueger17} wir die die vollständig diskretisierte LBM BGK Gleichung:
 
-\[\overline{f_i}(x+\xi_i,t+1) = \overline{f_i}(x,t) - \frac{1}{\overline\tau} (\overline{f_i}(x,t) - f_i^\text{eq}(x,t)).\]
+\[\overline{f_i}(x+\xi_i,t+1) = \overline{f_i}(x,t) - \frac{1}{\overline\tau} (\overline{f_i}(x,t) - f_i^\text{eq}(x,t))\]
 \end{Definition}
 
 Bemerkenswert ist an dieser Stelle, dass die Momente der Verteilungen mit \(\overline{f_i}\) analog zu Definition~\ref{def:Momente} berechnet werden können:
@@ -180,10 +180,10 @@ Bemerkenswert ist hierbei, dass der Kollisionsschritt nur lokale Informationen d
 
 \subsubsection{Chapman-Enskog Analyse}
 
-Ziel der beschriebenen Lattice Boltzmann Methode ist die möglichst gute Approximation der schwach-kompressiblen Navier-Stokes Gleichungen auf der Simulationsdomäne.
+Ziel der beschriebenen Lattice Boltzmann Methode ist die möglichst gute Approximation der inkompressiblen Navier-Stokes Gleichungen auf der Simulationsdomäne.
 
-\begin{Definition}[Schwach-kompressible Navier-Stokes Gleichungen]
-Sei \(\rho\) die Dichte, \(u\) die Geschwindigkeit und \(p\) der Druck zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(\mathrm{S}\) der Verzerrungstensor. Die Navier-Stokes Gleichungen:
+\begin{Definition}[Inkompressible Navier-Stokes Gleichungen]
+Sei \(\rho\) die konstante Dichte, \(p\) der Druck und \(u\) die Geschwindigkeit zu Zeit \(t\) sowie \(\nu\) die kinematische Viskosität und \(\mathrm{S}\) der Verzerrungstensor. Die inkompressiblen Navier-Stokes Gleichungen sind dann:
 \begin{align*}
 \partial_t  \rho + \nabla \cdot (\rho u) &= 0 \\
 \partial_t u + (u \cdot \nabla) u &= -\frac{1}{\rho} \nabla p + 2\nu\nabla \cdot (\mathrm{S}).
@@ -197,7 +197,7 @@ p &= c_s^2 \rho \\
 \end{align*}
 \end{Definition}
 
-Nach \cite[Kap.~4.1]{Krueger17} kann die asymptotische Äquivalenz von LBM BGK Gleichung und schwach-kompressiblen Navier-Stokes Gleichungen mit der Entwicklung von Chapman-Enskog gezeigt werden.
+Nach \cite[Kap.~4.1]{Krueger17} kann die asymptotische Äquivalenz von LBM BGK Gleichung und inkompressiblen Navier-Stokes Gleichungen mit der Entwicklung von Chapman-Enskog gezeigt werden.
 
 \begin{Definition}[Chapman-Enskog Ansatz]
 \label{def:ChapmanEnskog}
@@ -599,7 +599,9 @@ Im zurückliegenden Kapitel~\ref{kap:Komponenten} haben wir, aufbauend auf der S
 Entsprechend (\ref{eq:gridTime}) müssen für jeden groben Zeitschritt \(\delta t_g\) zwei feine Zeitschritte \(\delta t_f\) durchgeführt werden. Die alternierenden Kollisions- und Strömungsschritte der beiden Gitter sind also strikt gekoppelt und werden als eine Schleifeneinheit betrachtet. Als Schleifeninvariante definieren wir dabei die vollständige Bekanntheit aller Verteilungsfunktionen aller Knoten in beiden Gittern.
 
 \begin{figure}[h]
+\begin{adjustbox}{center}
 \input{img/algorithm_birds_eye.tikz}
+\end{adjustbox}
 \caption{Übersicht des Verfeinerungsalgorithmus mit Invariante}
 \label{fig:AlgorithmBirdsEye}
 \end{figure}
@@ -670,7 +672,7 @@ Im Allgemeinen ergibt sich aus diesen Komponenten folgende übliche Struktur von
 	\item Konstruktion der \class{SuperLattice2D} Instanz aus der \class{SuperGeometry2D}
 	\item Instantierung der benötigten \class{Dynamics} und etwaigen Randkonditionen
 	\item Bindung von \class{Dynamics} und Randkonditionen an die, von \class{SuperLattice2D} verwalteten, \class{Cell} Objekte anhand der Materialzahlen in einer \method{prepareLattice} Methode
-	\item Starten der Simulationsschleife zum Aufruf von \method{SuperLattice2D::collideAndStream}
+	\item Simulationsschleife zum Aufruf von \method{SuperLattice2D::collideAndStream}
 \end{enumerate}
 
 In letzterem, die eigentliche Simulation durchführendem, Schritt, werden weiter durch kanonisch benannte Funktionen wie \method{getResults} und \method{error} die Ergebnisse zur Analyse in Dateien~\cite{vtkGuide10} geschrieben, Fehlernormen berechnet und Konvergenzkriterien bestimmt.
@@ -835,8 +837,9 @@ Hiermit sind die zentralen Bestandteile der Umsetzung des Verfahrens von Lagrava
 \newpage
 \section{Evaluierung}
 
-Die Auswahl von Beispielen und Kriterien zur Bewertung der Qualität eines Gitterverfeinerungsverfahrens gestaltet sich zunächst unklarer, als man annehmen könnte. So stellt OpenLB zwar eine gute Sammlung verschiedener Simulationsbeispiele bereit, aber nur wenige von ihnen besitzen analytische Lösungen oder einfach zu verwendende gesicherte Vergleichsdaten. Solche Referenzwerte sind -- abseits offensichtlicher Gütekriterien wie der Vermeidung divergierender Simulationen -- Voraussetzung für die Bewertung der Verfahrensqualität. Ohne diese ist beim Vergleich mit aus uniformen Gittern gewonnenen Lösungen nicht klar, welches Ergebnis besser ist.
+Die Auswahl von Beispielen und Kriterien zur Bewertung der Qualität eines Gitterverfeinerungsverfahrens gestaltet sich zunächst unklarer, als man annehmen könnte. So existieren nur für wenige praktische Strömungssituationen analytische Lösungen der Navier-Stokes Gleichungen. Zur Evaluation können wir uns also nicht auf die optimale Situation des Vergleiches mit analytischen Lösungen beschränken, sondern müssen auch auf Vergleichsdaten aus anderen Simulationen oder realen Experimenten zurückgreifen.
 
+Solche Referenzwerte sind -- abseits offensichtlicher Gütekriterien wie der Vermeidung divergierender Simulationen -- Voraussetzung für die Bewertung der Verfahrensqualität. Ohne diese ist beim Vergleich mit aus uniformen Gittern gewonnenen Lösungen nicht klar, welches Ergebnis besser ist.
 Entsprechend beschränken wir uns je nach Beispiel auf die Betrachtung einer Auswahl der folgenden Gütekriterien:
 \begin{enumerate}
 	\item Subjektive Qualität des Strömungsbildes
@@ -899,7 +902,7 @@ Bei erster Betrachtung lässt sich erkennen, dass die Strömung den Gitterüberg
 \newpage
 \subsubsection{Vergleich mit der analytischen Lösung}
 
-Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung von Geschwindigkeit und Druck des Poiseuille-Flusses in Definition~\ref{def:analyticPoiseuille} heran. Wir können diese in \mbox{OpenLB} einfach mit Hilfe des \class{SuperRelativeErrorL2Norm2D} Funktors auf beiden Gittern mit der simulierten Lösung vergleichen:
+Zur formalen Qualitätsbewertung ziehen wir im Folgenden die analytische Lösung von Geschwindigkeit und Druck des Poiseuille-Flusses in Definition~\ref{def:analyticPoiseuille} heran. Wir können diese in \mbox{OpenLB} einfach mit Hilfe des, die relative Fehlernorm \(\frac{\|f_\text{ana}-f_\text{sim}\|_2}{\|f_\text{ana}\|_2}\) berechnenden, \class{SuperRelativeErrorL2Norm2D} Funktors mit der simulierten Lösung vergleichen:
 
 \begin{figure}[h]
 \centering
@@ -965,7 +968,7 @@ Während für diese Strömungssituation noch keine analytische Lösung gefunden 
 
 \begin{figure}[H]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n20_re100_16s.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_unrefined_n20_re100_16s.pdf}
 \end{adjustbox}
 \caption{Uniform mit \(N=20\) aufgelöstes Strömungsbild zu \(t=16s\)}
 \label{fig:UniformCylinderVelocity16s}
@@ -975,7 +978,7 @@ Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Z
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_n20_re100_16s.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_single_refinement_n20_re100_16s.pdf}
 \end{adjustbox}
 \caption{Einfach verfeinertes Strömungsbild zu \(t=16s\)}
 \label{fig:SingleLevelRefinementCylinderVelocity16s}
@@ -988,7 +991,7 @@ Vergleichen wir diese Grundsituation mit der in Abbildung~\ref{fig:SingleLevelRe
 
 \begin{figure}[H]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n40_re100_16s.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_unrefined_n40_re100_16s.pdf}
 \end{adjustbox}
 \caption{Uniform mit \(N=40\) aufgelöstes Strömungsbild zu \(t=16s\)}
 \label{fig:UniformCylinderVelocityN4016s}
@@ -1031,7 +1034,7 @@ Dieses, die theoretische mit der tatsächlich simulierten Knudsen-Kennzahl des F
 
 \begin{figure}[H]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n20_re100_16s_knudsen.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_unrefined_n20_re100_16s_knudsen.pdf}
 \end{adjustbox}
 \caption{Verfeinerungskriterium in einem uniform mit \(N=20\) aufgelösten Gitter}
 \label{fig:UnrefinedCylinderKnudsen60s}
@@ -1041,7 +1044,7 @@ Der lokale Vergleich der Knudsen-Zahlen eröffnet einen neuen, interessanten, Bl
 
 \begin{figure}[H]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n40_re100_16s_knudsen.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_unrefined_n40_re100_16s_knudsen.pdf}
 \end{adjustbox}
 \caption{Verfeinerungskriterium in einem uniform mit \(N=40\) aufgelösten Gitter}
 \label{fig:UnrefinedCylinderKnudsenN4060s}
@@ -1051,17 +1054,18 @@ Bei der Interpretation der Verfeinerungsfaktoren ist zu beachten, dass einzelne 
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_single_refinement_n20_re100_16s_knudsen.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_single_refinement_n20_re100_16s_knudsen.pdf}
 \end{adjustbox}
 \caption{Verfeinerungskriterium in einem einfach verfeinerten \(N=20\) Gitter}
 \label{fig:SingleLevelRefinementCylinderKnudsen16s}
 \end{figure}
 
+\newpage
 Insgesamt war unter dieser formaleren Analyse unsere intuitive Wahl des in Abbildung~\ref{fig:SingleLevelRefinementCylinderVelocity16s} verfeinerten Bereichs akzeptabel. Dies bestätigt sich auch bei Berechnung des Knudsen-Kriterium für das einfach verfeinerte Gitter in Abbildung~\ref{fig:SingleLevelRefinementCylinderKnudsen16s} -- die angemahnten Bereiche im Umfeld des Zylinders sind hier deutlich reduziert. Gehen wir weiterhin davon aus, dass das Kriterium belastbare Aussagen zur Simulationsqualität liefert, so ist die Reduzierung des des Verfeinerungsfaktors in den verfeinerten Gebieten um genau eins ein Indiz für die Qualität des Verfeinerungsalgorithmus.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_improved_grid_n20_re100_16s_knudsen.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_improved_grid_n20_re100_16s_knudsen.pdf}
 \end{adjustbox}
 \caption{Verbesserte Verfeinerungsstruktur um den Zylinder}
 \end{figure}
@@ -1071,11 +1075,14 @@ Es wäre vorteilhaft, wenn sich dieses Problem unter Einsatz möglichst weniger 
 
 \bigskip
 
-Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der Gitterzellen mit den für ein stabiles uniformes Gitter benötigten Zellen vergleichen: Während das im Ausgang verfeinerte Gitter nur 3608 aktive Zellen beinhaltet, benötigt ein stabiles uniformes Gitter eine Auflösung von mindestens \(N=12\), was 13500 Zellen entspricht. Interessieren wir uns an dieser Stelle also nur für ein subjektiv korrektes und nicht-divergentes Strömungsbild, so ermöglicht uns Gitterverfeinerung ein Auskommen mit nur etwa einem Viertel der für ein unverfeinertes Gitter benötigten Zellen.
+Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der Gitterzellen mit den für ein stabiles uniformes Gitter benötigten Zellen vergleichen: Während das im Ausgang verfeinerte Gitter nur 3608 aktive Zellen beinhaltet, benötigt ein uniformes Gitter eine Mindestauflösung von \(N=12\), was 13500 Zellen entspricht.
+
+\newpage
+Interessieren wir uns an dieser Stelle also nur für ein subjektiv korrektes und nicht-divergentes Strömungsbild, so ermöglicht uns Gitterverfeinerung ein Auskommen mit nur etwa einem Viertel der für ein unverfeinertes Gitter benötigten Zellen.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_low_resolution_outflow_refine_n5_re100_16s.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_low_resolution_outflow_refine_n5_re100_16s.pdf}
 \end{adjustbox}
 \caption{Stabile Zylinderumströmung mit \(N=5\) durch Ausgangsverfeinerung}
 \label{fig:CylinderOptimizedGridN5}
@@ -1084,11 +1091,13 @@ Dieses Beispiel gewinnt insbesondere an Eindruck, wenn wir die Gesamtanzahl der 
 Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d. h. der Knotenanzahl, beschränkte Rechenressourcen besser auf die zu simulierende Strömungssituation aufzuteilen. Beispielsweise fällt auf, dass der zentrale Zylinder in Abbildung~\ref{fig:CylinderOptimizedGridN5} nur sehr grob modelliert wird. Entsprechend wollen wir versuchen, bei Einschränkung auf die Anzahl der Gitterknoten eines uniformen Gitters mit \(N=12\), ein besseres Gitter zu erzeugen.
 
 \begin{figure}[H]
+\centering{Uniform aufgelöstes Gitter mit \num{13500} Knoten}
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_unrefined_n12_re100_16s.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_unrefined_n12_re100_16s.pdf}
 \end{adjustbox}
+\centering{Geeignet dreifach verfeinertes Gitter mit \num{13454} Knoten}
 \begin{adjustbox}{center}
-\includegraphics[width=1.2\textwidth]{img/static/cylinder2d_optimized_refinement_n5_re100_16s.pdf}
+\includegraphics[width=1.01\textwidth]{img/static/cylinder2d_optimized_refinement_n5_re100_16s.pdf}
 \end{adjustbox}
 \caption{Vergleich von uniform und problembezogen verteilten Freiheitsgraden}
 \label{fig:CylinderOptimizedGridComparison}

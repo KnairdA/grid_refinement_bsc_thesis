@@ -6,6 +6,4 @@ plot 'data/cylinder2d_unrefined_n12_re100_16s.csv' using ($6*10):($7*10):(sqrt($
 
 load 'common/velocity_wrapper.gnuplot'
 
-set title "Uniform aufgelöstes Gitter mit 13500 Knoten"
-
 load 'common/include_fluid.gnuplot'

@@ -11,4 +11,7 @@ set ytics 0,1,4
 set cbtics 0,0.5,2.0
 set cbrange [0:2.0]
 
+set colorbox user origin graph 1.01, graph 0 size 0.02, graph 1
+set rmargin at screen 0.91
+
 set cblabel "Geschwindigkeitsnorm"

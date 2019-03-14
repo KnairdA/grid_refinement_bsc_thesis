@@ -6,7 +6,7 @@
 \begin{axis}[
 	scale only axis,
 	height=7.5cm,
-	width=0.9*\textwidth,
+	width=0.85*\textwidth,
 	legend cell align=left,
 	legend pos=south east,
 	grid=both,
@@ -29,7 +29,7 @@
 	scale only axis,
 	yshift=-8.5cm,
 	height=7.5cm,
-	width=0.9*\textwidth,
+	width=0.85*\textwidth,
 	legend cell align=left,
 	legend pos=south east,
 	grid=both,

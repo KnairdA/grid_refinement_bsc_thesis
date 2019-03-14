@@ -1,65 +1,65 @@
-\hspace{-12.5mm}
 \tikzexternaldisable
 \begin{tikzpicture}[
 	scale=1.0,
-	lhs/.style={left,xshift=-5mm,align=left},
-	rhs/.style={right,xshift=5mm,align=left},
+	lhs/.style={left,xshift=-5mm,align=right,text width=7cm},
+	rhs/.style={right,xshift=5mm,align=left,text width=7cm},
 	coarse/.style={circle,inner sep=1.5mm},
 	fine/.style={circle,inner sep=1mm},
 	incomplete/.style={draw=gray,very thick,fill=white},
 	complete/.style={draw=gray,very thick,fill=green!70!black}
 ]
 
-\draw[gray,very thick] (0,0) -- (0,-11) {};
-\draw[gray,very thick] (1,0) -- (1,-11) {};
 
-\node[coarse,complete] at (0,0) {};
-\node[lhs] at (0,0) {\(f_{g,i}(\G)\) vollständig zu Zeit \(t\)};
+\draw[gray,very thick] (-0.4,0) -- (-0.4,-11) {};
+\draw[gray,very thick] (0.4,0) -- (0.4,-11) {};
 
-\node[fine,complete] at (1,0) {};
-\node[rhs] at (1,0) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t\)};
+\node[coarse,complete] at (-0.4,0) {};
+\node[lhs] at (-0.4,0) {\(f_{g,i}(\G)\) vollständig zu Zeit \(t\)};
 
-\node[coarse,incomplete] at (0,-1) {};
-\node[lhs] at (0,-1) {Zeitschritt \(t \to t+\delta t_g\) auf \(\G\)};
+\node[fine,complete] at (0.4,0) {};
+\node[rhs] at (0.4,0) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t\)};
 
-\node[fine,incomplete] at (1,-2) {};
-\node[rhs] at (1,-2) {Zeitschritt \(t \to t+\delta t_f\) auf \(\F\)};
+\node[coarse,incomplete] at (-0.4,-1) {};
+\node[lhs] at (-0.4,-1) {Zeitschritt \(t \to t+\delta t_g\) auf \(\G\)};
 
-\node[coarse,incomplete] at (0,-3) {};
-\node[lhs] at (0,-3)
-{Interpolation von \(\rho_g, u_g, f_{g,i}^\text{neq}\) in \(x_{g \to f}^g \in \G\)\\zu Zeitpunkt \(t + \delta t_g / 2\)};
+\node[fine,incomplete] at (0.4,-2) {};
+\node[rhs] at (0.4,-2) {Zeitschritt \(t \to t+\delta t_f\) auf \(\F\)};
 
-\node[fine,incomplete] at (1,-4) {};
-\node[rhs] at (1,-4)
-{Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) mit (\ref{eq:expandedDirectG2F})};
+\node[coarse,incomplete] at (-0.4,-3) {};
+\node[lhs] at (-0.4,-3)
+{Interpolation von \(\rho_g, u_g, f_{g,i}^\text{neq}\) in \(x_{g \to f}^g\)};
 
-\node[fine,incomplete] at (1,-5) {};
-\node[rhs] at (1,-5)
-{Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) mit (\ref{eq:expandedInterpolG2F})};
+\node[fine,incomplete] at (0.4,-4) {};
+\node[rhs] at (0.4,-4)
+{Setzen von \(f_{f,i}\) in \(x_{g \to f}^g\) (\ref{eq:expandedDirectG2F})};
 
-\node[fine,complete] at (1,-6) {};
-\node[rhs] at (1,-6) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t + \delta t_f\)};
+\node[fine,incomplete] at (0.4,-5) {};
+\node[rhs] at (0.4,-5)
+{Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f\) (\ref{eq:expandedInterpolG2F})};
 
-\node[fine,incomplete] at (1,-7) {};
-\node[rhs] at (1,-7) {Zeitschritt \(t+\delta t_f \to t+2\delta t_f\) auf \(\F\)};
+\node[fine,complete] at (0.4,-6) {};
+\node[rhs] at (0.4,-6) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t + \delta t_f\)};
 
-\node[fine,incomplete] at (1,-8) {};
-\node[rhs] at (1,-8)
-{Setzen von \(f_{f,i}\) in \(x_{g \to f}^g \in \F\) mit (\ref{eq:expandedDirectG2F})};
+\node[fine,incomplete] at (0.4,-7) {};
+\node[rhs] at (0.4,-7) {Zeitschritt \(t+\delta t_f \to t+2\delta t_f\) auf \(\F\)};
 
-\node[fine,incomplete] at (1,-9) {};
-\node[rhs] at (1,-9)
-{Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f \in \F\) mit (\ref{eq:expandedInterpolG2F})};
+\node[fine,incomplete] at (0.4,-8) {};
+\node[rhs] at (0.4,-8)
+{Setzen von \(f_{f,i}\) in \(x_{g \to f}^g\) (\ref{eq:expandedDirectG2F})};
 
-\node[coarse,incomplete] at (0,-10) {};
-\node[lhs] at (0,-10)
-{Restriktion von \(f_{g,i}\) in \(x_{f \to g} \in \G\) mit (\ref{eq:restrictedF2G})};
+\node[fine,incomplete] at (0.4,-9) {};
+\node[rhs] at (0.4,-9)
+{Interpolation von \(f_{f,i}\) in \(x_{g \to f}^f\) (\ref{eq:expandedInterpolG2F})};
 
-\node[coarse,complete] at (0,-11) {};
-\node[lhs] at (0,-11) {\(f_{g,i}(\G)\) vollständig zu Zeit \(t+\delta t_g\)};
+\node[coarse,incomplete] at (-0.4,-10) {};
+\node[lhs] at (-0.4,-10)
+{Restriktion von \(f_{g,i}\) in \(x_{f \to g}\) (\ref{eq:restrictedF2G})};
 
-\node[fine,complete] at (1,-11) {};
-\node[rhs] at (1,-11) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t+\delta t_g\)};
+\node[coarse,complete] at (-0.4,-11) {};
+\node[lhs] at (-0.4,-11) {\(f_{g,i}(\G)\) vollständig zu Zeit \(t+\delta t_g\)};
+
+\node[fine,complete] at (0.4,-11) {};
+\node[rhs] at (0.4,-11) {\(f_{f,i}(\F)\) vollständig zu Zeit \(t+\delta t_g\)};
 
 \end{tikzpicture}
 \tikzexternalenable

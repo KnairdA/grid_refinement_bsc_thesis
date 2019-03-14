@@ -51,7 +51,7 @@ Hierbei handelt es sich um eine Advektionsgleichung wobei der Term \(\partial_t 
 Zentrale Anforderung an den Kollisionsoperator ist die Impuls- und Masseerhaltung. Die im Folgenden betrachtete Lattice Boltzmann Methode verwendet die übliche BGK Approximation der Boltzmann-Gleichung ohne äußere Kraft von Bhatnagar, Gross und Krook (siehe \citetitle{Krueger17}~\cite[Kap.~3.5.3]{Krueger17}).
 Grundlegendes Element dieser Approximation ist der BGK Operator
 \[\Omega(f) := -\frac{f-f^\text{eq}}{\tau} \Delta t ,\]
-welcher die Partikelverteilung mit Rate \(\tau\) gegen eine Equilibriumsverteilung \(f^\text{eq}\) relaxiert. Ohne Beschränkung der Allgemeinheit setzen wir dabei  im Folgenden \(\Delta t = 1\).
+welcher die Partikelverteilung mit Rate \(\tau\) gegen eine Equilibriumsverteilung \(f^\text{eq}\) (vgl.~\ref{def:fieq}) relaxiert. Ohne Beschränkung der Allgemeinheit setzen wir dabei  im Folgenden \(\Delta t = 1\).
 
 Wenden wir den BGK Operator auf die Boltzmann-Gleichung ohne äußere Kräfte an, erhalten wir die BGK Approximation:
 
@@ -974,7 +974,10 @@ Während für diese Strömungssituation noch keine analytische Lösung gefunden 
 \label{fig:UniformCylinderVelocity16s}
 \end{figure}
 
-Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und dimensionalisieren diesen wiederum als \(D := \num{0.1}\si{\meter}\), was zugleich der charakteristischen Länge entspreche. Auflösungsangaben beziehen sich im Folgenden also auf den Durchmesser des Zylinders in groben Gitterweiten. Hinblickend auf die Vorgaben zum instationären Testfall \cite[Kapitel~2.2b]{SchaeferTurek96} sei \(\text{Re}:=100\) die Reynolds-Zahl und für den Einfluss sei ein Poiseuille-Geschwindigkeitsprofil angelegt. Wände und Ausflüsse werden analog zur hindernisfreien Rohrströmung durch lokale Geschwindigkeits- bzw. Druckrandbedingungen konstruiert, während der Zylinder den Fluss durch Bounce-Back hindere. Eine Relaxationszeit \(\overline\tau_g := \num{0.51}\) des gröbsten Gitters vervollständigt unser Modell.
+Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und dimensionalisieren diesen wiederum als \(D := \num{0.1}\si{\meter}\), was zugleich der charakteristischen Länge entspreche. Auflösungsangaben beziehen sich im Folgenden also auf den Durchmesser des Zylinders in groben Gitterweiten. Hinblickend auf die Vorgaben zum instationären Testfall \cite[Kapitel~2.2b]{SchaeferTurek96} sei \(\text{Re}:=100\) die Reynolds-Zahl und für den Einfluss sei ein Poiseuille-Geschwindigkeitsprofil angelegt.
+
+\newpage
+Wände und Ausflüsse werden analog zur hindernisfreien Rohrströmung durch lokale Geschwindigkeits- bzw. Druckrandbedingungen konstruiert, während der Zylinder den Fluss durch Bounce-Back hindere. Eine Relaxationszeit \(\overline\tau_g := \num{0.51}\) des gröbsten Gitters vervollständigt unser Modell.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -998,8 +1001,6 @@ Vergleichen wir diese Grundsituation mit der in Abbildung~\ref{fig:SingleLevelRe
 \end{figure}
 
 Ergänzen wir unsere Auswahl von Geschwindigkeitsbildern jedoch um Abbildung~\ref{fig:UniformCylinderVelocityN4016s}, welche aus einem unverfeinerten \(N=40\) Gitter hervorgeht, ist oberflächlich gegenüber dieser kein Unterschied zur einfach verfeinerten Variante erkennbar. Beachtenswert ist dabei, dass das uniform mit \(N=40\) aufgelöste Gitter \(\sim 145000\) Knoten enthält, während das subjektiv identische lokal verfeinerte \(N=20\) Gitter mit \(\sim 66000\) nicht einmal halb so viele Knoten benötigt.
-
-\bigskip
 
 Noch weiter kann diese Beobachtung hier jedoch nicht bewertet werden, da nicht klar ist, welche Wirbelkonfiguration in dieser konkreten Strömungssituation korrekt ist. Aussagekräftiger für die formale Qualitätsbewertung wird der Vergleich der von Schäfer und Turek in \cite{SchaeferTurek96} zusammengestellten Referenzwerte sein.
 
@@ -1103,8 +1104,8 @@ Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d
 \label{fig:CylinderOptimizedGridComparison}
 \end{figure}
 
-\newpage
-Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils maximal 13500 Zellen. Der kleine Unterschied in der Knotenanzahl ist dabei der Einschränkung auf quaderförmige Gitter geschuldet, welche eine exakte Fixierung der Knotenanzahl erschwert.
+Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils maximal 13500 Zellen. 
+Der kleine Unterschied in der Knotenanzahl ist dabei der Einschränkung auf quaderförmige Gitter geschuldet, welche eine exakte Fixierung der Knotenanzahl erschwert.
 
 Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretisierung des Zylinders durch Konzentration der verfügbaren Gitterknoten in dessen Umfeld. Auch liegt dem Ausfluss des verfeinerten Gitters die Divergenz ferner als dem Ausfluss des uniformen Gitters, an welchem sich schon Artefakte abzeichnen. Eine formalere Analyse der Qualität dieses optimierten Gitters erwartet uns in Kapitel~\ref{kap:cylinder2dCoefficients}.
 

@@ -750,26 +750,32 @@ Zu bemerken ist, dass die Konstellation aus dieser Methode zusammen mit \method{
 \begin{minted}{cpp}
 // Initialisiere gröbstes Gitter mit gewünschten Fluidkonstanten
 Grid2D<T,DESCRIPTOR> coarseGrid(coarseDomain, resolution, tau, Re);
+// Diskretisiere gewünschte Geometrie in Materialzahlen auf dem groben Gitter
 prepareGeometry(coarseGrid);
 
 // Verfeinere ein Einheitsquadrat beginnend bei $(0.5,0.5) \in \R^2$
-auto fineGrid = coarseGrid.refine({0.5, 0.5}, {1.0, 1.0});
+// (`RefiningGrid2D` ist eine bis auf Kopplung eigenständige Simulation)
+RefiningGrid2D<T,DESCRIPTOR>& fineGrid = coarseGrid.refine({0.5, 0.5}, {1.0, 1.0});
+// Diskretisiere gewünschte Geometrie in Materialzahlen auf dem feinen Gitter
 prepareGeometry(fineGrid);
 
-// Schließe den feinen Bereich auf dem groben Gitter aus (optional)
+// Schließe den feinen Bereich aus dem groben Gitter aus
 auto refinedOverlap = fineGrid.getRefinedOverlap();
-coarseGrid->getSuperGeometry().rename(1,0,*refinedOverlap);
+coarseGrid.getSuperGeometry().reset(refinedOverlap);
 
-// Binde Dynamics und Randkonditionen an die beiden Gitter
-prepareLattice(coarseGrid);
-prepareLattice(fineGrid);
+// Definiere das gewünschte Fluidverhalten durch Binden von Dynamics und Rand-
+// konditionen anhand der Materialzahlen (`forEachGrid` ruft `prepareLattice`
+// auf allen Gittern der Verfeinerungshierarchie auf)
+coarseGrid.forEachGrid(prepareLattice);
 
-// Simulationsschleife mit Ausgabe
-for (int iT = 0; iT < coarseGrid->getConverter().getLatticeTime(100); ++iT) {
-	coarseGrid->collideAndStream();
+// Simulationsschleife über 100 physikalische Sekunden
+for (int iT = 0; iT < coarseGrid.getConverter().getLatticeTime(100); ++iT) {
+	// Führe Kollisions- und Strömungsschritt rekursiv auf allen Gittern aus,
+	// Auflösungskopplung erfolgt automatisch
+	coarseGrid.collideAndStream();
 
-	getResults(coarseGrid, iT);
-	getResults(fineGrid,   iT);
+	// Ergebnisaufbereitung (z.B. Fehlernormberechnung, VTK-Ausgabe etc.)
+	coarseGrid.forEachGrid(getResults);
 }
 \end{minted}
 \caption{Beispielhafte Nutzung von \class{Grid2D}}

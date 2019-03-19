@@ -43,6 +43,7 @@
 	y tick label style={/pgf/number format/.cd, use comma}
 ]
 
+
 \addplot[color=black]{2.48};
 \addlegendentry {Gemittelte Referenzlösung \(\Delta P := \num{2.48}\)};
 \addplot[color=blue!50!white,thin,densely dashed] table [x expr=\thisrow{time}, y=deltap] {\uniformHigh};

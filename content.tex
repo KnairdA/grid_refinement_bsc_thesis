@@ -34,7 +34,7 @@ Da die Anzahl der benötigten Gitterpunkte sich maßgeblich auf den Speicherbeda
 \newpage
 \section{Grundlagen}
 
-In diesem Kapitel werden wir die, dem weiteren Verlauf dieser Arbeit zugrunde liegende, Lattice Boltzmann Methode in 2D nachvollziehen.
+In diesem Kapitel werden wir die, dem weiteren Verlauf dieser Arbeit zugrunde liegende, Lattice Boltzmann Methode in 2D nachvollziehen~\cite[vgl.~Kapitel~3]{Krueger17}.
 
 \subsection{Lattice Boltzmann Methode}\label{kap:LBM}
 
@@ -130,8 +130,8 @@ Wobei \(\Omega_i(x,t)\) hier die diskrete Formulierung des BGK Kollisionsoperato
 
 Da sich die exakte Lösung des Integrals auf der rechten Seite schwierig gestaltet, wird es in der Praxis nur approximiert. Während es dazu vielfältige Ansätze gibt, beschränken wir uns an dieser Stelle auf Anwendung der Trapezregel~\cite[Kap.~6]{AmannEscherII}:
 \begin{align*}
-f_i(x+\xi_i,t+1) - f_i(x,t) &= \frac{1}{2} \left( \Omega_i(x,t) + \Omega_i(x+\xi_i,t+1) \right) \\
-&= -\frac{1}{2\tau} \left( f_i(x+\xi_i,t+1) + f_i(x,t) - f_i^\text{eq}(x+\xi_i,t+1) - f_i^\text{eq}(x,t) \right)
+f_i(x\!+\!\xi_i,t\!+\!1) - f_i(x,t) &= \frac{1}{2} \left( \Omega_i(x,t) + \Omega_i(x\!+\!\xi_i,t\!+\!1) \right) \\
+	&= -\frac{1}{2\tau} \left( f_i(x\!+\!\xi_i,t\!+\!1) + f_i(x,t) - f_i^\text{eq}(x\!+\!\xi_i,t\!+\!1) - f_i^\text{eq}(x,t) \right)
 \end{align*}
 
 Zur expliziten Lösung dieser impliziten Gleichung benötigen wir nun nur noch eine geeignete Verschiebung von \(f_i\) und \(\tau\):
@@ -983,7 +983,7 @@ Während für diese Strömungssituation noch keine analytische Lösung gefunden 
 Für die Umsetzung in OpenLB parametrisieren wir die Geometrie bezogen auf den Zylinderdurchmesser \(D\) und dimensionalisieren diesen wiederum als \(D := \num{0.1}\si{\meter}\), was zugleich der charakteristischen Länge entspreche. Auflösungsangaben beziehen sich im Folgenden also auf den Durchmesser des Zylinders in groben Gitterweiten. Hinblickend auf die Vorgaben zum instationären Testfall \cite[Kapitel~2.2b]{SchaeferTurek96} sei \(\text{Re}:=100\) die Reynolds-Zahl und für den Einfluss sei ein Poiseuille-Geschwindigkeitsprofil angelegt.
 
 \newpage
-Wände und Ausflüsse werden analog zur hindernisfreien Rohrströmung durch lokale Geschwindigkeits- bzw. Druckrandbedingungen konstruiert, während der Zylinder den Fluss durch Bounce-Back hindere. Eine Relaxationszeit \(\overline\tau_g := \num{0.51}\) des gröbsten Gitters vervollständigt unser Modell.
+Wände und Ausflüsse werden analog zur hindernisfreien Rohrströmung durch lokale Geschwindigkeits- bzw. Druckrandbedingungen konstruiert, während der Zylinder den Fluss durch \emph{Bounce-Back} hindere. Eine Relaxationszeit \(\overline\tau_g := \num{0.51}\) des gröbsten Gitters vervollständigt unser Modell.
 
 \begin{figure}[h]
 \begin{adjustbox}{center}
@@ -1110,7 +1110,7 @@ Alternativ ist es möglich über das Festhalten der Anzahl der Freiheitsgrade, d
 \label{fig:CylinderOptimizedGridComparison}
 \end{figure}
 
-Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils maximal 13500 Zellen. 
+Wir sehen das Geschwindigkeitsbild dieser Bemühungen in Abbildung~\ref{fig:CylinderOptimizedGridComparison}. Die dort dargestellten Gitter beinhalten beide jeweils maximal 13500 Zellen.
 Der kleine Unterschied in der Knotenanzahl ist dabei der Einschränkung auf quaderförmige Gitter geschuldet, welche eine exakte Fixierung der Knotenanzahl erschwert.
 
 Klar zu erkennen ist die in der verfeinerten Variante deutlich bessere Diskretisierung des Zylinders durch Konzentration der verfügbaren Gitterknoten in dessen Umfeld. Auch liegt dem Ausfluss des verfeinerten Gitters die Divergenz ferner als dem Ausfluss des uniformen Gitters, an welchem sich schon Artefakte abzeichnen. Eine formalere Analyse der Qualität dieses optimierten Gitters erwartet uns in Kapitel~\ref{kap:cylinder2dCoefficients}.
@@ -1222,7 +1222,7 @@ Tatsächlich ist der Fehler des verfeinerten Gitters für Widerstandskoeffizient
 
 Wir haben an dieser Stelle also auch im formalen Vergleich bestätigt, dass sich Gitterverfeinerung zur besseren Verteilung beschränkter Rechenressourcen einsetzen lässt.
 Die bestimmten Vergleichswerte bestehen bei geeigneter Variation der lokalen Gitterweiten auch in Konkurrenz mit uniformen Gittern, die auf dem ganzen Simulationsgebiet der feinsten Gitterweite des heterogenen Gitters entsprechend aufgelöst sind. Es stellt sich daher die Frage, ob dieser klare Vorteil auch auf höher aufgelöste Gitter übertragen werden kann und sich die Ergebnisse in vergleichbarem Maße verbessern.
-Dazu sehen wir in Abbildungen~\ref{fig:cylinder2dHighResDragComparison} und \ref{fig:cylinder2dHighResLiftDeltapComparison} sowie zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparison} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen variierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
+Dazu sehen wir in Abbildungen~\ref{fig:cylinder2dHighResDragComparison} und \ref{fig:cylinder2dHighResLiftDeltapComparison} sowie zugehöriger Tabelle~\ref{tab:cylinder2dHighResComparisonBounceBack} die aerodynamischen Kennzahlen der uniformen \(N=48\) und \(N=80\) Gitter sowie eines problembezogen variierten \(N=20\) Gitters entsprechend der Struktur in Abbildung~\ref{fig:CylinderOptimizedGridComparison} ohne Ausflussverfeinerung.
 
 \bigskip
 
@@ -1263,16 +1263,47 @@ Das geeignet verfeinerte Gitter liefert demnach in zwei von drei Messwerten eine
 \(N=\) & \num{160} & \num{80} & \num{48} & \num{20} (max: \num{160}) & \\
 Knotenanzahl & \num{2298014} & \num{576758} & \num{207862} & \num{208031} & \\
 \end{tabular}
-\caption{Aerodynamische Kennzahlen höher aufgelöster Zylinderumströmungen}
-\label{tab:cylinder2dHighResComparison}
+\caption{Kennzahlen höher aufgelöster Zylinderumströmungen mit \emph{Bounce-Back}}
+\label{tab:cylinder2dHighResComparisonBounceBack}
 \end{table}
 
-Da alle vier getesteten Gitter gute Übereinstimmung zu den Referenzdaten von Schäfer und Turek aufweisen, fällt der Vorteil der Gitterverfeinerung im Allgemeinen jedoch geringer aus, als noch im Vergleich der niedrig aufgelösten Gitter aus Abbildung~\ref{fig:CylinderOptimizedGridComparison} und Tabelle~\ref{tab:cylinder2dComparison}. Darüber hinaus liegt die Knotenanzahl des betrachteten \(N=160\) Gitters weit oberhalb der maximalen referenzstiftenden Knotenzahlen \cite[Tabelle~4]{SchaeferTurek96}, so dass wir hier an die Grenzen der Aussagekraft von Fehlern bezüglich dieser Werte stoßen.
+Da alle vier getesteten Gitter gute Übereinstimmung zu den Referenzdaten von Schäfer und Turek aufweisen, fällt der Vorteil der Gitterverfeinerung im Allgemeinen jedoch geringer aus, als noch im Vergleich der  niedrig aufgelösten Gitter aus Abbildung~\ref{fig:CylinderOptimizedGridComparison} und Tabelle~\ref{tab:cylinder2dComparison}. Darüber hinaus liegt die Knotenanzahl des betrachteten \(N=160\) Gitters weit oberhalb der maximalen referenzstiftenden Knotenzahlen \cite[Tabelle~4]{SchaeferTurek96}, so dass wir hier an die Grenzen der Aussagekraft von Fehlern bezüglich dieser Werte stoßen.
+
+Abschließend wollen wir nun noch einen besonderen verzerrenden Einfluss der, auf die Treppendiskretisierung des Zylinders angewandten, \emph{Bounce-Back} Randbedingung durch Prüfung der Ergebnisse mit einer interpolierenden Randbedingung~\cite[Kap.~11.2.2.1]{Krueger17} nach Bouzidi ausschließen. Anlass dazu liefert insbesondere die Verschlechterung des Widerstandsfehlers in unserem verfeinerten \(N=20\) Gitter gegenüber dem verfeinerten \(N=5\) Gitter sowie die starke Verbesserung des uniformen \(N=48\) Gitters verglichen mit dem \(N=40\) Gitter in Tabelle~\ref{tab:cylinder2dComparison}.
+
+\begin{table}[H]
+\centering
+\sisetup{round-precision=4}
+
+\begin{tabular}{l l l l l l l}
+& Uniform & Uniform & Uniform & Verfeinert & Referenzintervall \cite{SchaeferTurek96} \\
+\hline
+\hline
+\(\widehat{c_w}\) & \num{3.22775} & \num{3.22155} & \num{3.21091} & \num{3.20742} & \([\num[round-mode=off]{3.22},\ \num[round-mode=off]{3.24}]\) \\
+\(|\widehat{c_w}-\num[round-mode=off]{3.23}|\) & \num{0.00225} & \num{0.00845} & \num{0.01132} & \num{0.02258} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}] \\
+\hline
+\(\widehat{c_a}\) & \num{0.996849} & \num{1.00043} & \num{0.998518} & \num{1.00932} & \([\num[round-mode=off]{0.99},\ \num[round-mode=off]{1.01}]\) \\
+\(|\widehat{c_a}-\num[round-mode=off]{1.0}|\) & \num{0.003151} & \num{0.00043} & \num{0.001482} & \num{0.00932} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.01}]  \\
+\hline
+\(\Delta P\) & \num{2.50541} & \num{2.50716} & \num{2.47826} & \num{2.48041} & \([\num[round-mode=off]{2.46},\ \num[round-mode=off]{2.5}]\)  \\
+\(|\Delta P-\num[round-mode=off]{2.48}|\) & \num{0.02716} & \num{0.02541} & \num{0.00174} & \num{0.00041} & [\num[round-mode=off]{0}, \num[round-mode=off]{0.02}] \\
+\hline
+\hline
+\(N=\) & \num{160} & \num{80} & \num{48} & \num{20} (max: \num{160}) & \\
+Knotenanzahl & \num{2298014} & \num{576758} & \num{207862} & \num{208031} & \\
+\end{tabular}
+\caption{Kennzahlen höher aufgelöster Zylinderumströmungen mit \emph{Bouzidi}}
+\label{tab:cylinder2dHighResComparisonBouzidi}
+\end{table}
+
+Tatsächlich beobachten wir in Tabelle~\ref{tab:cylinder2dHighResComparisonBouzidi} mäßige Verbesserungen fast aller aus uniformen Gittern gewonnenen Kennzahlen. Ausnahmen bilden der verfeinerte Auftriebskoeffizient sowie der Druckfehler des uniformen \(N=160\) Gitters. Da dieser Druckfehler im Rahmen der betrachteten uniformen Gitter bei \(N=40\) sein Minimum annimmt und mit steigender Auflösung anwächst, deutet sich hier darüber hinaus erneut die begrenzte Aussagekraft der Referenzwerte an.
+
+Fassen wir die in Tabelle~\ref{tab:cylinder2dHighResComparisonBounceBack} und \ref{tab:cylinder2dHighResComparisonBouzidi} verglichenen Ergebnisse zusammen, empfiehlt sich unter Betrachtung der durch Gitterverfeinerung geschaffenen zusätzlichen Komplexität und Performanceproblematik erneut, Vorsicht beim Einsatz von verfeinerten Gittern walten zu lassen. So lässt sich kein allgemeiner Genauigkeitsvorteil von verfeinerten Gittern gegenüber äquivalent aufgelösten uniformen Gittern feststellen -- ein solcher existiert in der betrachteten Zylinderumströmung nur, wenn ein uniformes Gitter sich nahe an der Divergenz bewegt.
+
+Kann ein Problem mit den verfügbaren Rechenressourcen durch ein uniformes Gitter behandelt werden, sollte die Option der Gitterverfeinerung nicht zur Vernachlässigung ebenso wichtiger Faktoren wie der verwendeten Randbedingungen führen.
 
 \bigskip
-Rückblickend hat die Evaluation unseres Gitterverfeinerungsverfahrens anhand der Zylinderumströmung dessen Vorteil spendende Verwendbarkeit eindrücklich demonstriert. Während bei der Betrachtung der einfachen Poiseuilleströmung Sorgen bezüglich der Ergebnisgenauigkeit verfeinerter Gitter geweckt wurden, konnten diese in der Betrachtung einer komplexeren und so einen Verfeinerungsbedarf besser begründenden Strömungssituation weitestgehend beigelegt werden. Während die aufgeworfene Frage nach der korrekten Behandlung von Randbedingungen im Übergangsbereich noch offen ist, konnten wir unter Vermeidung dieser unklaren Situation ein sinnvolles, durch ein formales Kriterium informiertes, lokal verfeinertes Gitter beschreiben.
-
-Verfeinerte Simulationen der Zylinderumströmung konnten auf diese Weise im Vergleich ihrer aerodynamischen Kennzahlen mit belastungsfähigen Referenzwerten \cite{SchaeferTurek96} durchweg gegen ungleich größere Knotengrade aufweisende uniforme Gitter bestehen.
+Rückblickend hat die Evaluation unseres Gitterverfeinerungsverfahrens anhand der Zylinderumströmung dessen Vorteil spendende Verwendbarkeit unter Einschränkungen demonstriert. Während bei der Betrachtung der einfachen Poiseuilleströmung Sorgen bezüglich der Ergebnisgenauigkeit verfeinerter Gitter geweckt wurden, konnten diese in der Betrachtung einer komplexeren und so einen Verfeinerungsbedarf besser begründenden Strömungssituation weitestgehend beigelegt werden. Während die aufgeworfene Frage nach der korrekten Behandlung von Randbedingungen im Übergangsbereich noch offen ist, konnten wir unter Vermeidung dieser unklaren Situation ein sinnvolles, durch ein formales Kriterium informiertes, lokal verfeinertes Gitter beschreiben.
 
 \newpage
 \section{Fazit}

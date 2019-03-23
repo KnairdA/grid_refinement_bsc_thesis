@@ -1,7 +1,6 @@
 \begin{tikzpicture}
 \pgfplotstableread[col sep=comma]{img/data/cylinder2d_optimized_refinement_n5_re100_drag_lift_deltap.csv}\refined
 \pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n12_re100_drag_lift_deltap.csv}\uniform
-\pgfplotstableread[col sep=comma]{img/data/cylinder2d_unrefined_n40_re100_drag_lift_deltap.csv}\uniformHighRes
 
 \begin{axis}[
 	scale only axis,

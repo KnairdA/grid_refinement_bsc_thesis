@@ -1,12 +1,12 @@
-with import <nixpkgs> {};
+{ pkgs ? import <nixpkgs> { }, ... }:
 
-stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {
   name = "latex-env";
-  env = buildEnv { name = name; paths = buildInputs; };
+  env = pkgs.buildEnv { name = name; paths = buildInputs; };
 
   buildInputs = let
-    texlive-custom = texlive.combine {
-      inherit (texlive) scheme-small collection-langgerman latexmk
+    texlive-custom = pkgs.texlive.combine {
+      inherit (pkgs.texlive) scheme-small collection-langgerman latexmk
       amsmath
       abstract
       cm-super
@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
       adjustbox collectbox
       ;
     };
-  in [
+  in with pkgs; [
     gnumake
     texlive-custom biber
     python3Packages.pygments

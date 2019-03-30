@@ -14,7 +14,10 @@ Ziel dieser Arbeit ist es, aus der Behebung dieser Einschränkung heraus einen G
 ## Build
 
 ```
-nix-shell --command make
+nix-shell
+mkdir -p build/tikzcache
+ln -s build/tikzcache .
+make
 ```
 
 Die Rohdaten der dokumentierten Simulationsergebnisse finden sich in `img/data`.
